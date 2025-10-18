@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -26,4 +27,13 @@ Route::group(['prefix' => 'profile', 'middleware' => 'auth:api'], function (): v
         Route::put('password', 'updatePassword');
         Route::put('photo', 'updateProfilePhoto');
     });
+});
+
+// Admin routes (protected and role-based)
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:api', 'role:admin']], function (): void {
+    Route::get('dashboard', [AdminController::class, 'dashboard']);
+    Route::get('users', [AdminController::class, 'getUsers']);
+    Route::post('users', [AdminController::class, 'createUser']);
+    Route::put('users/{id}', [AdminController::class, 'updateUser']);
+    Route::delete('users/{id}', [AdminController::class, 'deleteUser']);
 });
