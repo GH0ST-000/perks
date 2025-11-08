@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Visit;
+use App\Models\User;
 use Filament\Widgets\ChartWidget;
 
 class MostVisitedCategories extends ChartWidget
@@ -13,9 +14,16 @@ class MostVisitedCategories extends ChartWidget
 
     protected function getData(): array
     {
-        $record = $this->getOwnerRecord();
+        // Get the record ID from the route parameter
+        $record = null;
+        $route = request()->route();
         
-        if (!$record) {
+        if ($route && $route->hasParameter('record')) {
+            $recordId = $route->parameter('record');
+            $record = User::find($recordId);
+        }
+        
+        if (!$record || !isset($record->id)) {
             return [
                 'datasets' => [
                     [
