@@ -24,6 +24,10 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'profile_photo',
         'role',
+        'email_verified_at',
+        'phone',
+        'company_id',
+        'p_coins',
     ];
 
     /**
@@ -46,7 +50,18 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'p_coins' => 'integer',
         ];
+    }
+
+    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function visits(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Visit::class);
     }
 
     /**
