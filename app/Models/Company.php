@@ -22,4 +22,9 @@ class Company extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function customerNotifications(): HasMany
+    {
+        return $this->hasMany(CustomerNotification::class);
+    }
 }

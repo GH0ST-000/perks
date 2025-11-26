@@ -64,6 +64,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Visit::class);
     }
 
+    public function customerNotifications(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CustomerNotification::class, 'manager_id');
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      */

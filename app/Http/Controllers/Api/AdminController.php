@@ -5,42 +5,27 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CreateUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Resources\CompanyResource;
+use App\Http\Resources\UserResource;
+use App\Models\Company;
 use App\Models\User;
+use App\Services\AdminDashboardService;
+use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    public function __construct(
+        private UserService $userService,
+        private AdminDashboardService $dashboardService
+    ) {}
+
     /**
      * Get dashboard statistics and recent activities.
      */
     public function dashboard(): JsonResponse
     {
-        return response()->json([
-            'stats' => [
-                'users' => User::count(),
-                'products' => 0, // Replace with actual product count when implemented
-                'orders' => 0,   // Replace with actual order count when implemented
-                'revenue' => 0,  // Replace with actual revenue when implemented
-            ],
-            'recentActivities' => [
-                // This would typically come from a database query
-                // For now, we'll return some mock data
-                [
-                    'title' => 'New user registered',
-                    'status' => 'Completed',
-                    'user' => 'John Doe',
-                    'date' => now()->format('M d, Y')
-                ],
-                [
-                    'title' => 'System update',
-                    'status' => 'Completed',
-                    'user' => 'Admin',
-                    'date' => now()->subDay()->format('M d, Y')
-                ]
-            ]
-        ]);
+        return response()->json($this->dashboardService->getDashboardData());
     }
 
     /**
@@ -48,8 +33,10 @@ class AdminController extends Controller
      */
     public function getUsers(): JsonResponse
     {
+        $users = $this->userService->getAllUsers();
+
         return response()->json([
-            'users' => User::select('id', 'name', 'email', 'role', 'created_at')->get()
+            'users' => UserResource::collection($users)
         ]);
     }
 
@@ -58,60 +45,50 @@ class AdminController extends Controller
      */
     public function createUser(CreateUserRequest $request): JsonResponse
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-        ]);
+        $user = $this->userService->createUser($request->validated());
 
         return response()->json([
             'message' => 'User created successfully',
-            'user' => $user
+            'user' => new UserResource($user)
         ], 201);
     }
 
     /**
      * Update an existing user.
      */
-    public function updateUser(UpdateUserRequest $request, $id): JsonResponse
+    public function updateUser(UpdateUserRequest $request, User $user): JsonResponse
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role,
-        ]);
+        $updatedUser = $this->userService->updateUser($user, $request->validated());
 
         return response()->json([
             'message' => 'User updated successfully',
-            'user' => $user
+            'user' => new UserResource($updatedUser)
         ]);
     }
 
     /**
      * Delete a user.
      */
-    public function deleteUser($id): JsonResponse
+    public function deleteUser(User $user): JsonResponse
     {
-        $user = User::find($id);
+        try {
+            $this->userService->deleteUser($user, auth()->id());
 
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['message' => 'User deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
         }
+    }
 
-        // Prevent deleting yourself
-        if ($user->id === auth()->id()) {
-            return response()->json(['message' => 'You cannot delete your own account'], 403);
-        }
+    /**
+     * Get all companies.
+     */
+    public function getCompanies(): JsonResponse
+    {
+        $companies = Company::withCount('users')->get();
 
-        $user->delete();
-
-        return response()->json(['message' => 'User deleted successfully']);
+        return response()->json([
+            'companies' => CompanyResource::collection($companies)
+        ]);
     }
 }
