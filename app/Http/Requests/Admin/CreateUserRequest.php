@@ -25,7 +25,9 @@ class CreateUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
-            'role' => ['required', 'string', 'in:admin,user'],
+            'phone' => ['nullable', 'string', 'max:15'],
+            'role' => ['required', 'string', 'in:admin,manager,user'],
+            'company_id' => ['nullable', 'exists:companies,id', 'required_if:role,manager'],
         ];
     }
 
@@ -44,8 +46,11 @@ class CreateUserRequest extends FormRequest
             'email.unique' => 'This email is already in use',
             'password.required' => 'A password is required',
             'password.min' => 'The password must be at least 8 characters',
+            'phone.max' => 'The phone number cannot exceed 15 characters',
             'role.required' => 'A role is required',
-            'role.in' => 'The role must be either admin or user',
+            'role.in' => 'The role must be admin, manager, or user',
+            'company_id.exists' => 'The selected company does not exist',
+            'company_id.required_if' => 'A company is required for managers',
         ];
     }
 }

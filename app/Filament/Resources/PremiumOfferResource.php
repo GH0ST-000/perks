@@ -321,4 +321,9 @@ class PremiumOfferResource extends Resource
             'edit' => Pages\EditPremiumOffer::route('/{record}/edit'),
         ];
     }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->role === 'admin';
+    }
 }
