@@ -3,11 +3,11 @@
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex justify-between items-end mb-12">
             <div>
-                <h2 class="text-3xl font-bold dark:text-white mb-2" data-i18n="offers.title">პრემიუმ შეთავაზებები</h2>
-                <p class="text-gray-500" data-i18n="offers.subtitle">ექსკლუზიური გარიგებები ჩვენი ყველაზე მაღალი რეიტინგის პარტნიორებისგან</p>
+                <h2 class="text-3xl font-bold dark:text-white mb-2">პრემიუმ შეთავაზებები</h2>
+                <p class="text-gray-500">ექსკლუზიური გარიგებები ჩვენი ყველაზე მაღალი რეიტინგის პარტნიორებისგან</p>
             </div>
             <a href="{{ route('offers.index') }}" class="text-primary-600 font-bold flex items-center gap-2 hover:translate-x-1 transition-transform">
-                <span data-i18n="offers.seeAll">ყველას ნახვა</span>
+                <span>ყველას ნახვა</span>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
@@ -31,7 +31,7 @@
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                                 </svg>
-                                <span data-i18n="offers.premium">პრემიუმ</span>
+                                <span>პრემიუმ</span>
                             </div>
                         @endif
 
@@ -71,14 +71,14 @@
                                     <div class="w-5 h-5 rounded-full bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
                                         <div class="w-2 h-2 rounded-full bg-primary-600 dark:bg-primary-400"></div>
                                     </div>
-                                    {{ $offer->day_left }} days
+                                    {{ $offer->day_left }} დღე
                                 </div>
                             @else
                                 <div class="text-xs text-gray-500">-</div>
                             @endif
 
                             <span class="text-gray-600 group-hover:text-primary-700 dark:text-gray-400 dark:group-hover:text-white transition-colors flex items-center gap-1 text-xs font-bold uppercase">
-                                <span data-i18n="offers.viewDetails">დეტალურად</span>
+                                <span>დეტალურად</span>
                                 <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
@@ -92,8 +92,8 @@
                     <svg class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                     </svg>
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">No Premium Offers Available</h3>
-                    <p class="text-gray-500">Check back later for exclusive deals!</p>
+                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">პრემიუმ შეთავაზებები არ მოიძებნა</h3>
+                    <p class="text-gray-500">მალე დაბრუნდით ექსკლუზიური გარიგებებისთვის!</p>
                 </div>
             @endforelse
         </div>

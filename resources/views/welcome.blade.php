@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -181,56 +182,23 @@
         <section id="categories" class="py-20 bg-gray-50 dark:bg-gray-800">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold dark:text-white mb-4">Explore by Category</h2>
-                    <p class="text-gray-500 max-w-2xl mx-auto">Discover exclusive offers across all your favorite categories</p>
+                    <h2 class="text-3xl font-bold dark:text-white mb-4">კატეგორიები</h2>
+                    <p class="text-gray-500 max-w-2xl mx-auto">იპოვე ზუსტად ის, რაც გჭირდება ჩვენი პარტნიორებისგან.</p>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    <a href="#" class="bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-center group border border-gray-100 dark:border-gray-600 hover:scale-105">
-                        <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-primary-600 group-hover:scale-110 transition-transform">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
+                    @forelse($categories as $category)
+                        <a href="{{ route('offers.index', ['category' => $category->id]) }}" class="bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-center group border border-gray-100 dark:border-gray-600 hover:scale-105">
+                            <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-primary-600 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-{{ $category->icon ?? 'circle' }} text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-800 dark:text-gray-200">{{ $category->name }}</h3>
+                        </a>
+                    @empty
+                        <div class="col-span-full text-center py-8 text-gray-500">
+                            კატეგორიები არ მოიძებნა
                         </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-200">Restaurant</h3>
-                    </a>
-
-                    <a href="#" class="bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-center group border border-gray-100 dark:border-gray-600 hover:scale-105">
-                        <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-primary-600 group-hover:scale-110 transition-transform">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                            </svg>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-200">Hotel</h3>
-                    </a>
-
-                    <a href="#" class="bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-center group border border-gray-100 dark:border-gray-600 hover:scale-105">
-                        <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-primary-600 group-hover:scale-110 transition-transform">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-200">Fitness</h3>
-                    </a>
-
-                    <a href="#" class="bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-center group border border-gray-100 dark:border-gray-600 hover:scale-105">
-                        <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-primary-600 group-hover:scale-110 transition-transform">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-200">Wellness</h3>
-                    </a>
-
-                    <a href="#" class="bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-center group border border-gray-100 dark:border-gray-600 hover:scale-105">
-                        <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-primary-600 group-hover:scale-110 transition-transform">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                            </svg>
-                        </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-200">Entertainment</h3>
-                    </a>
+                    @endforelse
                 </div>
             </div>
         </section>
@@ -325,7 +293,7 @@
                         <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                     </svg>
                 </div>
-                <h2 class="text-3xl font-bold dark:text-white mb-12">What Our Members Say</h2>
+                <h2 class="text-3xl font-bold dark:text-white mb-12">რას ამბობენ ჩვენზე</h2>
 
                 <div class="relative min-h-[200px] flex flex-col items-center justify-center animate-fade-in">
                     <p class="text-2xl font-medium text-gray-800 dark:text-gray-200 italic mb-8 leading-relaxed">

@@ -9,11 +9,11 @@
             <div class="max-w-7xl mx-auto px-4">
                 <!-- Breadcrumb -->
                 <nav class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-8">
-                    <a href="{{ route('home') }}" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Home</a>
+                    <a href="{{ route('home') }}" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">მთავარი</a>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
-                    <a href="{{ route('offers.index') }}" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.offers">Offers</a>
+                    <a href="{{ route('offers.index') }}" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">შეთავაზებები</a>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
@@ -51,7 +51,7 @@
                                     </div>
                                 @endif
                                 <div>
-                                    <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Partner</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">პარტნიორი</div>
                                     <div class="text-xl font-bold text-gray-900 dark:text-white">{{ $offer->partner->name }}</div>
                                 </div>
                             </div>
@@ -78,9 +78,9 @@
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    <span class="text-sm font-medium">Time Left</span>
+                                    <span class="text-sm font-medium">დარჩენილი დრო</span>
                                 </div>
-                                <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ $offer->day_left }} days</div>
+                                <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ $offer->day_left }} დღე</div>
                             </div>
 
                             @if($offer->discount)
@@ -89,7 +89,7 @@
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                                         </svg>
-                                        <span class="text-sm font-medium">Discount</span>
+                                        <span class="text-sm font-medium">ფასდაკლება</span>
                                     </div>
                                     <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ $offer->discount }}% OFF</div>
                                 </div>
@@ -99,7 +99,7 @@
                         <!-- Categories -->
                         @if($offer->partner && $offer->partner->categories->count() > 0)
                             <div class="mb-8">
-                                <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3">Categories</h3>
+                                <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3">კატეგორიები</h3>
                                 <div class="flex flex-wrap gap-2">
                                     @foreach($offer->partner->categories as $category)
                                         <span class="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium">
@@ -113,16 +113,16 @@
                         <!-- CTA Button -->
                         @auth
                             <button class="w-full py-4 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg shadow-primary-600/30 active:scale-95">
-                                Claim This Offer
+                                მიიღე შეთავაზება
                             </button>
                         @else
                             @if(Route::has('login'))
                                 <a href="{{ route('login') }}" class="block w-full py-4 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg shadow-primary-600/30 text-center active:scale-95">
-                                    <span data-i18n="nav.login">Login</span> to Claim This Offer
+                                    შეთავაზების მისაღებად გაიარეთ ავტორიზაცია
                                 </a>
                             @else
                                 <button disabled class="w-full py-4 bg-gray-400 text-white rounded-xl font-bold text-lg shadow-lg opacity-50 cursor-not-allowed">
-                                    Login Required
+                                    საჭიროა ავტორიზაცია
                                 </button>
                             @endif
                         @endauth
@@ -169,12 +169,12 @@
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                 </svg>
-                                                <span>{{ $relatedOffer->day_left }} days</span>
+                                                <span>{{ $relatedOffer->day_left }} დღე</span>
                                             </div>
                                         </div>
 
                                         <a href="{{ route('offers.show', $relatedOffer) }}" class="mt-4 w-full px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all duration-200 text-center text-sm active:scale-95">
-                                            <span data-i18n="offers.viewDetails">View Details</span>
+                                            დეტალები
                                         </a>
                                     </div>
                                 </div>

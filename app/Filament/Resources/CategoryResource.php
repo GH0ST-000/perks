@@ -48,6 +48,32 @@ class CategoryResource extends Resource
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
                             ->columnSpan(2),
+                        Forms\Components\Select::make('icon')
+                            ->label('Icon')
+                            ->options([
+                                'utensils' => 'Restaurant / Food',
+                                'hotel' => 'Hotel / Accommodation',
+                                'dumbbell' => 'Fitness / Gym',
+                                'heart' => 'Wellness / Health',
+                                'film' => 'Entertainment / Cinema',
+                                'music' => 'Music / Concert',
+                                'bag-shopping' => 'Shopping / Retail',
+                                'mug-hot' => 'Cafe / Coffee',
+                                'cake-candles' => 'Bakery / Dessert',
+                                'pizza-slice' => 'Pizza',
+                                'wine-glass' => 'Bar / Wine',
+                                'spa' => 'Spa / Beauty',
+                                'person-swimming' => 'Pool / Water',
+                                'ticket' => 'Events / Tickets',
+                                'palette' => 'Art / Gallery',
+                                'book' => 'Education / Books',
+                                'gamepad' => 'Gaming',
+                                'car' => 'Transport / Car Service',
+                                'plane' => 'Travel / Flight',
+                                'cart-shopping' => 'Supermarket / Grocery',
+                            ])
+                            ->searchable()
+                            ->columnSpan(2),
                         Forms\Components\TextInput::make('small_text')
                             ->label('Small Text')
                             ->maxLength(255)
@@ -100,6 +126,11 @@ class CategoryResource extends Resource
                 Tables\Columns\ImageColumn::make('image')
                     ->disk('public')
                     ->size(50),
+                Tables\Columns\TextColumn::make('icon')
+                    ->label('Icon')
+                    ->formatStateUsing(fn (string $state = null): string => $state ? ucfirst($state) : 'N/A')
+                    ->badge()
+                    ->color('info'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable()
@@ -180,6 +211,10 @@ class CategoryResource extends Resource
                         Infolists\Components\TextEntry::make('name')
                             ->size('lg')
                             ->weight('bold'),
+                        Infolists\Components\TextEntry::make('icon')
+                            ->label('Icon')
+                            ->badge()
+                            ->color('info'),
                         Infolists\Components\TextEntry::make('slug')
                             ->copyable()
                             ->color('gray'),
