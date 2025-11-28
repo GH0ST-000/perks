@@ -133,7 +133,7 @@
                 @if($relatedOffers->count() > 0)
                     <div class="mt-16">
                         <div class="flex items-center justify-between mb-8">
-                            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">More from {{ $offer->partner->name }}</h2>
+                            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">სხვა შეთავაზებები <b>{{ $offer->partner->name }}</b> -სგან</h2>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

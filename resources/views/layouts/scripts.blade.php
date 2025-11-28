@@ -193,7 +193,8 @@
     }
 
     function toggleTheme() {
-        document.documentElement.classList.toggle('dark');
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
     }
 
     function toggleMobileMenu() {
@@ -258,5 +259,53 @@
         // Load saved language preference
         const savedLang = localStorage.getItem('language') || 'en';
         changeLanguage(savedLang);
+
+        // Start testimonials auto-rotation
+        if (typeof startTestimonialAutoRotate === 'function') {
+            startTestimonialAutoRotate();
+        }
     });
+
+    // Testimonials Slider
+    let currentTestimonial = 0;
+    let testimonialInterval;
+    const testimonials = document.querySelectorAll('.testimonial-slide');
+    const testimonialIndicators = document.querySelectorAll('.testimonial-indicator');
+
+    function changeTestimonial(index) {
+        // Hide all testimonials
+        testimonials.forEach(testimonial => {
+            testimonial.classList.remove('opacity-100');
+            testimonial.classList.add('opacity-0');
+        });
+
+        // Reset all indicators
+        testimonialIndicators.forEach(indicator => {
+            indicator.classList.remove('w-8', 'bg-primary-500');
+            indicator.classList.add('w-2', 'bg-gray-300', 'dark:bg-gray-700');
+        });
+
+        // Show selected testimonial
+        testimonials[index].classList.remove('opacity-0');
+        testimonials[index].classList.add('opacity-100');
+
+        // Highlight selected indicator
+        testimonialIndicators[index].classList.remove('w-2', 'bg-gray-300', 'dark:bg-gray-700');
+        testimonialIndicators[index].classList.add('w-8', 'bg-primary-500');
+
+        currentTestimonial = index;
+
+        // Reset auto-rotation timer
+        clearInterval(testimonialInterval);
+        startTestimonialAutoRotate();
+    }
+
+    function nextTestimonial() {
+        const next = (currentTestimonial + 1) % testimonials.length;
+        changeTestimonial(next);
+    }
+
+    function startTestimonialAutoRotate() {
+        testimonialInterval = setInterval(nextTestimonial, 5000); // Change every 5 seconds
+    }
 </script>

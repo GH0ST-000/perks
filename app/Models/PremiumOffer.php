@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
 
 class PremiumOffer extends Model
 {
@@ -16,6 +18,7 @@ class PremiumOffer extends Model
         'header_text',
         'description',
         'day_left',
+        'expires_at',
         'discount',
         'partner_id',
         'is_premium',
@@ -31,7 +34,30 @@ class PremiumOffer extends Model
             'is_premium' => 'boolean',
             'package_purchased' => 'boolean',
             'purchased_at' => 'datetime',
+            'expires_at' => 'date',
         ];
+    }
+
+    /**
+     * Calculate days left dynamically based on expires_at
+     */
+    protected function dayLeft(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (!$this->expires_at) {
+                    return 0;
+                }
+
+                $now = Carbon::now()->startOfDay();
+                $expiresAt = Carbon::parse($this->expires_at)->startOfDay();
+
+                $daysLeft = $now->diffInDays($expiresAt, false);
+
+                // Return 0 if expired (negative days)
+                return $daysLeft > 0 ? (int) $daysLeft : 0;
+            }
+        );
     }
 
     public function partner(): BelongsTo

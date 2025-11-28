@@ -7,6 +7,13 @@
         <!-- Page Header with Filters -->
         <section class="py-12">
             <div class="max-w-7xl mx-auto px-4">
+                <!-- Error Message -->
+                @if(session('error'))
+                    <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded-xl">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <div class="flex flex-col gap-6 mb-10">
                     <div>
                         <h1 class="text-3xl font-bold dark:text-white mb-2">შეთავაზებები</h1>
@@ -81,6 +88,15 @@
                                         <img src="{{ Storage::url($offer->image) }}" alt="{{ $offer->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                                     @else
                                         <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop" alt="{{ $offer->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                    @endif
+
+                                    @if($offer->is_premium)
+                                        <div class="absolute top-4 left-4 bg-amber-400 text-amber-950 text-xs font-black uppercase px-2 py-1 rounded shadow-sm flex items-center gap-1">
+                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <span>პრემიუმ</span>
+                                        </div>
                                     @endif
 
                                     @if($offer->discount)

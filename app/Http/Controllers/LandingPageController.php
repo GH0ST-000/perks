@@ -10,9 +10,9 @@ class LandingPageController extends Controller
 {
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        // Get premium offers with partner relationship
+        // Get premium offers with partner relationship (only non-expired)
         $premiumOffers = PremiumOffer::with(['partner', 'partner.categories'])
-            ->where('day_left', '>', 0)
+            ->whereDate('expires_at', '>=', now())
             ->orderBy('id', 'desc')
             ->limit(4)
             ->get();
@@ -28,9 +28,9 @@ class LandingPageController extends Controller
         // Get all categories for filtering
         $categories = Category::orderBy('name')->get();
 
-        // Start query
+        // Start query (only non-expired offers)
         $query = PremiumOffer::with(['partner', 'partner.categories'])
-            ->where('day_left', '>', 0);
+            ->whereDate('expires_at', '>=', now());
 
         // Apply search filter
         if ($request->filled('search')) {
@@ -66,14 +66,19 @@ class LandingPageController extends Controller
 
     public function showOffer(PremiumOffer $offer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
+        // Check if offer is expired, redirect to offers page if expired
+        if ($offer->day_left <= 0) {
+            return redirect()->route('offers.index')->with('error', 'This offer has expired.');
+        }
+
         // Load relationships
         $offer->load(['partner', 'partner.categories']);
 
-        // Get related offers from the same partner
+        // Get related offers from the same partner (only non-expired)
         $relatedOffers = PremiumOffer::with(['partner', 'partner.categories'])
             ->where('partner_id', $offer->partner_id)
             ->where('id', '!=', $offer->id)
-            ->where('day_left', '>', 0)
+            ->whereDate('expires_at', '>=', now())
             ->limit(4)
             ->get();
 

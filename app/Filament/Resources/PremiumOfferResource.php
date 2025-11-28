@@ -57,13 +57,12 @@ class PremiumOfferResource extends Resource
                             ->imageEditor()
                             ->maxSize(5120)
                             ->columnSpan(1),
-                        Forms\Components\TextInput::make('day_left')
-                            ->label('Days Left')
-                            ->numeric()
-                            ->default(0)
-                            ->minValue(0)
+                        Forms\Components\DatePicker::make('expires_at')
+                            ->label('Expires At')
+                            ->native(false)
                             ->required()
-                            ->suffix('days')
+                            ->minDate(now())
+                            ->helperText('The offer will expire at the end of this date')
                             ->columnSpan(1),
                         Forms\Components\TextInput::make('discount')
                             ->numeric()
@@ -157,11 +156,17 @@ class PremiumOfferResource extends Resource
                     ->sortable()
                     ->badge()
                     ->color(fn (int $state): string => match (true) {
+                        $state <= 0 => 'gray',
                         $state <= 3 => 'danger',
                         $state <= 7 => 'warning',
                         default => 'success',
                     })
-                    ->formatStateUsing(fn (int $state): string => $state . ' days'),
+                    ->formatStateUsing(fn (int $state): string => $state > 0 ? $state . ' days' : 'Expired'),
+                Tables\Columns\TextColumn::make('expires_at')
+                    ->label('Expires At')
+                    ->date()
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('discount')
                     ->sortable()
                     ->badge()
@@ -204,26 +209,32 @@ class PremiumOfferResource extends Resource
                     ->placeholder('All')
                     ->trueLabel('Purchased')
                     ->falseLabel('Not purchased'),
-                Tables\Filters\Filter::make('day_left')
+                Tables\Filters\Filter::make('expires_at')
                     ->form([
-                        Forms\Components\Select::make('day_left_filter')
-                            ->label('Days Left')
+                        Forms\Components\Select::make('expiration_filter')
+                            ->label('Expiration Status')
                             ->options([
-                                'urgent' => 'Urgent (0-3 days)',
+                                'expired' => 'Expired',
+                                'urgent' => 'Urgent (1-3 days)',
                                 'soon' => 'Soon (4-7 days)',
                                 'available' => 'Available (8+ days)',
                             ]),
                     ])
                     ->query(function ($query, array $data) {
                         return $query->when(
-                            $data['day_left_filter'] === 'urgent',
-                            fn ($query) => $query->where('day_left', '<=', 3)
+                            $data['expiration_filter'] === 'expired',
+                            fn ($query) => $query->whereDate('expires_at', '<', now())
                         )->when(
-                            $data['day_left_filter'] === 'soon',
-                            fn ($query) => $query->whereBetween('day_left', [4, 7])
+                            $data['expiration_filter'] === 'urgent',
+                            fn ($query) => $query->whereDate('expires_at', '>=', now())
+                                ->whereDate('expires_at', '<=', now()->addDays(3))
                         )->when(
-                            $data['day_left_filter'] === 'available',
-                            fn ($query) => $query->where('day_left', '>=', 8)
+                            $data['expiration_filter'] === 'soon',
+                            fn ($query) => $query->whereDate('expires_at', '>=', now()->addDays(4))
+                                ->whereDate('expires_at', '<=', now()->addDays(7))
+                        )->when(
+                            $data['expiration_filter'] === 'available',
+                            fn ($query) => $query->whereDate('expires_at', '>', now()->addDays(7))
                         );
                     }),
             ])
@@ -276,11 +287,16 @@ class PremiumOfferResource extends Resource
                             ->label('Days Left')
                             ->badge()
                             ->color(fn (int $state): string => match (true) {
+                                $state <= 0 => 'gray',
                                 $state <= 3 => 'danger',
                                 $state <= 7 => 'warning',
                                 default => 'success',
                             })
-                            ->formatStateUsing(fn (int $state): string => $state . ' days'),
+                            ->formatStateUsing(fn (int $state): string => $state > 0 ? $state . ' days' : 'Expired'),
+                        Infolists\Components\TextEntry::make('expires_at')
+                            ->label('Expires At')
+                            ->date()
+                            ->color('info'),
                         Infolists\Components\TextEntry::make('discount')
                             ->badge()
                             ->color('success')

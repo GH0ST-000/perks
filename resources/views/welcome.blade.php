@@ -10,6 +10,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- Alpine.js for dropdown functionality -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Load theme immediately to prevent flash -->
+    <script>
+        // Load theme preference before page renders
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -295,20 +308,45 @@
                 </div>
                 <h2 class="text-3xl font-bold dark:text-white mb-12">რას ამბობენ ჩვენზე</h2>
 
-                <div class="relative min-h-[200px] flex flex-col items-center justify-center animate-fade-in">
-                    <p class="text-2xl font-medium text-gray-800 dark:text-gray-200 italic mb-8 leading-relaxed">
-                        "Perks has transformed how we offer benefits to our employees. The platform is easy to use and our team loves the variety of exclusive offers available."
-                    </p>
-                    <div>
-                        <div class="font-bold text-gray-900 dark:text-white">Giorgi Beridze</div>
-                        <div class="text-gray-500 text-sm">HR Director, TechCorp Georgia</div>
+                <div class="relative min-h-[200px] overflow-hidden">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-slide absolute inset-0 transition-opacity duration-1000 opacity-100 flex flex-col items-center justify-center" data-testimonial="0">
+                        <p class="text-2xl font-medium text-gray-800 dark:text-gray-200 italic mb-8 leading-relaxed text-center max-w-3xl">
+                            "Perks-მა შეცვალა ის, თუ როგორ ვთავაზობთ ბენეფიტებს ჩვენს თანამშრომლებს. პლატფორმა მარტივია გამოსაყენებლად და ჩვენს გუნდს უყვარს ექსკლუზიური შეთავაზებების მრავალფეროვნება."
+                        </p>
+                        <div>
+                            <div class="font-bold text-gray-900 dark:text-white">გიორგი ბერიძე</div>
+                            <div class="text-gray-500 text-sm">HR დირექტორი, TechCorp საქართველო</div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-slide absolute inset-0 transition-opacity duration-1000 opacity-0 flex flex-col items-center justify-center" data-testimonial="1">
+                        <p class="text-2xl font-medium text-gray-800 dark:text-gray-200 italic mb-8 leading-relaxed text-center max-w-3xl">
+                            "ჩვენი თანამშრომლები ძალიან კმაყოფილი არიან Perks-ით. ყოველდღიურად იყენებენ შეთავაზებებს და ეს გაზრდის მათ ლოიალობას კომპანიის მიმართ."
+                        </p>
+                        <div>
+                            <div class="font-bold text-gray-900 dark:text-white">ნინო გელაშვილი</div>
+                            <div class="text-gray-500 text-sm">CEO, Digital Solutions</div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-slide absolute inset-0 transition-opacity duration-1000 opacity-0 flex flex-col items-center justify-center" data-testimonial="2">
+                        <p class="text-2xl font-medium text-gray-800 dark:text-gray-200 italic mb-8 leading-relaxed text-center max-w-3xl">
+                            "საუკეთესო გადაწყვეტა თანამშრომელთა მოტივაციისთვის. ფასდაკლებები რეალურად სასარგებლოა და პარტნიორები მაღალი ხარისხისაა."
+                        </p>
+                        <div>
+                            <div class="font-bold text-gray-900 dark:text-white">დავით მამულაშვილი</div>
+                            <div class="text-gray-500 text-sm">Operations Manager, StartUp Hub</div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="flex justify-center gap-2 mt-8">
-                    <button class="w-8 h-2 rounded-full bg-primary-500 transition-all"></button>
-                    <button class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-700 transition-all"></button>
-                    <button class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-700 transition-all"></button>
+                    <button onclick="changeTestimonial(0)" class="testimonial-indicator w-8 h-2 rounded-full bg-primary-500 transition-all" data-index="0"></button>
+                    <button onclick="changeTestimonial(1)" class="testimonial-indicator w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-700 transition-all" data-index="1"></button>
+                    <button onclick="changeTestimonial(2)" class="testimonial-indicator w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-700 transition-all" data-index="2"></button>
                 </div>
             </div>
         </section>
