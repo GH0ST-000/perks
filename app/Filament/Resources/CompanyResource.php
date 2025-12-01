@@ -24,7 +24,7 @@ class CompanyResource extends Resource
     protected static ?string $navigationLabel = 'Companies';
 
     protected static ?string $modelLabel = 'Company';
-
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $pluralModelLabel = 'Companies';
 
     protected static ?int $navigationSort = 6;

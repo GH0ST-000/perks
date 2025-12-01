@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LandingPageController::class, 'index'])->name('home');
 Route::get('/offers', [LandingPageController::class, 'allOffers'])->name('offers.index');
 Route::get('/offers/{offer}', [LandingPageController::class, 'showOffer'])->name('offers.show');
+Route::get('/companies', [LandingPageController::class, 'companies'])->name('companies');
+Route::post('/companies/request', [LandingPageController::class, 'storeCompanyRequest'])->name('companies.request');
+Route::get('/partners', [LandingPageController::class, 'partners'])->name('partners');
+Route::post('/partners/request', [LandingPageController::class, 'storePartnerRequest'])->name('partners.request');
+Route::get('/blog', [LandingPageController::class, 'blog'])->name('blog.index');
+Route::get('/blog/{slug}', [LandingPageController::class, 'blogPost'])->name('blog.show');
 
 // Dashboard
 Route::get('/dashboard', function () {
