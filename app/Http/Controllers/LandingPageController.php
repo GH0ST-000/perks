@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\CompanyRequest;
 use App\Models\PartnerRequest;
 use App\Models\BlogPost;
+use App\Models\Slider;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 
 class LandingPageController extends Controller
@@ -23,7 +25,17 @@ class LandingPageController extends Controller
         // Get all categories for the categories section
         $categories = Category::orderBy('name')->get();
 
-        return view('welcome', compact('premiumOffers', 'categories'));
+        // Get active sliders ordered by order field
+        $sliders = Slider::where('is_active', true)
+            ->orderBy('order', 'asc')
+            ->get();
+
+        // Get active testimonials ordered by order field
+        $testimonials = Testimonial::where('is_active', true)
+            ->orderBy('order', 'asc')
+            ->get();
+
+        return view('welcome', compact('premiumOffers', 'categories', 'sliders', 'testimonials'));
     }
 
     public function allOffers(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View

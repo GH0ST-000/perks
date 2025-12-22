@@ -21,7 +21,7 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-folder';
 
-    protected static ?string $navigationLabel = 'Categories';
+    protected static ?string $navigationLabel = 'კატეგორიები';
 
     protected static ?string $modelLabel = 'Category';
 

@@ -32,19 +32,19 @@
             <h4 class="font-bold text-lg mb-6">პლატფორმა</h4>
             <ul class="space-y-4 text-sm text-gray-400">
                 <li><a href="{{ route('offers.index') }}" class="hover:text-white transition-colors">შეთავაზებები</a></li>
-                <li><a href="#companies" class="hover:text-white transition-colors">კომპანიებისთვის</a></li>
-                <li><a href="#partners" class="hover:text-white transition-colors">პარტნიორებისთვის</a></li>
-                <li><a href="#shop" class="hover:text-white transition-colors">აუქციონი</a></li>
+                <li><a href="{{ route('vacancies.index') }}" class="hover:text-white transition-colors">ვაკანსიები</a></li>
+                <li><a href="{{ route('companies') }}" class="hover:text-white transition-colors">კომპანიებისთვის</a></li>
+                <li><a href="{{ route('partners') }}" class="hover:text-white transition-colors">პარტნიორებისთვის</a></li>
             </ul>
         </div>
 
         <div>
             <h4 class="font-bold text-lg mb-6">რესურსები</h4>
             <ul class="space-y-4 text-sm text-gray-400">
-                <li><a href="#" class="hover:text-white transition-colors">ბლოგი</a></li>
+                <li><a href="{{ route('blog.index') }}" class="hover:text-white transition-colors">ბლოგი</a></li>
                 <li><a href="#" class="hover:text-white transition-colors">ჩვენ შესახებ</a></li>
-                <li><a href="#" class="hover:text-white transition-colors">კარიერა</a></li>
-                <li><a href="#" class="hover:text-white transition-colors">კონფიდენციალურობის პოლიტიკა</a></li>
+                <li><a href="{{ route('vacancies.index') }}" class="hover:text-white transition-colors">კარიერა</a></li>
+                <li class="text-gray-400">კონფიდენციალურობის პოლიტიკა</li>
             </ul>
         </div>
 

@@ -21,7 +21,7 @@ class PremiumOfferResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-sparkles';
 
-    protected static ?string $navigationLabel = 'Premium Offers';
+    protected static ?string $navigationLabel = 'პრემიუმ შეთავაზებები';
 
     protected static ?string $modelLabel = 'Premium Offer';
 

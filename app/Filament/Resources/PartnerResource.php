@@ -21,7 +21,7 @@ class PartnerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
-    protected static ?string $navigationLabel = 'Partners';
+    protected static ?string $navigationLabel = 'პარტნიორები';
     protected static bool $shouldRegisterNavigation = false;
     protected static ?string $modelLabel = 'Partner';
 

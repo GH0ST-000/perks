@@ -172,23 +172,39 @@
 
         // Desktop buttons
         if (lang === 'ka') {
-            buttons.ka.classList.add('bg-white', 'dark:bg-gray-700', 'shadow-sm', 'text-gray-900', 'dark:text-white');
-            buttons.ka.classList.remove('text-gray-500');
-            buttons.en.classList.remove('bg-white', 'dark:bg-gray-700', 'shadow-sm', 'text-gray-900', 'dark:text-white');
-            buttons.en.classList.add('text-gray-500');
+            if (buttons.ka) {
+                buttons.ka.classList.add('bg-white', 'dark:bg-gray-700', 'shadow-sm', 'text-gray-900', 'dark:text-white');
+                buttons.ka.classList.remove('text-gray-500');
+            }
+            if (buttons.en) {
+                buttons.en.classList.remove('bg-white', 'dark:bg-gray-700', 'shadow-sm', 'text-gray-900', 'dark:text-white');
+                buttons.en.classList.add('text-gray-500');
+            }
 
             // Mobile buttons
-            buttons.kaMobile.classList.add('bg-white', 'shadow');
-            buttons.enMobile.classList.remove('bg-white', 'shadow');
+            if (buttons.kaMobile) {
+                buttons.kaMobile.classList.add('bg-white', 'shadow');
+            }
+            if (buttons.enMobile) {
+                buttons.enMobile.classList.remove('bg-white', 'shadow');
+            }
         } else {
-            buttons.en.classList.add('bg-white', 'dark:bg-gray-700', 'shadow-sm', 'text-gray-900', 'dark:text-white');
-            buttons.en.classList.remove('text-gray-500');
-            buttons.ka.classList.remove('bg-white', 'dark:bg-gray-700', 'shadow-sm', 'text-gray-900', 'dark:text-white');
-            buttons.ka.classList.add('text-gray-500');
+            if (buttons.en) {
+                buttons.en.classList.add('bg-white', 'dark:bg-gray-700', 'shadow-sm', 'text-gray-900', 'dark:text-white');
+                buttons.en.classList.remove('text-gray-500');
+            }
+            if (buttons.ka) {
+                buttons.ka.classList.remove('bg-white', 'dark:bg-gray-700', 'shadow-sm', 'text-gray-900', 'dark:text-white');
+                buttons.ka.classList.add('text-gray-500');
+            }
 
             // Mobile buttons
-            buttons.enMobile.classList.add('bg-white', 'shadow');
-            buttons.kaMobile.classList.remove('bg-white', 'shadow');
+            if (buttons.enMobile) {
+                buttons.enMobile.classList.add('bg-white', 'shadow');
+            }
+            if (buttons.kaMobile) {
+                buttons.kaMobile.classList.remove('bg-white', 'shadow');
+            }
         }
     }
 
@@ -253,26 +269,15 @@
         slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
     }
 
-    // Start the slideshow when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        startSlideShow();
-        // Load saved language preference
-        const savedLang = localStorage.getItem('language') || 'en';
-        changeLanguage(savedLang);
-
-        // Start testimonials auto-rotation
-        if (typeof startTestimonialAutoRotate === 'function') {
-            startTestimonialAutoRotate();
-        }
-    });
-
     // Testimonials Slider
     let currentTestimonial = 0;
     let testimonialInterval;
-    const testimonials = document.querySelectorAll('.testimonial-slide');
-    const testimonialIndicators = document.querySelectorAll('.testimonial-indicator');
+    let testimonials = [];
+    let testimonialIndicators = [];
 
     function changeTestimonial(index) {
+        if (testimonials.length === 0) return;
+
         // Hide all testimonials
         testimonials.forEach(testimonial => {
             testimonial.classList.remove('opacity-100');
@@ -286,12 +291,16 @@
         });
 
         // Show selected testimonial
-        testimonials[index].classList.remove('opacity-0');
-        testimonials[index].classList.add('opacity-100');
+        if (testimonials[index]) {
+            testimonials[index].classList.remove('opacity-0');
+            testimonials[index].classList.add('opacity-100');
+        }
 
         // Highlight selected indicator
-        testimonialIndicators[index].classList.remove('w-2', 'bg-gray-300', 'dark:bg-gray-700');
-        testimonialIndicators[index].classList.add('w-8', 'bg-primary-500');
+        if (testimonialIndicators[index]) {
+            testimonialIndicators[index].classList.remove('w-2', 'bg-gray-300', 'dark:bg-gray-700');
+            testimonialIndicators[index].classList.add('w-8', 'bg-primary-500');
+        }
 
         currentTestimonial = index;
 
@@ -301,11 +310,31 @@
     }
 
     function nextTestimonial() {
+        if (testimonials.length === 0) return;
         const next = (currentTestimonial + 1) % testimonials.length;
         changeTestimonial(next);
     }
 
     function startTestimonialAutoRotate() {
+        if (testimonials.length <= 1) return; // Don't rotate if there's only one or no testimonials
+        clearInterval(testimonialInterval);
         testimonialInterval = setInterval(nextTestimonial, 5000); // Change every 5 seconds
     }
+
+    // Start the slideshow when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        startSlideShow();
+        // Load saved language preference
+        const savedLang = localStorage.getItem('language') || 'en';
+        changeLanguage(savedLang);
+
+        // Initialize testimonials slider
+        testimonials = Array.from(document.querySelectorAll('.testimonial-slide'));
+        testimonialIndicators = Array.from(document.querySelectorAll('.testimonial-indicator'));
+        
+        // Start testimonials auto-rotation if there are testimonials
+        if (testimonials.length > 1) {
+            startTestimonialAutoRotate();
+        }
+    });
 </script>

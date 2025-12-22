@@ -23,7 +23,7 @@ class CustomerNotificationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationLabel = 'Customers';
+    protected static ?string $navigationLabel = 'კლიენტები';
 
     protected static ?string $modelLabel = 'Customer Notification';
 

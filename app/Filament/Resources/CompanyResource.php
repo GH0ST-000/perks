@@ -21,7 +21,7 @@ class CompanyResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static ?string $navigationLabel = 'Companies';
+    protected static ?string $navigationLabel = 'კომპანიები';
 
     protected static ?string $modelLabel = 'Company';
     protected static bool $shouldRegisterNavigation = false;
