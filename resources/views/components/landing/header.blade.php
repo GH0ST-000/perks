@@ -13,9 +13,11 @@
         <!-- Desktop Nav -->
         <nav class="hidden lg:flex items-center gap-8">
             <a href="{{ route('offers.index') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">შეთავაზებები</a>
+            
             <a href="{{ route('companies') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">კომპანიებისთვის</a>
             <a href="{{ route('partners') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">პარტნიორებისთვის</a>
             <a href="{{ route('blog.index') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">ბლოგი</a>
+            <a href="{{ route('vacancies.index') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">ვაკანსიები</a>
         </nav>
 
         <!-- Desktop Actions -->
@@ -96,6 +98,7 @@
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="hidden lg:hidden absolute top-20 left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 p-4 flex flex-col gap-4 shadow-xl animate-fade-in-down">
         <a href="{{ route('offers.index') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">შეთავაზებები</a>
+        <a href="{{ route('vacancies.index') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">ვაკანსიები</a>
         <a href="{{ route('companies') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">კომპანიებისთვის</a>
         <a href="{{ route('partners') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">პარტნიორებისთვის</a>
         <a href="{{ route('blog.index') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">ბლოგი</a>

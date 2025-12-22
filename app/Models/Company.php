@@ -27,4 +27,9 @@ class Company extends Model
     {
         return $this->hasMany(CustomerNotification::class);
     }
+
+    public function vacancies(): HasMany
+    {
+        return $this->hasMany(Vacancy::class);
+    }
 }

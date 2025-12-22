@@ -88,106 +88,82 @@
 
     <main class="animate-fade-in">
         <!-- Hero Section -->
-        <div class="max-w-7xl mx-auto px-4 mt-8">
-            <div id="heroSlider" class="relative h-[420px] rounded-[2.5rem] overflow-hidden shadow-2xl">
-                <!-- Slide 1 -->
-                <div class="hero-slide absolute inset-0 transition-opacity duration-1000" data-slide="0">
-                    <div class="absolute inset-0 hero-gradient z-10"></div>
-                    <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=1200&h=600&fit=crop" class="w-full h-full object-cover" alt="Employee Benefits">
+        @if(isset($sliders) && $sliders->count() > 0)
+            <div class="max-w-7xl mx-auto px-4 mt-8">
+                <div id="heroSlider" class="relative h-[420px] rounded-[2.5rem] overflow-hidden shadow-2xl">
+                    @foreach($sliders as $index => $slider)
+                        <div class="hero-slide absolute inset-0 transition-opacity duration-1000 {{ $index === 0 ? '' : 'opacity-0' }}" data-slide="{{ $index }}">
+                            <div class="absolute inset-0 hero-gradient z-10"></div>
+                            @if($slider->background_image)
+                                <img src="{{ Storage::url($slider->background_image) }}" class="w-full h-full object-cover" alt="{{ $slider->title ?? 'Slider' }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div class="w-full h-full bg-gradient-to-br from-primary-600 to-purple-600 hidden"></div>
+                            @else
+                                <div class="w-full h-full bg-gradient-to-br from-primary-600 to-purple-600"></div>
+                            @endif
 
-                    <div class="absolute inset-0 z-20 flex items-center">
-                        <div class="max-w-7xl mx-auto px-12 w-full">
-                            <div class="max-w-2xl text-white">
-                                <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs font-bold uppercase tracking-widest mb-4 border border-white/30">
-                                    Employee Benefits
-                                </span>
-                                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
-                                    Unlock Exclusive <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-purple-400">Benefits</span> at Your Favorite Places
-                                </h1>
-                                <p class="text-lg text-gray-200 mb-8 leading-relaxed max-w-lg">
-                                    Join thousands of employees enjoying exclusive discounts, rewards, and perks at hundreds of partner locations across Georgia.
-                                </p>
-                                <div class="flex gap-4">
-                                    <a href="#offers" class="px-8 py-3 rounded-lg bg-primary-600 text-white hover:bg-primary-700 font-medium transition-all duration-200 active:scale-95 text-lg shadow-lg">
-                                        Explore Offers
-                                    </a>
-                                    <a href="#companies" class="px-8 py-3 rounded-lg bg-white/10 text-white border border-white/30 hover:bg-white/20 font-medium transition-all duration-200 text-lg backdrop-blur">
-                                        For Companies
-                                    </a>
+                            <div class="absolute inset-0 z-20 flex items-center">
+                                <div class="max-w-7xl mx-auto px-12 w-full">
+                                    <div class="max-w-2xl text-white">
+                                        @if($slider->tag_text)
+                                            <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs font-bold uppercase tracking-widest mb-4 border border-white/30">
+                                                {{ $slider->tag_text }}
+                                            </span>
+                                        @endif
+                                        
+                                        <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
+                                            @if($slider->headline_before)
+                                                {{ $slider->headline_before }}
+                                            @endif
+                                            @if($slider->headline_highlight)
+                                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-purple-400">{{ $slider->headline_highlight }}</span>
+                                            @endif
+                                            @if($slider->headline_after)
+                                                {{ $slider->headline_after }}
+                                            @endif
+                                            @if(!$slider->headline_before && !$slider->headline_highlight && !$slider->headline_after && $slider->title)
+                                                {{ $slider->title }}
+                                            @endif
+                                        </h1>
+                                        
+                                        @if($slider->sub_headline)
+                                            <p class="text-lg text-gray-200 mb-8 leading-relaxed max-w-lg">
+                                                {{ $slider->sub_headline }}
+                                            </p>
+                                        @elseif($slider->description)
+                                            <p class="text-lg text-gray-200 mb-8 leading-relaxed max-w-lg">
+                                                {{ $slider->description }}
+                                            </p>
+                                        @endif
+                                        
+                                        <div class="flex gap-4">
+                                            @if($slider->button1_text && $slider->button1_link)
+                                                <a href="{{ $slider->button1_link }}" class="px-8 py-3 rounded-lg bg-primary-600 text-white hover:bg-primary-700 font-medium transition-all duration-200 active:scale-95 text-lg shadow-lg">
+                                                    {{ $slider->button1_text }}
+                                                </a>
+                                            @endif
+                                            @if($slider->button2_text && $slider->button2_link)
+                                                <a href="{{ $slider->button2_link }}" class="px-8 py-3 rounded-lg bg-white/10 text-white border border-white/30 hover:bg-white/20 font-medium transition-all duration-200 text-lg backdrop-blur">
+                                                    {{ $slider->button2_text }}
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    @endforeach
 
-                <!-- Slide 2 -->
-                <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-0" data-slide="1">
-                    <div class="absolute inset-0 hero-gradient z-10"></div>
-                    <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&h=600&fit=crop" class="w-full h-full object-cover" alt="Corporate Benefits">
-
-                    <div class="absolute inset-0 z-20 flex items-center">
-                        <div class="max-w-7xl mx-auto px-12 w-full">
-                            <div class="max-w-2xl text-white">
-                                <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs font-bold uppercase tracking-widest mb-4 border border-white/30">
-                                    For Companies
-                                </span>
-                                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
-                                    Empower Your Team with <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-purple-400">Premium</span> Benefits
-                                </h1>
-                                <p class="text-lg text-gray-200 mb-8 leading-relaxed max-w-lg">
-                                    Attract and retain top talent with comprehensive employee benefits. Easy to manage, loved by employees.
-                                </p>
-                                <div class="flex gap-4">
-                                    <a href="#pricing" class="px-8 py-3 rounded-lg bg-primary-600 text-white hover:bg-primary-700 font-medium transition-all duration-200 active:scale-95 text-lg shadow-lg">
-                                        View Pricing
-                                    </a>
-                                    <a href="#companies" class="px-8 py-3 rounded-lg bg-white/10 text-white border border-white/30 hover:bg-white/20 font-medium transition-all duration-200 text-lg backdrop-blur">
-                                        Learn More
-                                    </a>
-                                </div>
-                            </div>
+                    <!-- Slide Indicators -->
+                    @if($sliders->count() > 1)
+                        <div class="absolute bottom-8 left-0 right-0 z-30 flex justify-center gap-2">
+                            @foreach($sliders as $index => $slider)
+                                <button onclick="changeSlide({{ $index }})" class="slide-indicator {{ $index === 0 ? 'w-8 bg-primary-500' : 'w-2 bg-white/50 hover:bg-white' }} h-2 rounded-full transition-all" data-slide="{{ $index }}"></button>
+                            @endforeach
                         </div>
-                    </div>
-                </div>
-
-                <!-- Slide 3 -->
-                <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-0" data-slide="2">
-                    <div class="absolute inset-0 hero-gradient z-10"></div>
-                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&h=600&fit=crop" class="w-full h-full object-cover" alt="Partner Network">
-
-                    <div class="absolute inset-0 z-20 flex items-center">
-                        <div class="max-w-7xl mx-auto px-12 w-full">
-                            <div class="max-w-2xl text-white">
-                                <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs font-bold uppercase tracking-widest mb-4 border border-white/30">
-                                    Partner Network
-                                </span>
-                                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
-                                    Join <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-purple-400">Hundreds</span> of Premium Partners
-                                </h1>
-                                <p class="text-lg text-gray-200 mb-8 leading-relaxed max-w-lg">
-                                    From restaurants to hotels, fitness to wellness - discover exclusive offers from Georgia's best businesses.
-                                </p>
-                                <div class="flex gap-4">
-                                    <a href="#partners" class="px-8 py-3 rounded-lg bg-primary-600 text-white hover:bg-primary-700 font-medium transition-all duration-200 active:scale-95 text-lg shadow-lg">
-                                        Become a Partner
-                                    </a>
-                                    <a href="#offers" class="px-8 py-3 rounded-lg bg-white/10 text-white border border-white/30 hover:bg-white/20 font-medium transition-all duration-200 text-lg backdrop-blur">
-                                        View All Offers
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide Indicators -->
-                <div class="absolute bottom-8 left-0 right-0 z-30 flex justify-center gap-2">
-                    <button onclick="changeSlide(0)" class="slide-indicator w-8 h-2 rounded-full bg-primary-500 transition-all" data-slide="0"></button>
-                    <button onclick="changeSlide(1)" class="slide-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white transition-all" data-slide="1"></button>
-                    <button onclick="changeSlide(2)" class="slide-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white transition-all" data-slide="2"></button>
+                    @endif
                 </div>
             </div>
-        </div>
+        @endif
 
         @include('components.landing.offers', ['offers' => $premiumOffers])
 
@@ -299,57 +275,50 @@
         </section>
 
         <!-- Testimonials Section -->
-        <section id="testimonials" class="py-20 bg-gray-50 dark:bg-gray-800">
-            <div class="max-w-4xl mx-auto px-4 text-center">
-                <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-8 text-primary-600">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                    </svg>
-                </div>
-                <h2 class="text-3xl font-bold dark:text-white mb-12">რას ამბობენ ჩვენზე</h2>
+        @if(isset($testimonials) && $testimonials->count() > 0)
+            <section id="testimonials" class="py-20 bg-gray-50 dark:bg-gray-800">
+                <div class="max-w-4xl mx-auto px-4 text-center">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-8 text-primary-600">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold dark:text-white mb-12">რას ამბობენ ჩვენზე</h2>
 
-                <div class="relative min-h-[200px] overflow-hidden">
-                    <!-- Testimonial 1 -->
-                    <div class="testimonial-slide absolute inset-0 transition-opacity duration-1000 opacity-100 flex flex-col items-center justify-center" data-testimonial="0">
-                        <p class="text-2xl font-medium text-gray-800 dark:text-gray-200 italic mb-8 leading-relaxed text-center max-w-3xl">
-                            "Perks-მა შეცვალა ის, თუ როგორ ვთავაზობთ ბენეფიტებს ჩვენს თანამშრომლებს. პლატფორმა მარტივია გამოსაყენებლად და ჩვენს გუნდს უყვარს ექსკლუზიური შეთავაზებების მრავალფეროვნება."
-                        </p>
-                        <div>
-                            <div class="font-bold text-gray-900 dark:text-white">გიორგი ბერიძე</div>
-                            <div class="text-gray-500 text-sm">HR დირექტორი, TechCorp საქართველო</div>
-                        </div>
+                    <div class="relative min-h-[200px] overflow-hidden">
+                        @foreach($testimonials as $index => $testimonial)
+                            <div class="testimonial-slide absolute inset-0 transition-opacity duration-1000 {{ $index === 0 ? 'opacity-100' : 'opacity-0' }} flex flex-col items-center justify-center" data-testimonial="{{ $index }}">
+                                <p class="text-2xl font-medium text-gray-800 dark:text-gray-200 italic mb-8 leading-relaxed text-center max-w-3xl">
+                                    "{{ $testimonial->quote }}"
+                                </p>
+                                <div>
+                                    <div class="font-bold text-gray-900 dark:text-white">{{ $testimonial->author_name }}</div>
+                                    @if($testimonial->author_position || $testimonial->company_name)
+                                        <div class="text-gray-500 text-sm">
+                                            @if($testimonial->author_position && $testimonial->company_name)
+                                                {{ $testimonial->author_position }}, {{ $testimonial->company_name }}
+                                            @elseif($testimonial->author_position)
+                                                {{ $testimonial->author_position }}
+                                            @elseif($testimonial->company_name)
+                                                {{ $testimonial->company_name }}
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
 
-                    <!-- Testimonial 2 -->
-                    <div class="testimonial-slide absolute inset-0 transition-opacity duration-1000 opacity-0 flex flex-col items-center justify-center" data-testimonial="1">
-                        <p class="text-2xl font-medium text-gray-800 dark:text-gray-200 italic mb-8 leading-relaxed text-center max-w-3xl">
-                            "ჩვენი თანამშრომლები ძალიან კმაყოფილი არიან Perks-ით. ყოველდღიურად იყენებენ შეთავაზებებს და ეს გაზრდის მათ ლოიალობას კომპანიის მიმართ."
-                        </p>
-                        <div>
-                            <div class="font-bold text-gray-900 dark:text-white">ნინო გელაშვილი</div>
-                            <div class="text-gray-500 text-sm">CEO, Digital Solutions</div>
+                    @if($testimonials->count() > 1)
+                        <div class="flex justify-center gap-2 mt-8">
+                            @foreach($testimonials as $index => $testimonial)
+                                <button onclick="changeTestimonial({{ $index }})" class="testimonial-indicator {{ $index === 0 ? 'w-8 bg-primary-500' : 'w-2 bg-gray-300 dark:bg-gray-700' }} h-2 rounded-full transition-all" data-index="{{ $index }}"></button>
+                            @endforeach
                         </div>
-                    </div>
-
-                    <!-- Testimonial 3 -->
-                    <div class="testimonial-slide absolute inset-0 transition-opacity duration-1000 opacity-0 flex flex-col items-center justify-center" data-testimonial="2">
-                        <p class="text-2xl font-medium text-gray-800 dark:text-gray-200 italic mb-8 leading-relaxed text-center max-w-3xl">
-                            "საუკეთესო გადაწყვეტა თანამშრომელთა მოტივაციისთვის. ფასდაკლებები რეალურად სასარგებლოა და პარტნიორები მაღალი ხარისხისაა."
-                        </p>
-                        <div>
-                            <div class="font-bold text-gray-900 dark:text-white">დავით მამულაშვილი</div>
-                            <div class="text-gray-500 text-sm">Operations Manager, StartUp Hub</div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
-
-                <div class="flex justify-center gap-2 mt-8">
-                    <button onclick="changeTestimonial(0)" class="testimonial-indicator w-8 h-2 rounded-full bg-primary-500 transition-all" data-index="0"></button>
-                    <button onclick="changeTestimonial(1)" class="testimonial-indicator w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-700 transition-all" data-index="1"></button>
-                    <button onclick="changeTestimonial(2)" class="testimonial-indicator w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-700 transition-all" data-index="2"></button>
-                </div>
-            </div>
-        </section>
+            </section>
+        @endif
     </main>
 
     @include('components.landing.footer')

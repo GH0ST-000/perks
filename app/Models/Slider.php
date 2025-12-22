@@ -12,6 +12,17 @@ class Slider extends Model
 
     protected $fillable = [
         'title',
+        'tag_text',
+        'headline_before',
+        'headline_highlight',
+        'headline_after',
+        'sub_headline',
+        'button1_text',
+        'button1_link',
+        'button2_text',
+        'button2_link',
+        'background_image',
+        'order',
         'description',
         'is_active',
     ];
@@ -20,6 +31,7 @@ class Slider extends Model
     {
         return [
             'is_active' => 'boolean',
+            'order' => 'integer',
         ];
     }
 

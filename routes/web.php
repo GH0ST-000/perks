@@ -14,6 +14,9 @@ Route::get('/partners', [LandingPageController::class, 'partners'])->name('partn
 Route::post('/partners/request', [LandingPageController::class, 'storePartnerRequest'])->name('partners.request');
 Route::get('/blog', [LandingPageController::class, 'blog'])->name('blog.index');
 Route::get('/blog/{slug}', [LandingPageController::class, 'blogPost'])->name('blog.show');
+Route::get('/vacancies', [App\Http\Controllers\VacancyController::class, 'index'])->name('vacancies.index');
+Route::get('/vacancies/{slug}', [App\Http\Controllers\VacancyController::class, 'show'])->name('vacancies.show');
+Route::post('/vacancies/{vacancyId}/apply', [App\Http\Controllers\VacancyController::class, 'apply'])->name('vacancies.apply');
 
 // Dashboard
 Route::get('/dashboard', function () {
