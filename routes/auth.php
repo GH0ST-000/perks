@@ -16,11 +16,25 @@ Route::middleware('guest')->group(function () {
         ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
+    
+    // OTP-based registration routes
+    Route::post('register/send-otp', [RegisteredUserController::class, 'sendOtp'])
+        ->name('register.send-otp');
+    
+    Route::post('register/verify-otp', [RegisteredUserController::class, 'verifyOtp'])
+        ->name('register.verify-otp');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    
+    // OTP-based login routes
+    Route::post('login/send-otp', [AuthenticatedSessionController::class, 'sendOtp'])
+        ->name('login.send-otp');
+    
+    Route::post('login/verify-otp', [AuthenticatedSessionController::class, 'verifyOtp'])
+        ->name('login.verify-otp');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
