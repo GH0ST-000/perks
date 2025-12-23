@@ -85,9 +85,35 @@
 
     <!-- Content -->
     <section class="max-w-4xl mx-auto px-4 mb-20">
-        <article class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-a:text-primary-600 dark:prose-a:text-primary-400 prose-strong:text-gray-900 dark:prose-strong:text-white prose-img:rounded-xl prose-img:shadow-lg">
-            {!! $post->content !!}
-        </article>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 md:p-12 border border-gray-200 dark:border-gray-700 shadow-lg">
+            <article class="prose prose-lg dark:prose-invert max-w-none 
+                prose-headings:font-bold 
+                prose-headings:text-gray-900 dark:prose-headings:text-white 
+                prose-p:text-gray-700 dark:prose-p:text-gray-200 
+                prose-p:leading-relaxed
+                prose-a:text-primary-600 dark:prose-a:text-primary-400 
+                prose-a:no-underline hover:prose-a:underline
+                prose-strong:text-gray-900 dark:prose-strong:text-white 
+                prose-strong:font-bold
+                prose-li:text-gray-700 dark:prose-li:text-gray-200
+                prose-ul:text-gray-700 dark:prose-ul:text-gray-200
+                prose-ol:text-gray-700 dark:prose-ol:text-gray-200
+                prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-200
+                prose-blockquote:border-l-primary-500 dark:prose-blockquote:border-l-primary-400
+                prose-code:text-gray-900 dark:prose-code:text-gray-200
+                prose-code:bg-gray-100 dark:prose-code:bg-gray-700
+                prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+                prose-pre:bg-gray-100 dark:prose-pre:bg-gray-900
+                prose-pre:text-gray-900 dark:prose-pre:text-gray-200
+                prose-pre:border dark:prose-pre:border-gray-700
+                prose-img:rounded-xl prose-img:shadow-lg
+                prose-hr:border-gray-200 dark:prose-hr:border-gray-700
+                [&_p]:text-gray-700 dark:[&_p]:text-gray-200
+                [&_span]:text-gray-700 dark:[&_span]:text-gray-200
+                [&_div]:text-gray-700 dark:[&_div]:text-gray-200">
+                {!! $post->content !!}
+            </article>
+        </div>
     </section>
 
     <!-- Share Section -->
@@ -118,7 +144,7 @@
                     Twitter
                 </a>
                 <button
-                    onclick="navigator.clipboard.writeText('{{ route('blog.show', $post->slug) }}'); alert('ბმული დაკოპირდა!');"
+                    onclick="copyToClipboard('{{ route('blog.show', $post->slug) }}')"
                     class="flex items-center gap-2 px-6 py-3 bg-gray-700 hover:bg-gray-800 text-white rounded-xl font-medium transition-colors"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,4 +234,65 @@
 </main>
 
 @include('components.landing.footer')
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed top-4 right-4 z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 flex items-center gap-3 min-w-[300px] max-w-md">
+        <div class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <div class="flex-1">
+            <p class="text-sm font-medium text-gray-900 dark:text-white">ბმული დაკოპირდა!</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">ბმული წარმატებით დაკოპირდა კლიპბორდში</p>
+        </div>
+        <button onclick="hideToast()" class="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            showToast();
+        }).catch(function(err) {
+            console.error('Failed to copy: ', err);
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast();
+            } catch (err) {
+                console.error('Fallback copy failed: ', err);
+            }
+            document.body.removeChild(textArea);
+        });
+    }
+
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('translate-x-full');
+        toast.classList.add('translate-x-0');
+        
+        // Auto hide after 3 seconds
+        setTimeout(() => {
+            hideToast();
+        }, 3000);
+    }
+
+    function hideToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('translate-x-0');
+        toast.classList.add('translate-x-full');
+    }
+</script>
 @endsection
