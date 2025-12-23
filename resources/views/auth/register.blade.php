@@ -2,8 +2,8 @@
     <div class="w-full">
         <!-- Header -->
         <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold mb-2 text-white">ანგარიშის შექმნა</h2>
-            <p class="text-sm text-gray-400">დარეგისტრირდით დასაწყებად</p>
+            <h2 class="text-3xl font-bold mb-2 text-gray-900 dark:text-white transition-colors">ანგარიშის შექმნა</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors">დარეგისტრირდით დასაწყებად</p>
         </div>
 
         <!-- Step 1: Registration Form -->
@@ -13,7 +13,7 @@
 
         <!-- Name -->
         <div>
-                    <label for="name" class="block text-sm font-medium mb-2 text-gray-300">სრული სახელი</label>
+                    <label for="name" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300 transition-colors">სრული სახელი</label>
                     <input
                         id="name"
                         type="text"
@@ -22,15 +22,14 @@
                         required
                         autofocus
                         autocomplete="name"
-                        class="w-full px-4 py-3 rounded-lg border text-white focus:outline-none transition-colors"
-                        style="background-color: #36393F; border-color: #4285F4; color: #ffffff;"
+                        class="w-full px-4 py-3 rounded-lg border focus:outline-none transition-colors bg-gray-200 dark:bg-[#36393F] border-gray-300 dark:border-[#4285F4] text-gray-900 dark:text-white"
                     />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
         <!-- Email Address -->
                 <div>
-                    <label for="email" class="block text-sm font-medium mb-2 text-gray-300">ელფოსტის მისამართი</label>
+                    <label for="email" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300 transition-colors">ელფოსტის მისამართი</label>
                     <input
                         id="email"
                         type="email"
@@ -38,15 +37,14 @@
                         value="{{ old('email') }}"
                         required
                         autocomplete="username"
-                        class="w-full px-4 py-3 rounded-lg border text-white focus:outline-none transition-colors"
-                        style="background-color: #36393F; border-color: #4285F4; color: #ffffff;"
+                        class="w-full px-4 py-3 rounded-lg border focus:outline-none transition-colors bg-gray-200 dark:bg-[#36393F] border-gray-300 dark:border-[#4285F4] text-gray-900 dark:text-white"
                     />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
                 <!-- Phone Number -->
                 <div>
-                    <label for="phone" class="block text-sm font-medium mb-2 text-gray-300">ტელეფონის ნომერი</label>
+                    <label for="phone" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300 transition-colors">ტელეფონის ნომერი</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <svg class="w-5 h-5" style="color: #B9BBBE;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,12 +59,11 @@
                             placeholder="555 00 00 00"
                             required
                             autocomplete="tel"
-                            class="w-full px-4 py-3 pl-12 rounded-lg border text-white focus:outline-none transition-colors"
-                            style="background-color: #36393F; border-color: #4285F4; color: #ffffff;"
+                            class="w-full px-4 py-3 pl-12 rounded-lg border focus:outline-none transition-colors bg-gray-200 dark:bg-[#36393F] border-gray-300 dark:border-[#4285F4] text-gray-900 dark:text-white"
                         />
                     </div>
                     <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-                    <p class="mt-2 text-sm text-gray-400">
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 transition-colors">
                         SMS-ით გამოგიგზავნებათ დადასტურების კოდი
                     </p>
                 </div>
@@ -93,10 +90,10 @@
         <!-- Step 2: OTP Verification -->
         <div id="otp-step" class="hidden space-y-5">
             <div class="text-center mb-4">
-                <p class="text-sm text-gray-400">
+                <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors">
                     შეიყვანეთ 6-ნიშნა კოდი, რომელიც გამოგეგზავნათ
                 </p>
-                <p class="text-sm font-semibold mt-1 text-white" id="otp-phone-display"></p>
+                <p class="text-sm font-semibold mt-1 text-gray-900 dark:text-white transition-colors" id="otp-phone-display"></p>
             </div>
 
             <form method="POST" action="{{ route('register.verify-otp') }}" id="otp-form">
@@ -107,7 +104,7 @@
 
                 <!-- OTP Input -->
                 <div>
-                    <label for="otp" class="block text-sm font-medium mb-2 text-gray-300">დადასტურების კოდი</label>
+                    <label for="otp" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300 transition-colors">დადასტურების კოდი</label>
                     <div class="mt-1">
                         <input
                             id="otp"
@@ -118,10 +115,9 @@
                             required
                             autofocus
                             pattern="[0-9]{6}"
-                            class="w-full px-4 py-3 rounded-lg border text-white text-center text-2xl tracking-widest font-mono focus:outline-none transition-colors"
-                            style="background-color: #36393F; border-color: #4285F4; color: #ffffff;"
-                            onfocus="this.style.borderColor='#4285F4'"
-                            onblur="this.style.borderColor='#4285F4'"
+                            class="w-full px-4 py-3 rounded-lg border text-center text-2xl tracking-widest font-mono focus:outline-none transition-colors bg-gray-200 dark:bg-[#36393F] border-gray-300 dark:border-[#4285F4] text-gray-900 dark:text-white"
+                            onfocus="this.classList.add('dark:border-[#4285F4]', 'border-blue-500')"
+                            onblur="this.classList.remove('border-blue-500')"
                         />
                     </div>
                     <x-input-error :messages="$errors->get('otp')" class="mt-2" />
@@ -160,9 +156,9 @@
 
         <!-- Login Link -->
         <div class="mt-6 text-center">
-            <p class="text-sm text-gray-400">
+            <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors">
                 უკვე გაქვთ ანგარიში?
-                <a href="{{ route('login') }}" class="font-semibold ml-1 transition-colors text-blue-400 hover:text-blue-300">
+                <a href="{{ route('login') }}" class="font-semibold ml-1 transition-colors text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">
                     შესვლა
                 </a>
             </p>
