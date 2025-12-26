@@ -16,7 +16,7 @@ Route::middleware('guest')->group(function () {
         ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
-    
+
     // OTP-based registration routes
     Route::post('register/send-otp', [RegisteredUserController::class, 'sendOtp'])
         ->name('register.send-otp');

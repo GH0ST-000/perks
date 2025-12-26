@@ -13,7 +13,7 @@
         <!-- Desktop Nav -->
         <nav class="hidden lg:flex items-center gap-8">
             <a href="{{ route('offers.index') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">შეთავაზებები</a>
-            
+
             <a href="{{ route('companies') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">კომპანიებისთვის</a>
             <a href="{{ route('partners') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">პარტნიორებისთვის</a>
             <a href="{{ route('blog.index') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">ბლოგი</a>
@@ -41,9 +41,26 @@
             @else
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open" @click.outside="open = false" class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-                        <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            {{ substr(auth()->user()->name, 0, 1) }}
-                        </div>
+{{--                        <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm">--}}
+{{--                            {{ substr(auth()->user()->name, 0, 1) }}--}}
+{{--                        </div>--}}
+                        @if(auth()->check() && auth()->user()->profile_photo)
+                            @php
+                                $user = auth()->user();
+                                $profilePhoto = $user->profile_photo;
+                                $photoUrl = null;
+                                if ($profilePhoto) {
+                                    if (str_starts_with($profilePhoto, 'http://') || str_starts_with($profilePhoto, 'https://')) {
+                                        $photoUrl = $profilePhoto;
+                                    } elseif (str_starts_with($profilePhoto, 'data:image')) {
+                                        $photoUrl = $profilePhoto;
+                                    } else {
+                                        $photoUrl = asset('storage/' . ltrim($profilePhoto, '/'));
+                                    }
+                                }
+                            @endphp
+                            <img src="{{ $photoUrl }}" alt="{{ $user->name }}" style="width: 25px !important;height: 25px !important;" class="w-full h-full rounded-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        @endif
                         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
