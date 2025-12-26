@@ -69,6 +69,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(CustomerNotification::class, 'manager_id');
     }
 
+    public function walletTransactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(WalletTransaction::class);
+    }
+
+    public function paymentMethods(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      */

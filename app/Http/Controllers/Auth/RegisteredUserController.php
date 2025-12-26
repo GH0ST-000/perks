@@ -139,7 +139,7 @@ class RegisteredUserController extends Controller
         if (User::where('phone', $phone)->orWhere('email', $request->email)->exists()) {
             throw ValidationException::withMessages([
                 'email' => ['An account with this email or phone already exists.'],
-            ]);
+        ]);
         }
 
         // Create user (no password needed for OTP-based auth)

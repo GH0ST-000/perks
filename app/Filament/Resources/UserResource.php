@@ -374,6 +374,8 @@ class UserResource extends Resource
     {
         return [
             RelationManagers\VisitsRelationManager::class,
+            RelationManagers\WalletTransactionsRelationManager::class,
+            RelationManagers\PaymentMethodsRelationManager::class,
         ];
     }
 

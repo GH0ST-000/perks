@@ -35,6 +35,9 @@ class AuthenticatedSessionController extends Controller
     {
         $request->validate([
             'phone' => ['required', 'string', 'regex:/^[0-9]{9}$/'],
+        ], [
+            'phone.required' => 'ტელეფონის ნომერი აუცილებელია.',
+            'phone.regex' => 'გთხოვთ, შეიყვანოთ სწორი ქართული ტელეფონის ნომერი (9 ციფრი).',
         ]);
 
         $phone = '+995' . $request->phone;
@@ -44,7 +47,7 @@ class AuthenticatedSessionController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'No account found with this phone number. Please register first.',
+                'message' => 'ამ ტელეფონის ნომერზე ანგარიში არ მოიძებნა. გთხოვთ, ჯერ დარეგისტრირდეთ.',
             ], 422);
         }
 
@@ -54,7 +57,7 @@ class AuthenticatedSessionController extends Controller
             $seconds = RateLimiter::availableIn($key);
             return response()->json([
                 'success' => false,
-                'message' => "Too many attempts. Please try again in {$seconds} seconds.",
+                'message' => "ძალიან ბევრი მცდელობა. გთხოვთ, სცადოთ ხელახლა {$seconds} წამში.",
             ], 429);
         }
 
@@ -82,7 +85,7 @@ class AuthenticatedSessionController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Verification code sent successfully.',
+            'message' => 'დადასტურების კოდი წარმატებით გაიგზავნა.',
         ]);
     }
 
