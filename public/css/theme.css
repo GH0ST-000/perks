@@ -1,0 +1,161 @@
+/* Theme CSS Variables */
+:root {
+    /* Light Theme - Exact Reference Design Match */
+    --bg-primary: #f8f9fa;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #e9ecef;
+    --bg-card: #ffffff;
+    --bg-sidebar: #ffffff;
+    --bg-hover: #f1f3f5;
+    --text-primary: #1a1d2e;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --border-color: transparent;
+    --border-hover: transparent;
+    --shadow: rgba(0, 0, 0, 0.02);
+    --shadow-lg: rgba(0, 0, 0, 0.06);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --card-radius: 20px;
+}
+
+[data-theme="dark"] {
+    /* Dark Theme */
+    --bg-primary: #1a1d29;
+    --bg-secondary: #252836;
+    --bg-tertiary: #2d3142;
+    --bg-card: #252836;
+    --bg-sidebar: #1f2937;
+    --bg-hover: #374151;
+    --text-primary: #ffffff;
+    --text-secondary: #a0aec0;
+    --text-tertiary: #9ca3af;
+    --border-color: #2d3142;
+    --border-hover: #3b82f6;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow-lg: rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --card-radius: 16px;
+}
+
+/* Theme-aware utility classes */
+.bg-primary {
+    background-color: var(--bg-primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--bg-secondary) !important;
+}
+
+.bg-tertiary {
+    background-color: var(--bg-tertiary) !important;
+}
+
+.bg-card {
+    background-color: var(--bg-card) !important;
+}
+
+.text-primary {
+    color: var(--text-primary) !important;
+}
+
+.text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+.text-tertiary {
+    color: var(--text-tertiary) !important;
+}
+
+.border-themed {
+    border-color: var(--border-color) !important;
+}
+
+/* Override inline styles for common elements */
+[style*="background-color: #1a1d29"],
+[style*="background-color:#1a1d29"] {
+    background-color: var(--bg-primary) !important;
+}
+
+[style*="background-color: #252836"],
+[style*="background-color:#252836"] {
+    background-color: var(--bg-card) !important;
+}
+
+[style*="background-color: #2d3142"],
+[style*="background-color:#2d3142"] {
+    background-color: var(--bg-tertiary) !important;
+}
+
+[style*="color: #ffffff"],
+[style*="color:#ffffff"] {
+    color: var(--text-primary) !important;
+}
+
+[style*="color: #a0aec0"],
+[style*="color:#a0aec0"] {
+    color: var(--text-secondary) !important;
+}
+
+[style*="color: #9ca3af"],
+[style*="color:#9ca3af"] {
+    color: var(--text-tertiary) !important;
+}
+
+[style*="border: 1px solid #2d3142"],
+[style*="border:1px solid #2d3142"],
+[style*="border-color: #2d3142"],
+[style*="border-color:#2d3142"] {
+    border-color: var(--border-color) !important;
+}
+
+/* Card styles */
+.themed-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.themed-card:hover {
+    border-color: var(--border-hover);
+}
+
+/* Input styles */
+.themed-input {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.themed-input:focus {
+    border-color: #3b82f6;
+    background-color: var(--bg-card);
+}
+
+/* Button styles */
+.themed-button {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.themed-button:hover {
+    background-color: var(--bg-hover);
+}
+
+/* Smooth transitions */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Exclude certain elements from transitions */
+.no-transition,
+.no-transition * {
+    transition: none !important;
+}
+
+/* Gradients remain unchanged */
+[style*="linear-gradient"],
+[style*="linear-gradient"] * {
+    /* Gradients should not be affected by theme */
+}
+

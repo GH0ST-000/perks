@@ -1,29 +1,28 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+<x-dashboard-layout>
+    <!-- Page Header -->
+    <div style="margin-bottom: 32px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+            <span class="material-icons" style="font-size: 32px; color: #3b82f6;">account_circle</span>
+            <h1 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin: 0;">პროფილის რედაქტირება</h1>
+        </div>
+        <p style="font-size: 16px; color: var(--text-secondary); margin: 0;">განაახლეთ თქვენი პროფილის ინფორმაცია და უსაფრთხოების პარამეტრები</p>
+    </div>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
+    <!-- Profile Sections -->
+    <div style="display: flex; flex-direction: column; gap: 24px; max-width: 1200px;">
+        <!-- Profile Information Section -->
+        <div style="background-color: var(--bg-card); border-radius: var(--card-radius); padding: 32px; border: none; box-shadow: var(--shadow-card);">
                     @include('profile.partials.update-profile-information-form')
-                </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
+        <!-- Update Password Section -->
+        <div style="background-color: var(--bg-card); border-radius: var(--card-radius); padding: 32px; border: none; box-shadow: var(--shadow-card);">
                     @include('profile.partials.update-password-form')
-                </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
+        <!-- Delete Account Section -->
+        <div style="background-color: var(--bg-card); border-radius: var(--card-radius); padding: 32px; border: none; box-shadow: var(--shadow-card);">
                     @include('profile.partials.delete-user-form')
-                </div>
-            </div>
         </div>
     </div>
-</x-app-layout>
+</x-dashboard-layout>
