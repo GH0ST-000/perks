@@ -2,7 +2,7 @@
     <!-- Welcome Section -->
     <div style="margin-bottom: 32px;">
         <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">გამარჯობა, {{ auth()->user()->name }}</h1>
-        <p style="font-size: 16px; color: #a0aec0; margin: 0;">Welcome back to your perks dashboard.</p>
+{{--        <p style="font-size: 16px; color: #a0aec0; margin: 0;">Welcome back to your perks dashboard.</p>--}}
     </div>
 
     <!-- Main Content Grid -->

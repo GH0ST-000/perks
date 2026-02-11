@@ -79,6 +79,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(PaymentMethod::class);
     }
 
+    public function giftRedemptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(GiftRedemption::class);
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      */

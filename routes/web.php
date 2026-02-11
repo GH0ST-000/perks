@@ -32,6 +32,14 @@ Route::middleware('auth')->group(function () {
     // Wallet routes
     Route::get('/wallet', [App\Http\Controllers\WalletController::class, 'index'])->name('wallet.index');
     Route::post('/wallet/payment-methods', [App\Http\Controllers\WalletController::class, 'storePaymentMethod'])->name('wallet.payment-methods.store');
+    
+    // Gifts routes
+    Route::get('/gifts', [App\Http\Controllers\GiftController::class, 'index'])->name('gifts.index');
+    Route::post('/gifts/{gift}/redeem', [App\Http\Controllers\GiftController::class, 'redeem'])->name('gifts.redeem');
+    Route::get('/my-gifts', [App\Http\Controllers\GiftController::class, 'myGifts'])->name('gifts.my-gifts');
+    
+    // History routes
+    Route::get('/history', [App\Http\Controllers\HistoryController::class, 'index'])->name('history.index');
 });
 
 require __DIR__.'/auth.php';
