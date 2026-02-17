@@ -192,8 +192,8 @@
                     </a>
 
                     <!-- ჩემი საფულე (My Wallet) -->
-                    <a href="{{ route('wallet.index') }}" onclick="closeSidebarOnMobile()" style="display: flex; align-items: center; height: 48px; padding: 0 16px; text-decoration: none; border-radius: 12px; margin: 4px 0; {{ request()->routeIs('wallet.*') ? 'background-color: #3b82f6; color: #ffffff;' : 'color: var(--text-secondary);' }} transition: all 0.2s;" @if(!request()->routeIs('wallet.*')) onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)';" onmouseout="this.style.backgroundColor='transparent';" @endif>
-                        <span class="material-icons" style="margin-right: 16px; font-size: 20px; {{ request()->routeIs('wallet.*') ? 'color: #ffffff;' : 'color: var(--text-secondary);' }}">account_balance_wallet</span>
+                    <a href="{{ route('wallet.index') }}" onclick="closeSidebarOnMobile()" style="display: flex; align-items: center; height: 48px; padding: 0 16px; text-decoration: none; border-radius: 12px; margin: 4px 0; {{ request()->routeIs('wallet.*') || request()->routeIs('payments.*') || request()->routeIs('subscriptions.*') ? 'background-color: #3b82f6; color: #ffffff;' : 'color: var(--text-secondary);' }} transition: all 0.2s;" @if(!request()->routeIs('wallet.*') && !request()->routeIs('payments.*') && !request()->routeIs('subscriptions.*')) onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)';" onmouseout="this.style.backgroundColor='transparent';" @endif>
+                        <span class="material-icons" style="margin-right: 16px; font-size: 20px; {{ request()->routeIs('wallet.*') || request()->routeIs('payments.*') || request()->routeIs('subscriptions.*') ? 'color: #ffffff;' : 'color: var(--text-secondary);' }}">account_balance_wallet</span>
                         <span style="font-size: 14px; font-weight: 500;">ჩემი საფულე</span>
                     </a>
 
@@ -210,8 +210,8 @@
                     </a>
 
                     <!-- Perks Family -->
-                    <a href="#" onclick="closeSidebarOnMobile()" style="display: flex; align-items: center; height: 48px; padding: 0 16px; text-decoration: none; border-radius: 12px; margin: 4px 0; color: var(--text-secondary); transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)';" onmouseout="this.style.backgroundColor='transparent';">
-                        <span class="material-icons" style="margin-right: 16px; font-size: 20px; color: var(--text-secondary);">people</span>
+                    <a href="{{ route('family-members.index') }}" onclick="closeSidebarOnMobile()" style="display: flex; align-items: center; height: 48px; padding: 0 16px; text-decoration: none; border-radius: 12px; margin: 4px 0; {{ request()->routeIs('family-members.*') ? 'background-color: #3b82f6; color: #ffffff;' : 'color: var(--text-secondary);' }} transition: all 0.2s;" @if(!request()->routeIs('family-members.*')) onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)';" onmouseout="this.style.backgroundColor='transparent';" @endif>
+                        <span class="material-icons" style="margin-right: 16px; font-size: 20px; {{ request()->routeIs('family-members.*') ? 'color: #ffffff;' : 'color: var(--text-secondary);' }}">people</span>
                         <span style="font-size: 14px; font-weight: 500;">Perks Family</span>
                     </a>
                 </div>
