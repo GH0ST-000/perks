@@ -42,4 +42,13 @@ return [
         'enabled' => env('TWILIO_ENABLED', false),
     ],
 
+    'bog' => [
+        'base_url' => env('BOG_BASE_URL', 'https://api.bog.ge'),
+        'client_id' => env('BOG_CLIENT_ID'),
+        'secret_key' => env('BOG_SECRET_KEY'),
+        'merchant_id' => env('BOG_MERCHANT_ID'),
+        'terminal_id' => env('BOG_TERMINAL_ID'),
+        'client_inn' => env('BOG_CLIENT_INN'),
+    ],
+
 ];

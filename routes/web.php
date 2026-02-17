@@ -40,6 +40,29 @@ Route::middleware('auth')->group(function () {
     
     // History routes
     Route::get('/history', [App\Http\Controllers\HistoryController::class, 'index'])->name('history.index');
+    
+    // Family Members routes
+    Route::get('/family-members', [App\Http\Controllers\FamilyMemberController::class, 'index'])->name('family-members.index');
+    Route::post('/family-members', [App\Http\Controllers\FamilyMemberController::class, 'store'])->name('family-members.store');
+    Route::put('/family-members/{familyMember}', [App\Http\Controllers\FamilyMemberController::class, 'update'])->name('family-members.update');
+    Route::delete('/family-members/{familyMember}', [App\Http\Controllers\FamilyMemberController::class, 'destroy'])->name('family-members.destroy');
+    
+    // Payment routes
+    Route::get('/payments', [App\Http\Controllers\PaymentController::class, 'showPaymentPage'])->name('payments.index');
+    Route::post('/payments/initiate', [App\Http\Controllers\PaymentController::class, 'initiateOneTimePayment'])->name('payments.initiate');
+    Route::get('/payments/success/{payment}', [App\Http\Controllers\PaymentController::class, 'paymentSuccess'])->name('payment.success');
+    Route::get('/payments/failed', [App\Http\Controllers\PaymentController::class, 'paymentFailed'])->name('payment.failed');
+    
+    // Subscription routes
+    Route::get('/subscriptions', [App\Http\Controllers\SubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::post('/subscriptions/subscribe', [App\Http\Controllers\SubscriptionController::class, 'subscribe'])->name('subscriptions.subscribe');
+    Route::post('/subscriptions/{subscription}/cancel', [App\Http\Controllers\SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+    Route::get('/subscriptions/success/{subscription}', [App\Http\Controllers\SubscriptionController::class, 'subscriptionSuccess'])->name('subscription.success');
+    Route::delete('/payment-methods/{paymentMethod}', [App\Http\Controllers\SubscriptionController::class, 'deletePaymentMethod'])->name('payment-methods.delete');
 });
+
+// Public callback routes (no auth required)
+Route::post('/payment/callback', [App\Http\Controllers\PaymentController::class, 'handleCallback'])->name('payment.callback');
+Route::post('/subscription/callback', [App\Http\Controllers\SubscriptionController::class, 'handleCallback'])->name('subscription.callback');
 
 require __DIR__.'/auth.php';
