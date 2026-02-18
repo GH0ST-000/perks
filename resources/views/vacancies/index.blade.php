@@ -18,7 +18,7 @@
                 <!-- Section Header with Filter -->
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-3xl font-bold mb-4 md:mb-0 text-gray-900 dark:text-white">მიმდინარე ვაკანსიები</h2>
-                    
+
                     <!-- Department Filter -->
                     @if(isset($departments) && $departments->count() > 0)
                         <form method="GET" action="{{ route('vacancies.index') }}" class="w-full md:w-auto">
@@ -84,7 +84,7 @@
                                                     <span>{{ $vacancy->department }}</span>
                                                 </div>
                                             @endif
-                                            
+
                                             @if($vacancy->city)
                                                 <div class="flex items-center gap-2">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +132,7 @@
                             </svg>
                         </div>
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">ვაკანსიები არ მოიძებნა</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-8">სცადეთ სხვა დეპარტამენტი</p>
+{{--                        <p class="text-gray-600 dark:text-gray-400 mb-8">სცადეთ სხვა დეპარტამენტი</p>--}}
                     </div>
                 @endif
             </div>
@@ -265,15 +265,15 @@
         function openApplicationModal(vacancyId, vacancyTitle) {
             document.getElementById('vacancy_id').value = vacancyId;
             document.getElementById('modal-title').textContent = 'განაცხადის გაგზავნა - ' + vacancyTitle;
-            
+
             // Update form action
             const form = document.getElementById('application-form');
             form.action = `/vacancies/${vacancyId}/apply`;
-            
+
             // Reset form
             form.reset();
             document.getElementById('file-label').innerHTML = '<span class="font-semibold">Click to upload</span> PDF';
-            
+
             // Open modal
             window.dispatchEvent(new CustomEvent('open-modal', { detail: 'application-modal' }));
         }

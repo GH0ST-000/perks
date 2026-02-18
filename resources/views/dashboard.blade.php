@@ -1,7 +1,7 @@
 <x-dashboard-layout>
     <!-- Welcome Section -->
     <div style="margin-bottom: 32px;">
-        <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">გამარჯობა, {{ auth()->user()->name }}</h1>
+        <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">გამარჯობა, {{ auth()->user()->name }} </h1>
 {{--        <p style="font-size: 16px; color: #a0aec0; margin: 0;">Welcome back to your perks dashboard.</p>--}}
     </div>
 
@@ -58,22 +58,22 @@
 
     <!-- Exclusive Offer Section -->
     <div style="margin-top: 32px;">
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
-            <span class="material-icons" style="font-size: 24px; color: #a855f7;">star</span>
-            <h2 style="font-size: 20px; font-weight: 600; color: #ffffff; margin: 0;">Exclusive For You</h2>
-        </div>
+{{--        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">--}}
+{{--            <span class="material-icons" style="font-size: 24px; color: #a855f7;">star</span>--}}
+{{--            <h2 style="font-size: 20px; font-weight: 600; color: #ffffff; margin: 0;">Exclusive For You</h2>--}}
+{{--        </div>--}}
 
-        <div style="background-color: #252836; border-radius: 16px; padding: 24px; border: 1px solid #2d3142;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-                <span style="font-size: 12px; font-weight: 600; color: #a855f7; background-color: rgba(168,85,247,0.1); padding: 6px 12px; border-radius: 12px;">INDIVIDUAL OFFER</span>
-                <span style="font-size: 12px; color: #a0aec0;">{{ date('m/d/Y', strtotime('+30 days')) }}</span>
-            </div>
-            <h3 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">Birthday Special</h3>
-            <p style="font-size: 16px; color: #a0aec0; margin: 0 0 20px 0;">Get a free dessert with any main course!</p>
-            <a href="#" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #3b82f6; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#60a5fa';" onmouseout="this.style.color='#3b82f6';">
-                Redeem Offer
-                <span class="material-icons" style="font-size: 18px;">arrow_forward</span>
-            </a>
-        </div>
+{{--        <div style="background-color: #252836; border-radius: 16px; padding: 24px; border: 1px solid #2d3142;">--}}
+{{--            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">--}}
+{{--                <span style="font-size: 12px; font-weight: 600; color: #a855f7; background-color: rgba(168,85,247,0.1); padding: 6px 12px; border-radius: 12px;">INDIVIDUAL OFFER</span>--}}
+{{--                <span style="font-size: 12px; color: #a0aec0;">{{ date('m/d/Y', strtotime('+30 days')) }}</span>--}}
+{{--            </div>--}}
+{{--            <h3 style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">Birthday Special</h3>--}}
+{{--            <p style="font-size: 16px; color: #a0aec0; margin: 0 0 20px 0;">Get a free dessert with any main course!</p>--}}
+{{--            <a href="#" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #3b82f6; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#60a5fa';" onmouseout="this.style.color='#3b82f6';">--}}
+{{--                Redeem Offer--}}
+{{--                <span class="material-icons" style="font-size: 18px;">arrow_forward</span>--}}
+{{--            </a>--}}
+{{--        </div>--}}
     </div>
 </x-dashboard-layout>

@@ -153,11 +153,29 @@
                                     @endif
                                 </div>
                             </div>
-                            @if($method->is_default)
-                                <button style="padding: 6px 12px; background-color: #ffffff; color: #000000; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
-                                    Default
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                @if($method->is_default)
+                                    <span style="padding: 6px 12px; background-color: #3b82f6; color: #ffffff; border-radius: 6px; font-size: 12px; font-weight: 600;">
+                                        ძირითადი
+                                    </span>
+                                @endif
+                                <button 
+                                    onclick="showDeleteCardModal({{ $method->id }}, '{{ $method->last_four }}')"
+                                    style="padding: 8px 12px; background-color: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;"
+                                    onmouseover="this.style.backgroundColor='#ef4444'; this.style.color='#ffffff';"
+                                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ef4444';">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 6h18"/>
+                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                    </svg>
+                                    წაშლა
                                 </button>
-                            @endif
+                                <form id="delete-card-form-{{ $method->id }}" action="{{ route('payment-methods.delete', $method) }}" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -413,6 +431,141 @@
                 alert('დაფიქსირდა შეცდომა: ' + error.message);
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
+            }
+        });
+    </script>
+
+    <!-- Delete Card Confirmation Modal -->
+    <div id="deleteCardModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px); animation: fadeIn 0.2s ease-in-out;">
+        <div style="background-color: var(--bg-card); border-radius: 16px; padding: 32px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 0.3s ease-out; position: relative;">
+            <!-- Icon -->
+            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="20" height="14" x="2" y="5" rx="2"/>
+                    <line x1="2" x2="22" y1="10" y2="10"/>
+                    <path d="M16 8h-6"/>
+                </svg>
+            </div>
+
+            <!-- Title -->
+            <h3 style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0 0 12px 0; text-align: center;">დარწმუნებული ხართ?</h3>
+            
+            <!-- Message -->
+            <p style="font-size: 14px; color: var(--text-secondary); margin: 0 0 24px 0; text-align: center; line-height: 1.6;">
+                გსურთ ბარათის <strong id="cardNumber" style="color: var(--text-primary); font-family: monospace;"></strong>-ის წაშლა? <br>
+                <span style="font-size: 13px; color: #ef4444;">ეს მოქმედება შეუქცევადია.</span>
+            </p>
+
+            <!-- Buttons -->
+            <div style="display: flex; gap: 12px;">
+                <button 
+                    onclick="hideDeleteCardModal()"
+                    style="flex: 1; padding: 12px; background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.backgroundColor='var(--bg-hover)';"
+                    onmouseout="this.style.backgroundColor='var(--bg-secondary)';">
+                    გაუქმება
+                </button>
+                <button 
+                    id="confirmDeleteCardBtn"
+                    onclick="confirmDeleteCard()"
+                    style="flex: 1; padding: 12px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #ffffff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(239, 68, 68, 0.4)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.3)';">
+                    წაშლა
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+        }
+
+        #deleteCardModal.hiding {
+            animation: fadeOut 0.2s ease-in-out;
+        }
+
+        #deleteCardModal.hiding > div {
+            animation: slideDown 0.2s ease-out;
+        }
+    </style>
+
+    <script>
+        let currentDeleteCardFormId = null;
+
+        function showDeleteCardModal(cardId, lastFour) {
+            currentDeleteCardFormId = cardId;
+            document.getElementById('cardNumber').textContent = '•••• ' + lastFour;
+            const modal = document.getElementById('deleteCardModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideDeleteCardModal() {
+            const modal = document.getElementById('deleteCardModal');
+            modal.classList.add('hiding');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                modal.classList.remove('hiding');
+                document.body.style.overflow = 'auto';
+                currentDeleteCardFormId = null;
+            }, 200);
+        }
+
+        function confirmDeleteCard() {
+            if (currentDeleteCardFormId) {
+                document.getElementById('delete-card-form-' + currentDeleteCardFormId).submit();
+            }
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                hideDeleteCardModal();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('deleteCardModal')?.addEventListener('click', function(event) {
+            if (event.target === this) {
+                hideDeleteCardModal();
             }
         });
     </script>
