@@ -20,6 +20,9 @@ class PremiumOffer extends Model
         'day_left',
         'expires_at',
         'discount',
+        'standard_discount',
+        'premium_discount',
+        'p_coins_reward',
         'partner_id',
         'is_premium',
         'package_purchased',
@@ -31,6 +34,9 @@ class PremiumOffer extends Model
     {
         return [
             'discount' => 'decimal:2',
+            'standard_discount' => 'decimal:2',
+            'premium_discount' => 'decimal:2',
+            'p_coins_reward' => 'integer',
             'is_premium' => 'boolean',
             'package_purchased' => 'boolean',
             'purchased_at' => 'datetime',

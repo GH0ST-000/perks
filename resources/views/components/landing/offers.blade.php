@@ -44,10 +44,18 @@
                     </div>
 
                     <div class="p-5 flex-1 flex flex-col relative">
-                        @if($offer->discount > 0)
-                            <div class="absolute -top-6 right-4 bg-primary-700 text-white w-12 h-12 flex flex-col items-center justify-center rounded-xl shadow-lg shadow-primary-900/20 border-2 border-white dark:border-gray-800">
-                                <span class="text-sm font-bold">{{ number_format($offer->discount, 0) }}%</span>
-                                <span class="text-xs uppercase font-bold opacity-100">OFF</span>
+                        @if($offer->standard_discount || $offer->premium_discount)
+                            <div class="absolute -top-6 right-4 flex flex-col gap-1">
+                                @if($offer->standard_discount > 0)
+                                    <div class="px-2.5 py-1.5 flex flex-col items-center rounded-lg shadow-lg border-2 border-white dark:border-gray-800" style="background-color: #C4C4C4;">
+                                        <span class="text-xs font-bold" style="color: #1F2937;">-{{ number_format($offer->standard_discount, 0) }}%</span>
+                                    </div>
+                                @endif
+                                @if($offer->premium_discount > 0)
+                                    <div class="px-2.5 py-1.5 flex flex-col items-center rounded-lg shadow-lg border-2 border-white dark:border-gray-800" style="background-color: #EFBF04;">
+                                        <span class="text-xs font-bold" style="color: #1F2937;">-{{ number_format($offer->premium_discount, 0) }}%</span>
+                                    </div>
+                                @endif
                             </div>
                         @endif
 
@@ -63,6 +71,39 @@
                             <p class="text-gray-700 dark:text-gray-300 text-sm line-clamp-2 mb-4 flex-1 leading-relaxed">
                                 {{ $offer->description }}
                             </p>
+                        @endif
+
+                        @if($offer->standard_discount || $offer->premium_discount)
+                            <div class="mb-3 flex flex-col gap-1">
+                                @if($offer->standard_discount > 0)
+                                    <div class="flex items-center justify-between text-xs py-1 px-1.5 rounded" style="background-color: rgba(196, 196, 196, 0.1);">
+                                        <span class="font-medium" style="color: #6B7280;">Standard</span>
+                                        <span class="font-bold" style="color: #9CA3AF;">-{{ $offer->standard_discount }}%</span>
+                                    </div>
+                                @endif
+                                @if($offer->premium_discount > 0)
+                                    <div class="flex items-center justify-between text-xs py-1 px-1.5 rounded" style="background-color: rgba(239, 191, 4, 0.1);">
+                                        <span class="font-medium" style="color: #92400E;">Premium</span>
+                                        <span class="font-bold" style="color: #B45309;">-{{ $offer->premium_discount }}%</span>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+
+                        @if($offer->p_coins_reward > 0)
+                            <div class="mb-3 p-2 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                        </svg>
+                                        <span class="text-xs font-bold text-amber-900 dark:text-amber-100">+{{ $offer->p_coins_reward }}</span>
+                                    </div>
+                                    <svg class="w-3 h-3 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                            </div>
                         @endif
 
                         <div class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">

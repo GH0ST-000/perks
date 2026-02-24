@@ -104,6 +104,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(FamilyMember::class);
     }
 
+    public function offerClaims(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(OfferClaim::class);
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      */

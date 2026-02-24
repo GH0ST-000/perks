@@ -99,9 +99,24 @@
                                         </div>
                                     @endif
 
-                                    @if($offer->discount)
-                                        <div class="absolute top-4 right-4 bg-primary-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                                            {{ $offer->discount }}% ფასდაკლება
+                                    @if($offer->standard_discount || $offer->premium_discount)
+                                        <div class="absolute top-4 right-4 flex flex-col gap-1.5">
+                                            @if($offer->standard_discount > 0)
+                                                <div class="px-2.5 py-1 rounded-lg text-xs font-bold shadow-lg flex items-center gap-1.5" style="background-color: #C4C4C4; color: #1F2937;">
+                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M4 4a2 2 0 012-2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v16h12V4H6z"/>
+                                    </svg>
+                                                    <span>-{{ $offer->standard_discount }}%</span>
+                                                </div>
+                                            @endif
+                                            @if($offer->premium_discount > 0)
+                                                <div class="px-2.5 py-1 rounded-lg text-xs font-bold shadow-lg flex items-center gap-1.5" style="background-color: #EFBF04; color: #1F2937;">
+                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                                    </svg>
+                                                    <span>-{{ $offer->premium_discount }}%</span>
+                                                </div>
+                                            @endif
                                         </div>
                                     @endif
                                 </div>
@@ -128,6 +143,39 @@
                                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
                                             {{ $offer->description }}
                                         </p>
+                                    @endif
+
+                                    @if($offer->standard_discount || $offer->premium_discount)
+                                        <div class="mb-3 flex flex-col gap-1.5">
+                                            @if($offer->standard_discount > 0)
+                                                <div class="flex items-center justify-between text-xs py-1.5 px-2 rounded" style="background-color: rgba(196, 196, 196, 0.1);">
+                                                    <span class="font-medium" style="color: #6B7280;">Standard:</span>
+                                                    <span class="font-bold" style="color: #9CA3AF;">-{{ $offer->standard_discount }}%</span>
+                                                </div>
+                                            @endif
+                                            @if($offer->premium_discount > 0)
+                                                <div class="flex items-center justify-between text-xs py-1.5 px-2 rounded" style="background-color: rgba(239, 191, 4, 0.1);">
+                                                    <span class="font-medium" style="color: #92400E;">Premium:</span>
+                                                    <span class="font-bold" style="color: #B45309;">-{{ $offer->premium_discount }}%</span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
+
+                                    @if($offer->p_coins_reward > 0)
+                                        <div class="mb-3 p-2 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center gap-1.5">
+                                                    <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                                    </svg>
+                                                    <span class="text-xs font-bold text-amber-900 dark:text-amber-100">+{{ $offer->p_coins_reward }} P-coins</span>
+                                                </div>
+                                                <svg class="w-3 h-3 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                </svg>
+                                            </div>
+                                        </div>
                                     @endif
 
                                     <div class="mt-auto flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">

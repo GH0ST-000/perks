@@ -15,8 +15,10 @@ class LandingPageController extends Controller
 {
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        // Get premium offers with partner relationship (only non-expired)
+        // Get premium offers with partner relationship (only non-expired and marked as premium)
+        // Note: Premium visibility on Home Page is part of the Marketing Package benefit
         $premiumOffers = PremiumOffer::with(['partner', 'partner.categories'])
+            ->where('is_premium', true)
             ->whereDate('expires_at', '>=', now())
             ->orderBy('id', 'desc')
             ->limit(4)
@@ -43,7 +45,8 @@ class LandingPageController extends Controller
         // Get all categories for filtering
         $categories = Category::orderBy('name')->get();
 
-        // Start query (only non-expired offers)
+        // Start query (all non-expired offers - both premium and regular)
+        // Premium offers will be marked with a badge in the UI
         $query = PremiumOffer::with(['partner', 'partner.categories'])
             ->whereDate('expires_at', '>=', now());
 
@@ -79,7 +82,7 @@ class LandingPageController extends Controller
         return view('offers.index', compact('offers', 'categories'));
     }
 
-    public function showOffer(PremiumOffer $offer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    public function showOffer(PremiumOffer $offer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
     {
         // Check if offer is expired, redirect to offers page if expired
         if ($offer->day_left <= 0) {
@@ -89,7 +92,7 @@ class LandingPageController extends Controller
         // Load relationships
         $offer->load(['partner', 'partner.categories']);
 
-        // Get related offers from the same partner (only non-expired)
+        // Get related offers from the same partner (all non-expired offers)
         $relatedOffers = PremiumOffer::with(['partner', 'partner.categories'])
             ->where('partner_id', $offer->partner_id)
             ->where('id', '!=', $offer->id)
@@ -195,4 +198,54 @@ class LandingPageController extends Controller
 
         return view('blog.show', compact('post', 'relatedPosts'));
     }
+
+    public function claimOffer(PremiumOffer $offer): \Illuminate\Http\RedirectResponse
+    {
+        $user = auth()->user();
+
+        // Check if offer is expired
+        if ($offer->day_left <= 0) {
+            return redirect()->back()->with('error', 'ეს შეთავაზება ვადაგასულია.');
+        }
+
+        // Check if user already claimed this offer
+        $existingClaim = \App\Models\OfferClaim::where('user_id', $user->id)
+            ->where('premium_offer_id', $offer->id)
+            ->first();
+
+        if ($existingClaim) {
+            return redirect()->back()->with('info', 'თქვენ უკვე მიიღეთ ეს შეთავაზება.');
+        }
+
+        // Determine card type and discount based on user's subscription
+        $cardType = 'standard';
+        $discount = $offer->standard_discount;
+
+        // Check if user has active premium subscription
+        $activeSubscription = $user->subscriptions()
+            ->where('status', 'active')
+            ->where(function($query) {
+                $query->whereNull('expires_at')
+                      ->orWhere('expires_at', '>', now());
+            })
+            ->first();
+
+        if ($activeSubscription) {
+            $cardType = 'premium';
+            $discount = $offer->premium_discount;
+        }
+
+        // Create the claim
+        \App\Models\OfferClaim::create([
+            'user_id' => $user->id,
+            'premium_offer_id' => $offer->id,
+            'card_type' => $cardType,
+            'discount_received' => $discount,
+            'status' => 'pending',
+            'claimed_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'შეთავაზება წარმატებით მიღებულია! თქვენ მიიღეთ ' . $discount . '% ფასდაკლება.');
+    }
 }
+
