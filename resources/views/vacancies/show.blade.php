@@ -167,19 +167,15 @@
 
                             <!-- Apply Button -->
                             <div class="space-y-3">
-                                @if($vacancy->application_url)
-                                    <a href="{{ $vacancy->application_url }}" target="_blank" class="block w-full py-4 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg shadow-primary-600/30 text-center active:scale-95">
-                                        განაცხადის გაგზავნა
-                                    </a>
-                                @elseif($vacancy->application_email)
-                                    <a href="mailto:{{ $vacancy->application_email }}?subject=Application for {{ $vacancy->title }}" class="block w-full py-4 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg shadow-primary-600/30 text-center active:scale-95">
-                                        განაცხადის გაგზავნა
-                                    </a>
-                                @else
-                                    <button disabled class="w-full py-4 bg-gray-400 text-white rounded-xl font-bold text-lg shadow-lg opacity-50 cursor-not-allowed">
-                                        განაცხადის გაგზავნა
-                                    </button>
-                                @endif
+                                <button
+                                    onclick="openApplicationModal({{ $vacancy->id }}, '{{ $vacancy->title }}')"
+                                    class="w-full py-4 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg shadow-primary-600/30 text-center active:scale-95 flex items-center justify-center gap-2"
+                                >
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    განაცხადის გაგზავნა
+                                </button>
 
                                 <button onclick="window.print()" class="w-full py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-all duration-200">
                                     ბეჭდვა
@@ -252,6 +248,152 @@
         </section>
     </main>
 
+    <!-- Application Modal -->
+    <x-modal name="application-modal" maxWidth="2xl">
+        <div class="bg-white dark:bg-gray-800 p-6">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white" id="modal-title">განაცხადის გაგზავნა</h2>
+                <button
+                    onclick="closeApplicationModal()"
+                    class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Application Form -->
+            <form id="application-form" method="POST" action="{{ route('vacancies.apply', $vacancy->id) }}" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+
+                <!-- Name and Surname -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">სახელი, გვარი</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="სახელი, გვარი"
+                    >
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ელ-ფოსტა</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="ელ-ფოსტა"
+                    >
+                </div>
+
+                <!-- CV Upload -->
+                <div>
+                    <label for="cv" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ატვირთეთ CV</label>
+                    <div class="relative">
+                        <input
+                            type="file"
+                            id="cv"
+                            name="cv"
+                            required
+                            accept=".pdf"
+                            class="hidden"
+                            onchange="updateFileLabel(this)"
+                        >
+                        <label
+                            for="cv"
+                            class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+                        >
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-10 h-10 mb-3 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p class="mb-2 text-sm text-gray-600 dark:text-gray-400" id="file-label">
+                                    <span class="font-semibold">Click to upload</span> PDF
+                                </p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Cover Letter (Optional) -->
+                <div>
+                    <label for="cover_letter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">დამატებითი ინფორმაცია (არასავალდებულო)</label>
+                    <textarea
+                        id="cover_letter"
+                        name="cover_letter"
+                        rows="4"
+                        class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="დაწერეთ დამატებითი ინფორმაცია თქვენს შესახებ..."
+                    ></textarea>
+                </div>
+
+                <!-- Phone (Optional) -->
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ტელეფონი (არასავალდებულო)</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="ტელეფონი"
+                    >
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end gap-4 pt-4">
+                    <button
+                        type="button"
+                        onclick="closeApplicationModal()"
+                        class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-colors"
+                    >
+                        გაუქმება
+                    </button>
+                    <button
+                        type="submit"
+                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                    >
+                        გაგზავნა
+                    </button>
+                </div>
+            </form>
+        </div>
+    </x-modal>
+
     @include('components.landing.footer')
+
+    <script>
+        function openApplicationModal(vacancyId, vacancyTitle) {
+            document.getElementById('modal-title').textContent = 'განაცხადის გაგზავნა - ' + vacancyTitle;
+
+            // Reset form
+            const form = document.getElementById('application-form');
+            form.reset();
+            document.getElementById('file-label').innerHTML = '<span class="font-semibold">Click to upload</span> PDF';
+
+            // Open modal
+            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'application-modal' }));
+        }
+
+        function closeApplicationModal() {
+            window.dispatchEvent(new CustomEvent('close-modal', { detail: 'application-modal' }));
+        }
+
+        function updateFileLabel(input) {
+            const label = document.getElementById('file-label');
+            if (input.files && input.files[0]) {
+                label.innerHTML = '<span class="font-semibold">' + input.files[0].name + '</span>';
+            } else {
+                label.innerHTML = '<span class="font-semibold">Click to upload</span> PDF';
+            }
+        }
+    </script>
 @endsection
 

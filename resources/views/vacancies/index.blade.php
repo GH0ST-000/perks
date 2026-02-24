@@ -70,11 +70,16 @@
                 @if($vacancies->count() > 0)
                     <div class="space-y-4">
                         @foreach($vacancies as $vacancy)
-                            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
+                            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-600 hover:shadow-lg transition-all">
                                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                                    <!-- Left Side: Job Info -->
-                                    <div class="flex-1">
-                                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">{{ $vacancy->title }}</h3>
+                                    <!-- Left Side: Job Info - Make it clickable -->
+                                    <a href="{{ route('vacancies.show', $vacancy->slug) }}" class="flex-1 group">
+                                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{{ $vacancy->title }}</h3>
+                                        
+                                        @if($vacancy->description)
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{{ Str::limit($vacancy->description, 150) }}</p>
+                                        @endif
+                                        
                                         <div class="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400 text-sm">
                                             @if($vacancy->department)
                                                 <div class="flex items-center gap-2">
@@ -103,16 +108,38 @@
                                                     <span>{{ $vacancy->employment_type }}</span>
                                                 </div>
                                             @endif
+                                            
+                                            @if($vacancy->salary_range !== 'დასახელებულია')
+                                                <div class="flex items-center gap-2 font-semibold text-primary-600 dark:text-primary-400">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    <span>{{ $vacancy->salary_range }}</span>
+                                                </div>
+                                            @endif
                                         </div>
-                                    </div>
+                                    </a>
 
-                                    <!-- Right Side: Apply Button -->
-                                    <div>
+                                    <!-- Right Side: Action Buttons -->
+                                    <div class="flex gap-3">
+                                        <a 
+                                            href="{{ route('vacancies.show', $vacancy->slug) }}"
+                                            class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium px-6 py-3 rounded-lg transition-colors whitespace-nowrap flex items-center gap-2"
+                                        >
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            </svg>
+                                            დეტალურად
+                                        </a>
                                         <button
                                             onclick="openApplicationModal({{ $vacancy->id }}, '{{ $vacancy->title }}')"
-                                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors whitespace-nowrap"
+                                            class="bg-primary-600 hover:bg-primary-700 text-white font-medium px-6 py-3 rounded-lg transition-colors whitespace-nowrap flex items-center gap-2"
                                         >
-                                            განაცხადის გაგზავნა
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            განაცხადი
                                         </button>
                                     </div>
                                 </div>

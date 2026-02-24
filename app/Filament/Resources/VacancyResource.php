@@ -139,20 +139,30 @@ class VacancyResource extends Resource
                     ])
                     ->columns(2),
                 Forms\Components\Section::make('დამატებითი ინფორმაცია')
+                    ->description('ეს ველები აუცილებლად უნდა შეივსოს ვაკანსიის დეტალების საჩვენებლად')
                     ->schema([
                         Forms\Components\Textarea::make('requirements')
                             ->label('მოთხოვნები')
+                            ->required()
                             ->rows(5)
+                            ->placeholder('ჩამოწერეთ ვაკანსიის მოთხოვნები...')
+                            ->helperText('მოთხოვნები რომელიც კანდიდატმა უნდა აკმაყოფილოს')
                             ->columnSpanFull(),
                         Forms\Components\Textarea::make('responsibilities')
                             ->label('პასუხისმგებლობა')
+                            ->required()
                             ->rows(5)
+                            ->placeholder('ჩამოწერეთ სამუშაოს პასუხისმგებლობები...')
+                            ->helperText('რაზე იქნება პასუხისმგებელი თანამშრომელი')
                             ->columnSpanFull(),
                         Forms\Components\Textarea::make('benefits')
                             ->label('პრივილეგიები')
                             ->rows(5)
+                            ->placeholder('ჩამოწერეთ რას სთავაზობთ კანდიდატს...')
+                            ->helperText('ბენეფიტები და პრივილეგიები (შეიძლება დარჩეს ცარიელი)')
                             ->columnSpanFull(),
                     ])
+                    ->collapsed(false)
                     ->collapsible(),
                 Forms\Components\Section::make('განაცხადის ინფორმაცია')
                     ->schema([
