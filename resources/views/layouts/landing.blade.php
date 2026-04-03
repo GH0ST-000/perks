@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Perks.ge - Employee Benefits Platform</title>
+    <title>Perks აქციეთ ზრუნვა მოტივაციად</title>
+    <meta name="description" content="აღმოაჩინეთ პლატფორმა, რომელიც ქმნის დაზოგვის შესაძლებლობას თანამშრომლებისთვის და უნიკალურ ბენეფიტს კომპანიისთვის">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

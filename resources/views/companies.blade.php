@@ -15,10 +15,10 @@
                 <!-- Left Content -->
                 <div class="flex-1 space-y-6">
                     <h1 class="text-4xl md:text-6xl font-black leading-tight">
-                        იზრუნეთ თქვენს გუნდზე <span class="text-primary-400">Perks</span>-ით.
+                        გააძლიერე გუნდი. შექმენი საუკეთესო სამუშაო გარემო.
                     </h1>
                     <p class="text-xl text-gray-300 max-w-lg">
-                        თანამშრომელთა ბენეფიტების პლატფორმა, რომელიც ზრდის ლოიალობას და კმაყოფილებას.
+                        კომპანია ინარჩუნებს საუკეთესო კადრებს მოტივაციის ზრდით, თანამშრომელი კი იღებს ყოველდღიურ სარგებელს იქ, სადაც ყველაზე მეტად სჭირდება
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
                         <a href="#contact-form" class="inline-flex items-center justify-center px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold text-lg transition-colors shadow-lg">
@@ -65,7 +65,7 @@
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl font-bold text-center dark:text-white mb-4">როგორ მუშაობს?</h2>
             <p class="text-center text-gray-500 dark:text-gray-400 mb-16 max-w-2xl mx-auto">
-                მარტივი 3 ნაბიჯი თქვენი გუნდისთვის ბენეფიტების სისტემის დასაწყებად
+                მხოლოდ 3 ნაბიჯი მოტივირებულ და კმაყოფილ გუნდამდე
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -113,7 +113,7 @@
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl font-bold text-center dark:text-white mb-4">რატომ Perks?</h2>
             <p class="text-center text-gray-500 dark:text-gray-400 mb-16 max-w-2xl mx-auto">
-                აღმოაჩინეთ რა სარგებელს მოუტანს Perks თქვენს კომპანიას და თანამშრომლებს
+                რა სარგებელს მოუტანს Perks თქვენს კომპანიას და თანამშრომლებს
             </p>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -136,19 +136,19 @@
                             <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            <span class="text-gray-600 dark:text-gray-300">გამარტივებული ადმინისტრირება HR-ისთვის</span>
+                            <span class="text-gray-600 dark:text-gray-300"> კადრების დენადობის შემცირება</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            <span class="text-gray-600 dark:text-gray-300">დეტალური რეპორტინგი და ანალიტიკა</span>
+                            <span class="text-gray-600 dark:text-gray-300">დამსაქმებლის იმიჯის გაძლიერება</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            <span class="text-gray-600 dark:text-gray-300">მოქნილი პაკეტები და ფასები</span>
+                            <span class="text-gray-600 dark:text-gray-300">პოზიტიური კორპორატიული კულტურის ჩამოყალიბება</span>
                         </li>
                     </ul>
                 </div>
@@ -184,7 +184,7 @@
                             <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            <span class="text-gray-600 dark:text-gray-300">მარტივი და ხელსაყრელი აპლიკაცია</span>
+                            <span class="text-gray-600 dark:text-gray-300">საკუთარი პერსონალური ასისტენტი</span>
                         </li>
                     </ul>
                 </div>

@@ -14,10 +14,10 @@
                 ბიზნეს პარტნიორებისთვის
             </span>
             <h1 class="text-4xl md:text-6xl font-black mb-6 text-gray-900 dark:text-white">
-                გაზარდეთ თქვენი ბიზნესი <span class="text-primary-600">Perks</span>-თან ერთად
+                გაზარდეთ ბრენდის ცნობადობა
             </h1>
             <p class="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-10">
-                მიიღეთ წვდომა ათასობით გადახდისუნარიან კორპორატიულ კლიენტზე და მართეთ თქვენი მარკეტინგი ეფექტურად
+                Perks აკავშირებს გამორჩეულ სივრცეებსა და სერვისებს იმ კომპანიებთან, რომლებიც მუდმივად ეძებენ საუკეთესო გამოცდილებას თავიანთი თანამშრომლებისთვის.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="#partner-form" class="inline-flex items-center justify-center px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold text-lg transition-colors shadow-lg">
@@ -71,7 +71,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold dark:text-white mb-2">Push შეტყობინებები</h3>
-                <p class="text-gray-500 dark:text-gray-400">პირდაპირი კომუნიკაცია მომხმარებელთან</p>
+                <p class="text-gray-500 dark:text-gray-400">ექსკლუზიური შეთავაზებები პირდაპირ მომხმარებლის ეკრანზე</p>
             </div>
 
             <!-- Tool 2 -->
@@ -82,7 +82,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold dark:text-white mb-2">სოციალური მედია</h3>
-                <p class="text-gray-500 dark:text-gray-400">პოსტები ჩვენს გვერდებზე</p>
+                <p class="text-gray-500 dark:text-gray-400">მიზნობრივი კამპანიები ჩვენს პლატფორმებზე, თქვენი ბრენდის ცნობადობისა და ლოიალობის გასაზრდელად</p>
             </div>
 
             <!-- Tool 3 -->
@@ -93,7 +93,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold dark:text-white mb-2">Email მარკეტინგი</h3>
-                <p class="text-gray-500 dark:text-gray-400">ყოველთვიური დაიჯესტი</p>
+                <p class="text-gray-500 dark:text-gray-400">პრიორიტეტული განთავსება Perks-ის ყოველთვიურ კორპორატიულ დაიჯესტში, რომელსაც ათასობით დასაქმებული კითხულობს</p>
             </div>
         </div>
     </div>
@@ -102,8 +102,8 @@
     <div class="bg-gray-50 dark:bg-gray-800/50 py-20">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold dark:text-white mb-4">რატომ უნდა გახდეთ Perks პარტნიორი?</h2>
-                <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">აღმოაჩინეთ სარგებელი, რომელსაც მიიღებთ ჩვენს პლატფორმაში</p>
+                <h2 class="text-3xl font-bold dark:text-white mb-4">რატომ უნდა გახდე პარტნიორი?</h2>
+                <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">განათავსეთ თქვენი შეთავაზება და მიეცით მიზნობრივ აუდიტორიას, თქვენი ბრენდის აღმოჩენის შესაძლებლობა</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -136,8 +136,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
                     </div>
-                    <h3 class="font-bold dark:text-white mb-2">დეტალური ანალიტიკა</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">პანელში იხილეთ ყველა მონაცემი</p>
+                    <h3 class="font-bold dark:text-white mb-2">მომხმარებლის ქცევის ანალიტიკა</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">გაიცანით თქვენი აუდიტორია. მიიღეთ ზუსტი მონაცემები და რეპორტები, რათა მუდმივად გააუმჯობესოთ თქვენი შეთავაზებები</p>
                 </div>
 
                 <!-- Benefit 4 -->
@@ -148,6 +148,7 @@
                         </svg>
                     </div>
                     <h3 class="font-bold dark:text-white mb-2">პრემიუმ ხილვადობა</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">იყავით მუდმივად თვალსაჩინო მიზნობრივი აუდიტორიისთვის</p>
                     <p class="text-sm text-gray-500 dark:text-gray-400">თქვენი ბრენდი პრემიუმ კატალოგში</p>
                 </div>
             </div>
@@ -158,8 +159,8 @@
     <div class="py-20 bg-white dark:bg-gray-800">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold dark:text-white mb-4">როგორ გავხდეთ პარტნიორი?</h2>
-                <p class="text-gray-500 dark:text-gray-400">მარტივი 4 ნაბიჯი თქვენი ბიზნესის დასაწყებად Perks-ზე</p>
+                <h2 class="text-3xl font-bold dark:text-white mb-4">როგორ გავხდე პარტნიორი?</h2>
+                <p class="text-gray-500 dark:text-gray-400">მარტივი 4 ნაბიჯი დასაწყებად</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -286,26 +287,25 @@
         <div class="max-w-3xl mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold dark:text-white mb-4">ხშირად დასმული კითხვები</h2>
-                <p class="text-gray-500 dark:text-gray-400">პასუხები თქვენს კითხვებზე</p>
             </div>
 
             <div class="space-y-6">
                 <!-- FAQ 1 -->
                 <div class="bg-gray-50 dark:bg-gray-700/30 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
-                    <h3 class="font-bold text-lg dark:text-white mb-2">რა ღირს პარტნიორობა?</h3>
-                    <p class="text-gray-600 dark:text-gray-300">პარტნიორად დარეგისტრირება უფასოა. მოქმედებს მხოლოდ საკომისიო სისტემა.</p>
+                    <h3 class="font-bold text-lg dark:text-white mb-2">რა ინვესტიციას მოითხოვს Perks-თან პარტნიორობა?</h3>
+                    <p class="text-gray-600 dark:text-gray-300">პლატფორმაზე განთავსება სრულიად უფასოა. რამდენიმე მარტივი ნაბიჯის გავლით, თქვენი შეთავაზება უკვე ხელმისაწვდომი გახდება ათასობით კორპორატიული მომხმარებლისთვის</p>
                 </div>
 
                 <!-- FAQ 2 -->
                 <div class="bg-gray-50 dark:bg-gray-700/30 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
-                    <h3 class="font-bold text-lg dark:text-white mb-2">როგორ აღვრიცხავ მომხმარებლებს?</h3>
-                    <p class="text-gray-600 dark:text-gray-300">ჩვენი Partner App-ის მეშვეობით მარტივად დაასკანერებთ QR კოდს.</p>
+                    <h3 class="font-bold text-lg dark:text-white mb-2">როგორ ვაკონტროლებ ფასდაკლების გამოყენების სტატისტიკას?</h3>
+                    <p class="text-gray-600 dark:text-gray-300">ჩვენი სპეციალური Partner აპლიკაციით. მომხმარებლის QR კოდის 1 კლიკით დასკანერების შემდეგ, ვიზიტი ავტომატურად ფიქსირდება და მონაცემები რეალურ დროში აისახება თქვენს პირად სამართავ პანელში</p>
                 </div>
 
                 <!-- FAQ 3 -->
                 <div class="bg-gray-50 dark:bg-gray-700/30 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
-                    <h3 class="font-bold text-lg dark:text-white mb-2">რამდენი ხანი სჭირდება დამატებას?</h3>
-                    <p class="text-gray-600 dark:text-gray-300">განაცხადის შევსებიდან 2-3 სამუშაო დღეში თქვენი ობიექტი გამოჩნდება აპლიკაციაში.</p>
+                    <h3 class="font-bold text-lg dark:text-white mb-2">რამდენ ხანში ჩაერთვება ჩემი ბიზნესი პარტნიორთა ქსელში?</h3>
+                    <p class="text-gray-600 dark:text-gray-300">განაცხადის დადასტურებიდან სულ რაღაც 2-3 სამუშაო დღეში თქვენი ბრენდი სრულად ინტეგრირდება ჩვენს სისტემაში და მზად იქნება სტუმრების მისაღებად</p>
                 </div>
             </div>
         </div>

@@ -4,7 +4,7 @@
         <div class="flex justify-between items-end mb-12">
             <div>
                 <h2 class="text-3xl font-bold dark:text-white mb-2">პრემიუმ შეთავაზებები</h2>
-                <p class="text-gray-500">ექსკლუზიური გარიგებები ჩვენი ყველაზე მაღალი რეიტინგის პარტნიორებისგან</p>
+                <p class="text-gray-500">აღმოაჩინე საუკეთესო ბენეფიტები</p>
             </div>
             <a href="{{ route('offers.index') }}" class="text-primary-600 font-bold flex items-center gap-2 hover:translate-x-1 transition-transform">
                 <span>ყველას ნახვა</span>
@@ -134,7 +134,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                     </svg>
                     <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">პრემიუმ შეთავაზებები არ მოიძებნა</h3>
-                    <p class="text-gray-500">მალე დაბრუნდით ექსკლუზიური გარიგებებისთვის!</p>
+                    <p class="text-gray-500">მალე დაბრუნდით საუკეთესო ბენეფიტებისთვის!</p>
                 </div>
             @endforelse
         </div>

@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Perks.ge - Employee Benefits Platform</title>
+    <title>Perks აქციეთ ზრუნვა მოტივაციად</title>
+    <meta name="description" content="აღმოაჩინეთ პლატფორმა, რომელიც ქმნის დაზოგვის შესაძლებლობას თანამშრომლებისთვის და უნიკალურ ბენეფიტს კომპანიისთვის">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -172,7 +173,7 @@
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-bold dark:text-white mb-4">კატეგორიები</h2>
-                    <p class="text-gray-500 max-w-2xl mx-auto">იპოვე ზუსტად ის, რაც გჭირდება ჩვენი პარტნიორებისგან.</p>
+                    <p class="text-gray-500 max-w-2xl mx-auto">აირჩიე სასურველი კატეგორია</p>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -196,33 +197,36 @@
         <section id="pricing" class="py-20 bg-white dark:bg-gray-900">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl font-bold dark:text-white mb-4">აირჩიეთ თქვენი პაკეტი</h2>
-                    <p class="text-gray-500 max-w-2xl mx-auto">საუკეთესო პირობები ინდივიდუალური და კორპორატიული წევრებისთვის</p>
+                    <h2 class="text-3xl font-bold dark:text-white mb-4">აირჩიე პაკეტი</h2>
+                    <p class="text-gray-500 max-w-2xl mx-auto">ყოველთვიური ბენეფიტების პაკეტი</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <!-- Basic Plan -->
+                    <!-- Member Plan -->
                     <div class="rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 relative hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
-                        <h3 class="text-xl font-bold dark:text-white mb-2">სტანდარტი</h3>
-                        <p class="text-gray-500 text-sm mb-6">იდეალურია ინდივიდუალური გამოყენებისთვის</p>
+                        <h3 class="text-xl font-bold dark:text-white mb-2">Member</h3>
+                        <p class="text-gray-500 text-sm mb-6"></p>
                         <div class="flex items-end gap-1 mb-8">
-                            <span class="text-4xl font-bold dark:text-white">29₾</span>
+                            <span class="text-4xl font-bold dark:text-white">19₾</span>
                             <span class="text-gray-500 mb-1">/თვეში</span>
                         </div>
 
                         <ul class="space-y-4 mb-8">
                             <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
-                                წვდომა ყველა შეთავაზებაზე
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+                                სტანდარტული ფასდაკლებები ობიექტებში
                             </li>
                             <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
-                                მობილური აპლიკაცია
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+                                ექსკლუზიური შეთავაზებები
                             </li>
-
                             <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
-                                24/7 მხარდაჭერა
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+                                P-Coin-ის დაგროვების სისტემა
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+                                ოჯახის წევრის დამატება
                             </li>
                         </ul>
 
@@ -231,39 +235,39 @@
                         </button>
                     </div>
 
-                    <!-- Business Plan -->
+                    <!-- Limited Plan -->
                     <div class="rounded-3xl p-8 border border-primary-600 bg-primary-50/50 dark:bg-primary-900/10 relative hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
                         <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase">
                             ყველაზე პოპულარული
                         </div>
-                        <h3 class="text-xl font-bold dark:text-white mb-2">პრემიუმი</h3>
-                        <p class="text-gray-500 text-sm mb-6">საუკეთესო არჩევანი ოჯახისთვის</p>
+                        <h3 class="text-xl font-bold dark:text-white mb-2">Limited</h3>
+                        <p class="text-gray-500 text-sm mb-6"></p>
                         <div class="flex items-end gap-1 mb-8">
-                            <span class="text-4xl font-bold dark:text-white">49₾</span>
+                            <span class="text-4xl font-bold dark:text-white">29₾</span>
                             <span class="text-gray-500 mb-1">/თვეში</span>
                         </div>
 
                         <ul class="space-y-4 mb-8">
                             <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
-                                წვდომა ყველა შეთავაზებაზე
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+                                პრემიუმ ფასდაკლებები ობიექტებში
                             </li>
                             <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
-                                მობილური აპლიკაცია
-
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+                                ექსკლუზიური შეთავაზებები
                             </li>
                             <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
-                                24/7 მხარდაჭერა
-
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+                                1.5-ჯერ მეტი P-Coin დაგროვების სისტემა
                             </li>
                             <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+                                პერსონალური ასისტენტი
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
                                 ოჯახის წევრის დამატება
-
                             </li>
-
                         </ul>
 
                         <button class="w-full py-4 px-5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm flex items-center justify-center gap-2 bg-primary-600 text-white hover:bg-primary-700 shadow-md shadow-primary-600/20 dark:shadow-none">

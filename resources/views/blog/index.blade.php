@@ -10,7 +10,6 @@
                 <div class="flex flex-col gap-6 mb-10">
                     <div>
                         <h1 class="text-3xl font-bold dark:text-white mb-2">ბლოგი</h1>
-                        <p class="text-gray-500 dark:text-gray-400">სიახლეები, გზამკვლევები და სასარგებლო ინფორმაცია</p>
                     </div>
 
                     <!-- Search Bar -->
