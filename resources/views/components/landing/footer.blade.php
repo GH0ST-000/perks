@@ -42,9 +42,10 @@
             <h4 class="font-bold text-lg mb-6">რესურსები</h4>
             <ul class="space-y-4 text-sm text-gray-400">
                 <li><a href="{{ route('blog.index') }}" class="hover:text-white transition-colors">ბლოგი</a></li>
-                <li><a href="#" class="hover:text-white transition-colors">ჩვენ შესახებ</a></li>
+                <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">ჩვენს შესახებ</a></li>
                 <li><a href="{{ route('vacancies.index') }}" class="hover:text-white transition-colors">კარიერა</a></li>
-                <li class="text-gray-400">კონფიდენციალურობის პოლიტიკა</li>
+                <li><a href="#" onclick="openFooterModal('termsModal'); return false;" class="hover:text-white transition-colors cursor-pointer">წესები და პირობები</a></li>
+                <li><a href="#" onclick="openFooterModal('privacyModal'); return false;" class="hover:text-white transition-colors cursor-pointer">კონფიდენციალურობის პოლიტიკა</a></li>
             </ul>
         </div>
 
@@ -77,8 +78,295 @@
     <div class="max-w-7xl mx-auto px-4 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
         <p>&copy; {{ date('Y') }} Perks.ge. ყველა უფლება დაცულია.</p>
         <div class="flex gap-6">
-            <a href="#" class="hover:text-white">წესები და პირობები</a>
-            <a href="#" class="hover:text-white">კონფიდენციალურობის პოლიტიკა</a>
+            <a href="#" onclick="openFooterModal('termsModal'); return false;" class="hover:text-white transition-colors">წესები და პირობები</a>
+            <a href="#" onclick="openFooterModal('privacyModal'); return false;" class="hover:text-white transition-colors">კონფიდენციალურობის პოლიტიკა</a>
         </div>
     </div>
 </footer>
+
+<!-- Privacy Policy Modal -->
+<div id="privacyModal" class="fixed inset-0 z-[9999] hidden">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeFooterModal('privacyModal')"></div>
+    <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl max-h-[85vh] flex flex-col transform transition-all">
+                <div class="sticky top-0 z-10 bg-white rounded-t-2xl border-b border-gray-100 px-8 py-6 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">კონფიდენციალურობის პოლიტიკა</h2>
+                        <p class="text-sm text-gray-500 mt-1">შპს ''პერქს'' · ს/ნ: 400455690</p>
+                    </div>
+                    <button onclick="closeFooterModal('privacyModal')" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="overflow-y-auto px-8 py-6 text-gray-700 leading-relaxed space-y-6 text-sm">
+                    <p>შპს ''პერქს'' ს/ნ: 400455690 (შემდგომში „Perks", „ჩვენ" ან „კომპანია") პატივს სცემს თქვენს პირად სივრცეს. წინამდებარე დოკუმენტი შემუშავებულია „პერსონალურ მონაცემთა დაცვის შესახებ" საქართველოს კანონის მოთხოვნათა სრული დაცვით და განსაზღვრავს ჩვენი პლატფორმით (www.perks.ge) სარგებლობისას თქვენი მონაცემების დამუშავების, შენახვისა და უსაფრთხოების წესებს.</p>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">1. რა მონაცემებს ვაგროვებთ და რა არის დამუშავების სამართლებრივი საფუძველი?</h3>
+                        <p class="mb-3">ჩვენ ვაგროვებთ მხოლოდ იმ ინფორმაციას, რაც აუცილებელია სერვისის უზრუნველსაყოფად. თითოეული მონაცემის დამუშავებას აქვს თავისი მკაცრი სამართლებრივი საფუძველი:</p>
+
+                        <div class="space-y-4 pl-4">
+                            <div>
+                                <h4 class="font-semibold text-gray-800">საიდენტიფიკაციო, ლოკაციური და საკონტაქტო მონაცემები:</h4>
+                                <ul class="list-disc pl-5 mt-1 space-y-1 text-gray-600">
+                                    <li>სახელი, გვარი;</li>
+                                    <li>პირადი ნომერი (პლატფორმაზე მომხმარებლის უნიკალური იდენტიფიკაციისთვის, გაორებული ანგარიშებისა და თაღლითობის პრევენციის მიზნით);</li>
+                                    <li>საცხოვრებელი ქალაქი (თქვენს ლოკაციაზე მაქსიმალურად მორგებული, რელევანტური პარტნიორი ობიექტების შესათავაზებლად);</li>
+                                    <li>ტელეფონის ნომერი (აუცილებელია ფასდაკლების SMS ვერიფიკაციისთვის) და ელ.ფოსტა.</li>
+                                </ul>
+                                <p class="mt-1 text-gray-500 italic">სამართლებრივი საფუძველი: სახელშეკრულებო ვალდებულების შესრულება და თქვენი თანხმობა.</p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold text-gray-800">კორპორატიული მონაცემები:</h4>
+                                <p class="text-gray-600">ინფორმაცია თქვენი დამსაქმებელი კომპანიის შესახებ და არჩეული სააბონენტო პაკეტი.</p>
+                                <p class="mt-1 text-gray-500 italic">სამართლებრივი საფუძველი: სახელშეკრულებო ვალდებულების შესრულება.</p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold text-gray-800">ტრანზაქციული და აქტივობის მონაცემები:</h4>
+                                <p class="text-gray-600">პარტნიორ ობიექტებში ვიზიტების ისტორია, დაგროვებული და დახარჯული P-Coin-ები.</p>
+                                <p class="mt-1 text-gray-500 italic">სამართლებრივი საფუძველი: ჩვენი ლეგიტიმური ინტერესი (სერვისის გაუმჯობესება) და სახელშეკრულებო ვალდებულება.</p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold text-gray-800">ტექნოლოგიური მონაცემები (Cookies):</h4>
+                                <p class="text-gray-600">IP მისამართი, მოწყობილობისა და ბრაუზერის ტიპი, სესიის სტატუსი.</p>
+                                <p class="mt-1 text-gray-500 italic">სამართლებრივი საფუძველი: თქვენი თანხმობა (ვებსაიტზე ავტორიზაციისას).</p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold text-gray-800">ფინანსური მონაცემები:</h4>
+                                <p class="text-gray-600">საგადახდო ბარათის ნაწილობრივი მონაცემები (მხოლოდ პირველი 6 და ბოლო 4 ციფრი) გამოწერის ავტომატური განახლების სამართავად (სრულ მონაცემებს ამუშავებს პარტნიორი ბანკი).</p>
+                                <p class="mt-1 text-gray-500 italic">სამართლებრივი საფუძველი: კანონისმიერი ვალდებულება და ხელშეკრულების შესრულება.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">2. რატომ ვაგროვებთ და როგორ ვიყენებთ თქვენს მონაცემებს?</h3>
+                        <p class="mb-2">ჩვენ ვიყენებთ თქვენს მონაცემებს მხოლოდ მკაცრად განსაზღვრული მიზნებისთვის:</p>
+                        <ul class="list-disc pl-5 space-y-2 text-gray-600">
+                            <li><strong class="text-gray-800">ვერიფიკაცია და მომსახურების გაწევა:</strong> თქვენი ტელეფონის ნომერი აუცილებელია პარტნიორ ობიექტზე ერთჯერადი SMS კოდის მისაღებად და ფასდაკლების ვალიდაციისთვის.</li>
+                            <li><strong class="text-gray-800">ანგარიშის მართვა:</strong> Family Sharing-ის ფარგლებში ოჯახის წევრის დამატების ან პაკეტის ცვლილების პროცესების უზრუნველსაყოფად.</li>
+                            <li><strong class="text-gray-800">პირდაპირი მარკეტინგი და კომუნიკაცია:</strong> სიახლეების, ახალი პარტნიორი ობიექტებისა და სპეციალური შეთავაზებების შესახებ ინფორმაციის მოსაწოდებლად.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">3. ვის ვუზიარებთ მომხმარებლის მონაცემებს?</h3>
+                        <p class="mb-3">Perks იცავს თქვენი მონაცემების კონფიდენციალურობას და იღებს ვალდებულებას არ გადასცეს მესამე პირს. მონაცემების გაზიარება ხდება მხოლოდ გამონაკლის შემთხვევებში:</p>
+                        <ul class="list-disc pl-5 space-y-2 text-gray-600">
+                            <li><strong class="text-gray-800">პარტნიორ ობიექტებთან:</strong> ვალიდაციის პროცესში პარტნიორი ობიექტი იყენებს მხოლოდ თქვენს საიდენტიფიკაციო მონაცემს (ტელეფონის ნომერს/კოდს), რათა მოხდეს ფასდაკლების დადასტურება ჩვენს სისტემაში. მათ არ აქვთ წვდომა თქვენს სრულ პირად პროფილსა და ვიზიტების ისტორიაზე.</li>
+                            <li><strong class="text-gray-800">სერვის-პროვაიდერებთან (მესამე მხარეებთან):</strong> სატელეკომუნიკაციო ოპერატორებთან (SMS კოდების გამოსაგზავნად), საგადახდო სისტემებთან და სერვერულ პროვაიდერებთან, რომლებიც მოქმედებენ მკაცრი კონფიდენციალურობის ხელშეკრულების საფუძველზე.</li>
+                            <li><strong class="text-gray-800">სახელმწიფო ორგანოებთან:</strong> საქართველოს მოქმედი კანონმდებლობით გათვალისწინებულ შემთხვევებში (მაგ. დანაშაულის გამოძიება ან საგადასახადო აუდიტი).</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">4. თაღლითობის პრევენცია და ავტომატური გადაწყვეტილებები (პროფაილინგი)</h3>
+                        <p>თქვენი მონაცემები გვეხმარება, დავადგინოთ ხომ არ გამოიყენება პროფილი არაკეთილსინდისიერად (მაგალითად, SMS კოდის სხვა პირისთვის გადაცემა). სისტემამ შესაძლოა ავტომატური რეჟიმით დროებით შეაჩეროს თქვენი ანგარიში, თუ დაფიქსირდა არაბუნებრივი ან საეჭვო ტრანზაქციული აქტივობა. თქვენ გაქვთ უფლება, მოითხოვოთ ამგვარი ავტომატური გადაწყვეტილების გადახედვა ჩვენი გუნდის (ადამიანის) მიერ.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">5. მონაცემთა შენახვის ვადები</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-gray-600">
+                            <li><strong class="text-gray-800">აქტიური მომსახურება:</strong> თქვენი მონაცემები ინახება პლატფორმით სარგებლობის მთელი პერიოდის განმავლობაში.</li>
+                            <li><strong class="text-gray-800">სესიის მონაცემები:</strong> ავტორიზაციის სტატუსი ვებსაიტზე ინახება 4 თვის ვადით, გარდა იმ შემთხვევისა, თუ თქვენ თავად არ გამოხვალთ სისტემიდან (Log out).</li>
+                            <li><strong class="text-gray-800">მომსახურების შეწყვეტის შემდეგ:</strong> ანგარიშის გაუქმების შემდეგ, საგადასახადო/ფინანსური ანგარიშგებისა და შესაძლო სამართლებრივი დავების პრევენციის მიზნით, მონაცემები ინახება არაუმეტეს 3 წლის ვადით. ამ ვადის გასვლის შემდეგ მონაცემები სრულად ნადგურდება.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">6. პირდაპირი მარკეტინგის შეწყვეტის უფლება</h3>
+                        <p class="mb-2">თქვენ ნებისმიერ დროს გაქვთ უფლება, მოითხოვოთ პირდაპირი მარკეტინგის (სარეკლამო SMS ან Email შეტყობინებების) შეწყვეტა:</p>
+                        <ul class="list-disc pl-5 space-y-2 text-gray-600">
+                            <li><strong class="text-gray-800">პირადი პროფილიდან:</strong> პარამეტრების განყოფილებაში შესაბამისი ღილაკის მონიშვნის მოხსნით.</li>
+                            <li><strong class="text-gray-800">ელ.ფოსტით:</strong> მოგვწერეთ მისამართზე privacy@perks.ge სათაურით "MARKETING-OFF".</li>
+                        </ul>
+                        <p class="mt-2 text-gray-500 italic">მარკეტინგული შეტყობინებების გათიშვა არ იწვევს საოპერაციო (მაგ. ვერიფიკაციის SMS კოდები) შეტყობინებების მიწოდების შეწყვეტას.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">7. არასრულწლოვანი პირები</h3>
+                        <p>Perks-ის პლატფორმა შექმნილია სრულწლოვანი პირებისთვის. ჩვენ მიზანმიმართულად არ ვაგროვებთ მონაცემებს 18 წლამდე პირების შესახებ. პლატფორმაზე ავტორიზაციით თქვენ ადასტურებთ, რომ ხართ სულ მცირე 18 წლის. არასრულწლოვანი პირის მიერ რეგისტრაციის აღმოჩენის შემთხვევაში, მისი პროფილი დაუყოვნებლივ გაუქმდება.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">8. მომხმარებლის უფლებები და მონაცემთა მართვა</h3>
+                        <p class="mb-2">საქართველოს კანონმდებლობის შესაბამისად, თქვენ ნებისმიერ დროს გაქვთ უფლება მოითხოვოთ:</p>
+                        <ul class="list-disc pl-5 space-y-2 text-gray-600">
+                            <li>ინფორმაცია იმის შესახებ, თუ რომელი მონაცემები მუშავდება ჩვენ მიერ;</li>
+                            <li>მონაცემების გასწორება, განახლება ან დამატება;</li>
+                            <li>მონაცემების პორტირება (ასლის გადმოცემა);</li>
+                            <li>მონაცემთა დამუშავების შეწყვეტა, დაბლოკვა ან სრულად წაშლა (Right to be Forgotten), თუ აღარ არსებობს მათი შენახვის კანონისმიერი საფუძველი;</li>
+                            <li>თქვენ მიერ გაცემული თანხმობის გამოხმობა.</li>
+                        </ul>
+                        <p class="mt-2 text-gray-500 italic">იმ შემთხვევაში, თუ თვლით, რომ თქვენი უფლებები დაირღვა, გაქვთ უფლება საჩივრით მიმართოთ პერსონალურ მონაცემთა დაცვის სამსახურს.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">9. უსაფრთხოება</h3>
+                        <p>ჩვენ ვიყენებთ უსაფრთხოების თანამედროვე ტექნიკურ და ორგანიზაციულ სტანდარტებს (მათ შორის, დაშიფრვას) თქვენი მონაცემების არაავტორიზებული წვდომისგან, დაკარგვისგან ან განადგურებისგან დასაცავად. გთხოვთ, არ გაანდოთ თქვენი პაროლი და SMS კოდები მესამე პირებს, წინააღმდეგ შემთხვევაში კომპანია იხსნის პასუხისმგებლობას მონაცემთა გაჟონვაზე.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">10. ცვლილებები პოლიტიკაში</h3>
+                        <p>წინამდებარე დოკუმენტში შეიძლება განხორციელდეს ცვლილებები. მნიშვნელოვანი ცვლილებების შემთხვევაში, თქვენ მიიღებთ პირად შეტყობინებას ან განახლებული ვერსია გამოქვეყნდება ვებგვერდზე. პლატფორმით სარგებლობის გაგრძელება ჩაითვლება განახლებულ პირობებზე თანხმობად.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">11. საკონტაქტო ინფორმაცია და მონაცემთა დაცვის ოფიცერი (DPO)</h3>
+                        <p>თუ გაქვთ კითხვები მონაცემთა დაცვასთან დაკავშირებით ან გსურთ თქვენი უფლებების გამოყენება, გთხოვთ დაგვიკავშირდეთ - ელ.ფოსტა: <a href="mailto:privacy@perks.ge" class="text-blue-600 hover:underline">privacy@perks.ge</a></p>
+                    </div>
+                </div>
+
+                <div class="sticky bottom-0 bg-white rounded-b-2xl border-t border-gray-100 px-8 py-4 flex justify-end">
+                    <button onclick="closeFooterModal('privacyModal')" class="px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium">
+                        დახურვა
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms & Conditions Modal -->
+<div id="termsModal" class="fixed inset-0 z-[9999] hidden">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeFooterModal('termsModal')"></div>
+    <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl max-h-[85vh] flex flex-col transform transition-all">
+                <div class="sticky top-0 z-10 bg-white rounded-t-2xl border-b border-gray-100 px-8 py-6 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 leading-snug">Perks - ვებ-გვერდითა და სერვისებით სარგებლობის წესები და პირობები</h2>
+                        <p class="text-sm text-gray-500 mt-1">www.perks.ge</p>
+                    </div>
+                    <button onclick="closeFooterModal('termsModal')" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="overflow-y-auto px-8 py-6 text-gray-700 leading-relaxed space-y-6 text-sm">
+                    <p>წინამდებარე დოკუმენტი არეგულირებს პლატფორმა Perks-სა (შემდგომში - „კომპანია") და პლატფორმით მოსარგებლე პირს (შემდგომში - „მომხმარებელი") შორის არსებულ სამართლებრივ ურთიერთობებს. ვებ-გვერდზე (www.perks.ge) ავტორიზაციითა და მომსახურების პირობებზე თანხმობის ღილაკის მონიშვნით, თქვენ სრულად ეთანხმებით ქვემოთ მოცემულ წესებს.</p>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">1. ტერმინთა განმარტება</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-gray-600">
+                            <li><strong class="text-gray-800">კლიენტი (დამსაქმებელი):</strong> იურიდიული პირი, რომელთანაც Perks-ს გაფორმებული აქვს კორპორატიული მომსახურების ხელშეკრულება.</li>
+                            <li><strong class="text-gray-800">მომხმარებელი:</strong> კლიენტის თანამშრომელი (ან მისი ოჯახის წევრი Limited პაკეტის ფარგლებში), რომელიც რეგისტრირდება Perks-ის ვებ-გვერდზე.</li>
+                            <li><strong class="text-gray-800">პარტნიორი ობიექტი:</strong> ბიზნესი (რესტორანი, მაღაზია, სერვისი), რომელიც უშუალოდ გასცემს შეთავაზებას/ფასდაკლებას.</li>
+                            <li><strong class="text-gray-800">ინტერაქტიული სერვისი / პლატფორმა:</strong> კომპანიის კუთვნილი ვებ-გვერდი და მისი ფუნქციონალი. (Perks არ იყენებს მობილურ აპლიკაციას).</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">2. სერვისის არსი და პასუხისმგებლობის შეზღუდვა</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li><strong class="text-gray-800">2.1.</strong> Perks წარმოადგენს დამაკავშირებელ, ინტერაქტიულ პლატფორმას მომხმარებელსა და პარტნიორ ობიექტს შორის.</li>
+                            <li><strong class="text-gray-800">2.2. პასუხისმგებლობა მომსახურებაზე:</strong> Perks არ არის იმ პროდუქტების/სერვისების მფლობელი, რომლებსაც სთავაზობს პლატფორმის მეშვეობით. შესაბამისად, პარტნიორი ობიექტის მიერ გაწეული მომსახურების ხარისხზე, უსაფრთხოებასა თუ რაიმე სახის ფიზიკურ/მატერიალურ ზიანზე ერთპიროვნულად პასუხისმგებელია თავად პარტნიორი ობიექტი.</li>
+                            <li><strong class="text-gray-800">2.3. ტექნიკური შეფერხება:</strong> ინტერნეტქსელის არსიდან გამომდინარე, კომპანია არ იძლევა გარანტიას, რომ ვებ-გვერდის მუშაობა იქნება უწყვეტი. კომპანია არ აგებს პასუხს პარტნიორის ობიექტზე ინტერნეტის გათიშვის ან მობილური ოპერატორის მიერ SMS-ის დაგვიანების გამო შეთავაზების მიღების შეფერხებაზე.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">3. ანგარიშსწორება და გამოწერის ავტომატური განახლება</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li><strong class="text-gray-800">3.1.</strong> მომხმარებლის მიერ სერვისის (სტანდარტი ან Limited პაკეტი) შეძენა ხდება ვებ-გვერდზე საბანკო ბარათის მიბმით.</li>
+                            <li><strong class="text-gray-800">3.2. ავტომატური ჩამოჭრა:</strong> მომსახურება წარმოადგენს ყოველთვიურ გამოწერას (Subscription). მომდევნო საანგარიშო პერიოდის (თვის) საფასურის ავტომატური ჩამოჭრა მიბმული ბარათიდან განხორციელდება ახალი პერიოდის დაწყებამდე შეთანხმებული წესით. თუ მომხმარებელს არ სურს გამოწერის გაგრძელება, მან უნდა გააუქმოს იგი პირად პროფილში ჩამოჭრის თარიღამდე.</li>
+                            <li><strong class="text-gray-800">3.3. ფასის ცვლილება:</strong> კომპანია იტოვებს უფლებას ცალმხრივად შეცვალოს მომსახურების პაკეტების საფასური. ამის შესახებ მომხმარებელს ეცნობება ელ.ფოსტის ან პროფილის მეშვეობით, ახალი ფასის ძალაში შესვლამდე არანაკლებ 30 დღით ადრე. შეცვლილი ფასი არ იმოქმედებს უკვე გადახდილ თვეზე.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">4. ფასდაკლების გამოყენება (SMS ვერიფიკაცია) და თაღლითობის პრევენცია</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li><strong class="text-gray-800">4.1.</strong> შეთავაზების მისაღებად მომხმარებელმა ანგარიშსწორებამდე პარტნიორ ობიექტს უნდა წარუდგინოს თავისი პერსონალური საიდენტიფიკაციო კოდი / ტელეფონის ნომერი.</li>
+                            <li><strong class="text-gray-800">4.2.</strong> ვალიდაცია სრულდება მომხმარებლის ტელეფონზე მოსული ერთჯერადი SMS კოდის ობიექტის წარმომადგენლისთვის კარნახით.</li>
+                            <li><strong class="text-gray-800">4.3. ფიქტიური ვიზიტები და გადაცემა:</strong> სასტიკად იკრძალება საკუთარი ნომრისა და SMS კოდის სხვა პირისთვის გადაცემა, ასევე ფიქტიური ვიზიტის დაფიქსირება სერვისის მიღების გარეშე. ამ წესის დარღვევის ან არაკეთილსინდისიერი ქცევის აღმოჩენის შემთხვევაში, Perks იტოვებს უფლებას მომენტალურად, თანხის დაბრუნების გარეშე, გააუქმოს მომხმარებლის პროფილი.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">5. Family Sharing (ოჯახის წევრის დამატება)</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li><strong class="text-gray-800">5.1.</strong> Limited პაკეტის მფლობელს უფლება აქვს, თავისი პროფილის მეშვეობით მიიწვიოს ოჯახის 1 წევრი.</li>
+                            <li><strong class="text-gray-800">5.2.</strong> ოჯახის წევრი გადის დამოუკიდებელ რეგისტრაციას საკუთარი ტელეფონის ნომრით და შეთავაზებებით სარგებლობს ინდივიდუალური SMS ვერიფიკაციის გავლით.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">6. ხელშეკრულების შეწყვეტა, შეჩერება და თანხის დაბრუნება (Refund)</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li><strong class="text-gray-800">6.1. 14-დღიანი უარის უფლება:</strong> საქართველოს კანონმდებლობის შესაბამისად, მომხმარებელს უფლება აქვს მომსახურების პირველადი შეძენიდან 14 კალენდარული დღის განმავლობაში ყოველგვარი მიზეზის გარეშე უარი თქვას ხელშეკრულებაზე. ამ შემთხვევაში მას დაუბრუნდება გადახდილი თანხა, უკვე მიღებული სარგებლის (ასეთის არსებობისას) პროპორციული გამოკლებით.</li>
+                            <li><strong class="text-gray-800">6.2. ხელშეკრულების შეწყვეტა:</strong> მომხმარებელს უფლება აქვს სრულად გააუქმოს პლატფორმის წევრობა კომპანიის 1 (ერთი) თვით ადრე წერილობითი გაფრთხილების საფუძველზე.</li>
+                            <li><strong class="text-gray-800">6.3. შეჩერება და დაბრუნების პოლიტიკა:</strong> მომხმარებელს უფლება აქვს ნებისმიერ დროს გააუქმოს გამოწერა (მომსახურების შეჩერება) შემდგომი საანგარიშო პერიოდიდან. თუმცა, მომხმარებელს უფლება არ აქვს მოითხოვოს შესაბამის საანგარიშო (მიმდინარე/უკვე გადახდილ) პერიოდზე გადახდილი საფასურის უკან დაბრუნება. სერვისით სარგებლობა გაგრძელდება გადახდილი თვის ბოლომდე.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">7. საავტორო უფლებები და პლატფორმის საკუთრება</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li><strong class="text-gray-800">7.1.</strong> ვებ-გვერდზე განთავსებული სრული კონტენტი (დიზაინი, ლოგო, ტექსტები, სტრუქტურა) დაცულია საავტორო უფლებებით და წარმოადგენს კომპანიის ექსკლუზიურ საკუთრებას.</li>
+                            <li><strong class="text-gray-800">7.2.</strong> აკრძალულია პლატფორმის კონტენტის, მასალების ან მონაცემთა ბაზის სრულად ან ნაწილობრივ კოპირება, მოდიფიცირება ან კომერციული მიზნებისთვის გამოყენება კომპანიის წინასწარი წერილობითი თანხმობის გარეშე.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">8. ფორს-მაჟორი</h3>
+                        <p><strong class="text-gray-800">8.1.</strong> მხარეები თავისუფლდებიან პასუხისმგებლობისგან ვალდებულებების შეუსრულებლობისთვის, თუ ეს გამოწვეულია დაუძლეველი ძალით (ფორს-მაჟორი), რაც მოიცავს: სტიქიურ უბედურებებს, ომს, პანდემიას, კიბერ-შეტევებს, სახელმწიფო ორგანოების მიერ მიღებულ ისეთ აქტებს, რომლებიც შეუძლებელს ხდის პლატფორმის ოპერირებას.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">9. მონაცემთა დამუშავება, ქუქი-ფაილები (Cookies) და ანალიტიკა</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li><strong class="text-gray-800">9.1.</strong> პლატფორმის შეუფერხებელი მუშაობის, უსაფრთხოებისა და სერვისის გაუმჯობესების მიზნით, Perks იყენებს ქუქი-ფაილებს (Cookies) და მსგავს ტექნოლოგიებს.</li>
+                            <li><strong class="text-gray-800">9.2.</strong> ჩვენ ვაგროვებთ ტექნიკურ ინფორმაციას (IP მისამართი, ბრაუზერის ტიპი, საიტზე გატარებული დრო), რათა გავაანალიზოთ მომხმარებელთა ქცევა და აღმოვფხვრათ ხარვეზები. პლატფორმაზე ასევე ინტეგრირებულია მესამე მხარის ანალიტიკური სერვისები (მაგ: Google Analytics).</li>
+                            <li><strong class="text-gray-800">9.3.</strong> მომხმარებლის პერსონალური მონაცემების დამუშავების, შენახვისა და მესამე პირებზე (პარტნიორ ობიექტებზე ვერიფიკაციის მიზნით) გაცემის დეტალური წესები რეგულირდება Perks-ის ცალკეული კონფიდენციალურობის პოლიტიკის (Privacy Policy) დოკუმენტით, რომელიც წინამდებარე წესების განუყოფელი ნაწილია.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="sticky bottom-0 bg-white rounded-b-2xl border-t border-gray-100 px-8 py-4 flex justify-end">
+                    <button onclick="closeFooterModal('termsModal')" class="px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium">
+                        დახურვა
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openFooterModal(id) {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        const scrollBody = modal.querySelector('.max-w-4xl div.overflow-y-auto.px-8');
+        if (scrollBody) scrollBody.scrollTop = 0;
+    }
+
+    function closeFooterModal(id) {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function onFooterModalEscape(e) {
+        if (e.key !== 'Escape') return;
+        ['privacyModal', 'termsModal'].forEach(function(id) {
+            const modal = document.getElementById(id);
+            if (modal && !modal.classList.contains('hidden')) {
+                closeFooterModal(id);
+            }
+        });
+    });
+</script>

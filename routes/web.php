@@ -12,6 +12,7 @@ Route::post('/offers/{offer}/claim', [LandingPageController::class, 'claimOffer'
 Route::get('/companies', [LandingPageController::class, 'companies'])->name('companies');
 Route::post('/companies/request', [LandingPageController::class, 'storeCompanyRequest'])->name('companies.request');
 Route::get('/partners', [LandingPageController::class, 'partners'])->name('partners');
+Route::get('/about', [LandingPageController::class, 'about'])->name('about');
 Route::post('/partners/request', [LandingPageController::class, 'storePartnerRequest'])->name('partners.request');
 Route::get('/blog', [LandingPageController::class, 'blog'])->name('blog.index');
 Route::get('/blog/{slug}', [LandingPageController::class, 'blogPost'])->name('blog.show');

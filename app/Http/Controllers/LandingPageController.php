@@ -113,6 +113,11 @@ class LandingPageController extends Controller
         return view('partners');
     }
 
+    public function about(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    {
+        return view('about');
+    }
+
     public function storeCompanyRequest(Request $request): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
