@@ -24,7 +24,7 @@
                     ამავდროულად, უზრუნველვყოფთ, რომ თითოეულმა თანამშრომელმა მიიღოს ექსკლუზიური ბენეფიტები და იგრძნოს დამსაქმებლის რეალური მხარდაჭერა სამუშაო საათების მიღმაც. ჩვენი პლატფორმის დახმარებით, ისინი ყოველდღიურად იზოგავენ დროსა და ფულს, ხოლო მათი კეთილდღეობა ხდება სამსახურის პრიორიტეტი.
                 </p>
             </div>
-            <blockquote class="mt-10 rounded-2xl border border-primary-200 bg-primary-50 text-primary-900 px-6 py-5 text-lg md:text-xl font-medium leading-relaxed dark:border-primary-500/30 dark:bg-primary-950/40 dark:text-primary-100">
+            <blockquote class="mt-10 rounded-2xl border border-primary-200 bg-primary-50 text-primary-800 px-6 py-5 text-lg md:text-xl font-medium leading-relaxed dark:border-primary-700 dark:bg-primary-900/60 dark:text-primary-50">
                 საბოლოო ჯამში, ჩვენ არ ვართ უბრალოდ ფასდაკლების პლატფორმა — ჩვენ ვართ დამაკავშირებელი ხიდი ბიზნესსა და მის ყველაზე ღირებულ აქტივს, ადამიანებს შორის.
             </blockquote>
         </div>
