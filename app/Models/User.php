@@ -27,6 +27,7 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at',
         'phone',
         'company_id',
+        'partner_id',
         'p_coins',
     ];
 
@@ -57,6 +58,16 @@ class User extends Authenticatable implements JWTSubject
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function partner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Partner::class);
+    }
+
+    public function isPartner(): bool
+    {
+        return $this->role === 'partner';
     }
 
     public function visits(): \Illuminate\Database\Eloquent\Relations\HasMany

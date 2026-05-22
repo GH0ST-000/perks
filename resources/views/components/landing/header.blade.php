@@ -18,7 +18,6 @@
             <a href="{{ route('partners') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">პარტნიორებისთვის</a>
             <a href="{{ route('blog.index') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">ბლოგი</a>
             <a href="{{ route('about') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">ჩვენი ისტორია</a>
-            <a href="{{ route('vacancies.index') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">ვაკანსიები</a>
         </nav>
 
         <!-- Desktop Actions -->
@@ -33,11 +32,8 @@
             </button>
 
             @guest
-                <a href="{{ route('login') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <a href="{{ route('login') }}" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium text-sm transition-colors shadow-md">
                     შესვლა
-                </a>
-                <a href="{{ route('register') }}" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium text-sm transition-colors shadow-md">
-                    რეგისტრაცია
                 </a>
             @else
                 <div class="relative" x-data="{ open: false }">
@@ -72,7 +68,7 @@
                             <p class="text-sm font-bold text-gray-900 dark:text-white">{{ auth()->user()->name }}</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ auth()->user()->email }}</p>
                         </div>
-                        <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <a href="{{ auth()->user()->isPartner() ? route('partner.dashboard') : route('dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
@@ -116,7 +112,6 @@
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="hidden lg:hidden absolute top-20 left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 p-4 flex flex-col gap-4 shadow-xl animate-fade-in-down">
         <a href="{{ route('offers.index') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">შეთავაზებები</a>
-        <a href="{{ route('vacancies.index') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">ვაკანსიები</a>
         <a href="{{ route('companies') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">კომპანიებისთვის</a>
         <a href="{{ route('partners') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">პარტნიორებისთვის</a>
         <a href="{{ route('blog.index') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">ბლოგი</a>
@@ -134,9 +129,8 @@
         </div>
 
         @guest
-            <div class="flex gap-3 pt-4">
-                <a href="{{ route('login') }}" class="flex-1 text-center px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg font-medium text-sm">შესვლა</a>
-                <a href="{{ route('register') }}" class="flex-1 text-center px-4 py-2 bg-primary-600 text-white rounded-lg font-medium text-sm">რეგისტრაცია</a>
+            <div class="pt-4">
+                <a href="{{ route('login') }}" class="block w-full text-center px-4 py-2 bg-primary-600 text-white rounded-lg font-medium text-sm">შესვლა</a>
             </div>
         @else
             <div class="pt-4 border-t border-gray-100 dark:border-gray-800 mt-4">
@@ -149,7 +143,7 @@
                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</p>
                     </div>
                 </div>
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors mb-2">
+                <a href="{{ auth()->user()->isPartner() ? route('partner.dashboard') : route('dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors mb-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                     </svg>

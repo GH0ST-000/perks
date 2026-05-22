@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PartnerResource\Pages;
 use App\Filament\Resources\PartnerResource\RelationManagers;
 use App\Models\Partner;
+use App\Support\PhoneNumber;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
@@ -19,23 +20,27 @@ class PartnerResource extends Resource
 {
     protected static ?string $model = Partner::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
-    protected static ?string $navigationLabel = 'პარტნიორები';
-    protected static bool $shouldRegisterNavigation = true;
-    protected static ?string $modelLabel = 'Partner';
+    protected static ?string $navigationGroup = 'მართვა';
 
-    protected static ?string $pluralModelLabel = 'Partners';
+    protected static ?string $navigationLabel = 'პარტნიორ კომპანიები';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?string $modelLabel = 'პარტნიორ კომპანია';
+
+    protected static ?string $pluralModelLabel = 'პარტნიორ კომპანიები';
+
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Partner Information')
+                Forms\Components\Section::make('პარტნიორ კომპანია')
+                    ->description('ბიზნეს პარტნიორი შეთავაზებებისა და ფასდაკლებებისთვის. ეს არ არის საიტზე შესვლადი მომხმარებელი — ცალკე ბიზნეს პროფილია.')
                     ->schema([
                         Forms\Components\TextInput::make('name')
+                            ->label('სახელი')
                             ->required()
                             ->maxLength(255)
                             ->columnSpanFull(),
@@ -53,14 +58,23 @@ class PartnerResource extends Resource
                             ->columnSpan(1),
                     ])
                     ->columns(2),
-                Forms\Components\Section::make('Contact Details')
+                Forms\Components\Section::make('შესვლა და კონტაქტი')
+                    ->description('ტელეფონი აუცილებელია — ამ ნომრით პარტნიორმა შეძლებს საიტზე OTP შესვლას.')
                     ->schema([
-                        Forms\Components\TextInput::make('email')
-                            ->email()
-                            ->maxLength(255)
-                            ->columnSpan(1),
                         Forms\Components\TextInput::make('phone')
+                            ->label('ტელეფონი (შესვლისთვის)')
                             ->tel()
+                            ->required()
+                            ->maxLength(20)
+                            ->regex('/^[0-9]{9}$/')
+                            ->prefix('+995')
+                            ->helperText('9 ციფრი, მაგ: 595242937')
+                            ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? PhoneNumber::normalize($state) : null)
+                            ->formatStateUsing(fn (?string $state): ?string => filled($state) ? PhoneNumber::display($state) : null)
+                            ->columnSpan(1),
+                        Forms\Components\TextInput::make('email')
+                            ->label('ელფოსტა')
+                            ->email()
                             ->maxLength(255)
                             ->columnSpan(1),
                     ])

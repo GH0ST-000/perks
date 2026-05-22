@@ -18,8 +18,8 @@ class LandingPageController extends Controller
         // Get premium offers with partner relationship (only non-expired and marked as premium)
         // Note: Premium visibility on Home Page is part of the Marketing Package benefit
         $premiumOffers = PremiumOffer::with(['partner', 'partner.categories'])
+            ->publicVisible()
             ->where('is_premium', true)
-            ->whereDate('expires_at', '>=', now())
             ->orderBy('id', 'desc')
             ->limit(4)
             ->get();
@@ -48,7 +48,7 @@ class LandingPageController extends Controller
         // Start query (all non-expired offers - both premium and regular)
         // Premium offers will be marked with a badge in the UI
         $query = PremiumOffer::with(['partner', 'partner.categories'])
-            ->whereDate('expires_at', '>=', now());
+            ->publicVisible();
 
         // Apply search filter
         if ($request->filled('search')) {
@@ -84,9 +84,8 @@ class LandingPageController extends Controller
 
     public function showOffer(PremiumOffer $offer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
     {
-        // Check if offer is expired, redirect to offers page if expired
-        if ($offer->day_left <= 0) {
-            return redirect()->route('offers.index')->with('error', 'This offer has expired.');
+        if ($offer->status !== PremiumOffer::STATUS_APPROVED || $offer->day_left <= 0) {
+            return redirect()->route('offers.index')->with('error', 'This offer is not available.');
         }
 
         // Load relationships
@@ -94,13 +93,21 @@ class LandingPageController extends Controller
 
         // Get related offers from the same partner (all non-expired offers)
         $relatedOffers = PremiumOffer::with(['partner', 'partner.categories'])
+            ->publicVisible()
             ->where('partner_id', $offer->partner_id)
             ->where('id', '!=', $offer->id)
-            ->whereDate('expires_at', '>=', now())
             ->limit(4)
             ->get();
 
-        return view('offers.show', compact('offer', 'relatedOffers'));
+        $userClaim = null;
+        if (auth()->check()) {
+            $userClaim = \App\Models\OfferClaim::query()
+                ->where('user_id', auth()->id())
+                ->where('premium_offer_id', $offer->id)
+                ->first();
+        }
+
+        return view('offers.show', compact('offer', 'relatedOffers', 'userClaim'));
     }
 
     public function companies(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -208,9 +215,8 @@ class LandingPageController extends Controller
     {
         $user = auth()->user();
 
-        // Check if offer is expired
-        if ($offer->day_left <= 0) {
-            return redirect()->back()->with('error', 'ეს შეთავაზება ვადაგასულია.');
+        if ($offer->status !== PremiumOffer::STATUS_APPROVED || $offer->day_left <= 0) {
+            return redirect()->back()->with('error', 'ეს შეთავაზება ხელმისაწვდომი არ არის.');
         }
 
         // Check if user already claimed this offer
@@ -240,17 +246,17 @@ class LandingPageController extends Controller
             $discount = $offer->premium_discount;
         }
 
-        // Create the claim
-        \App\Models\OfferClaim::create([
-            'user_id' => $user->id,
-            'premium_offer_id' => $offer->id,
-            'card_type' => $cardType,
-            'discount_received' => $discount,
-            'status' => 'pending',
-            'claimed_at' => now(),
-        ]);
+        $claim = app(\App\Services\OfferClaimService::class)->createClaim(
+            $user,
+            $offer,
+            $cardType,
+            (float) $discount
+        );
 
-        return redirect()->back()->with('success', 'შეთავაზება წარმატებით მიღებულია! თქვენ მიიღეთ ' . $discount . '% ფასდაკლება.');
+        return redirect()->back()->with(
+            'success',
+            'შეთავაზება წარმატებით მიღებულია! თქვენი კოდი: '.$claim->redemption_code
+        );
     }
 }
 

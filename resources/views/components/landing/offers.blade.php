@@ -73,23 +73,6 @@
                             </p>
                         @endif
 
-                        @if($offer->standard_discount || $offer->premium_discount)
-                            <div class="mb-3 flex flex-col gap-1">
-                                @if($offer->standard_discount > 0)
-                                    <div class="flex items-center justify-between text-xs py-1 px-1.5 rounded" style="background-color: rgba(196, 196, 196, 0.1);">
-                                        <span class="font-medium" style="color: #6B7280;">Standard</span>
-                                        <span class="font-bold" style="color: #9CA3AF;">-{{ $offer->standard_discount }}%</span>
-                                    </div>
-                                @endif
-                                @if($offer->premium_discount > 0)
-                                    <div class="flex items-center justify-between text-xs py-1 px-1.5 rounded" style="background-color: rgba(239, 191, 4, 0.1);">
-                                        <span class="font-medium" style="color: #92400E;">Premium</span>
-                                        <span class="font-bold" style="color: #B45309;">-{{ $offer->premium_discount }}%</span>
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
-
                         @if($offer->p_coins_reward > 0)
                             <div class="mb-3 p-2 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
                                 <div class="flex items-center justify-between">

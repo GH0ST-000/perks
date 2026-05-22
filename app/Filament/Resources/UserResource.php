@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use App\Support\PhoneNumber;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
@@ -21,11 +22,13 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    protected static ?string $navigationGroup = 'მართვა';
+
     protected static ?string $navigationLabel = 'მომხმარებლები';
 
-    protected static ?string $modelLabel = 'User';
+    protected static ?string $modelLabel = 'მომხმარებელი';
 
-    protected static ?string $pluralModelLabel = 'Users';
+    protected static ?string $pluralModelLabel = 'მომხმარებლები';
 
     protected static ?int $navigationSort = 1;
 
@@ -33,28 +36,38 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('User Information')
+                Forms\Components\Section::make('კორპორატიული წევრი')
+                    ->description('კორპორატიული თანამშრომელი — შეძლებს საიტზე შესვლას ტელეფონის OTP-ით. პარტნიორ კომპანიის დასამატებლად გადადით: მართვა → პარტნიორ კომპანიები.')
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->label('Full Name')
+                            ->label('სახელი და გვარი')
                             ->required()
                             ->maxLength(255)
                             ->columnSpanFull(),
+                        Forms\Components\TextInput::make('phone')
+                            ->label('ტელეფონი (შესვლისთვის)')
+                            ->tel()
+                            ->required()
+                            ->maxLength(20)
+                            ->regex('/^[0-9]{9}$/')
+                            ->prefix('+995')
+                            ->helperText('შეიყვანეთ 9 ციფრი (მაგ: 555123456). ეს ნომერი გამოიყენება OTP შესვლისთვის.')
+                            ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? PhoneNumber::normalize($state) : null)
+                            ->formatStateUsing(fn (?string $state): ?string => filled($state) ? PhoneNumber::display($state) : null)
+                            ->columnSpan(1),
                         Forms\Components\TextInput::make('email')
+                            ->label('ელფოსტა')
                             ->email()
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255)
                             ->columnSpan(1),
-                        Forms\Components\TextInput::make('phone')
-                            ->tel()
-                            ->maxLength(255)
-                            ->columnSpan(1),
                         Forms\Components\Select::make('company_id')
-                            ->label('Company')
+                            ->label('კომპანია')
                             ->relationship('company', 'name')
                             ->searchable()
                             ->preload()
+                            ->required()
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('name')
                                     ->required()
@@ -68,9 +81,10 @@ class UserResource extends Resource
                             ])
                             ->columnSpan(1),
                         Forms\Components\Select::make('role')
+                            ->label('როლი')
                             ->options([
-                                'user' => 'User',
-                                'admin' => 'Admin',
+                                'user' => 'მომხმარებელი',
+                                'admin' => 'ადმინისტრატორი',
                             ])
                             ->default('user')
                             ->required()
@@ -83,20 +97,28 @@ class UserResource extends Resource
                             ->required()
                             ->suffix('coins')
                             ->columnSpan(1),
-                        Forms\Components\DateTimePicker::make('email_verified_at')
+                        Forms\Components\Toggle::make('email_verified')
+                            ->label('ელფოსტა დადასტურებული')
+                            ->default(true)
+                            ->dehydrated(false)
+                            ->afterStateHydrated(function (Forms\Components\Toggle $component, ?User $record): void {
+                                $component->state($record?->email_verified_at !== null);
+                            })
                             ->columnSpan(1),
                     ])
                     ->columns(2),
-                Forms\Components\Section::make('Authentication')
+                Forms\Components\Section::make('პაროლი (არასავალდებულო)')
+                    ->description('შესვლა ხდება ტელეფონის OTP-ით. პაროლი საჭიროა მხოლოდ API ან სპეციალური შემთხვევებისთვის.')
+                    ->collapsed()
                     ->schema([
                         Forms\Components\TextInput::make('password')
+                            ->label('პაროლი')
                             ->password()
-                            ->required(fn (string $operation): bool => $operation === 'create')
                             ->dehydrated(fn ($state) => filled($state))
                             ->dehydrateStateUsing(fn ($state) => bcrypt($state))
                             ->maxLength(255)
                             ->columnSpanFull()
-                            ->helperText('Leave blank to keep current password when editing.'),
+                            ->helperText('დატოვეთ ცარიელი — შესვლა მხოლოდ OTP-ით.'),
                     ]),
                 Forms\Components\Section::make('Profile Photo')
                     ->schema([
@@ -136,10 +158,9 @@ class UserResource extends Resource
                     ->icon('heroicon-m-phone')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('company.name')
-                    ->label('Company')
+                    ->label('კომპანია')
                     ->searchable()
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('p_coins')
                     ->label('P-Coins')
                     ->sortable()
@@ -183,7 +204,7 @@ class UserResource extends Resource
                         'admin' => 'Admin',
                     ]),
                 Tables\Filters\SelectFilter::make('company_id')
-                    ->label('Company')
+                    ->label('კომპანია')
                     ->relationship('company', 'name')
                     ->searchable()
                     ->preload(),
@@ -329,7 +350,7 @@ class UserResource extends Resource
                             ->icon('heroicon-m-phone')
                             ->copyable(),
                         Infolists\Components\TextEntry::make('company.name')
-                            ->label('Company')
+                            ->label('კომპანია')
                             ->badge()
                             ->color('info'),
                         Infolists\Components\TextEntry::make('p_coins')

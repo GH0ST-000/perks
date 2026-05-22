@@ -13,6 +13,7 @@ class Visit extends Model
     protected $fillable = [
         'user_id',
         'partner_id',
+        'offer_claim_id',
         'category_id',
         'visited_at',
         'notes',
@@ -38,5 +39,10 @@ class Visit extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function offerClaim(): BelongsTo
+    {
+        return $this->belongsTo(OfferClaim::class);
     }
 }

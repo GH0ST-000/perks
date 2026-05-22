@@ -41,6 +41,16 @@ class PremiumOfferResource extends Resource
                             ->searchable()
                             ->preload()
                             ->columnSpanFull(),
+                        Forms\Components\Select::make('status')
+                            ->label('სტატუსი')
+                            ->options([
+                                PremiumOffer::STATUS_PENDING => 'მოლოდინში',
+                                PremiumOffer::STATUS_APPROVED => 'დამტკიცებული',
+                                PremiumOffer::STATUS_REJECTED => 'უარყოფილი',
+                            ])
+                            ->default(PremiumOffer::STATUS_APPROVED)
+                            ->required()
+                            ->columnSpan(1),
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255)
@@ -163,6 +173,22 @@ class PremiumOfferResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('სტატუსი')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        PremiumOffer::STATUS_PENDING => 'warning',
+                        PremiumOffer::STATUS_APPROVED => 'success',
+                        PremiumOffer::STATUS_REJECTED => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        PremiumOffer::STATUS_PENDING => 'მოლოდინში',
+                        PremiumOffer::STATUS_APPROVED => 'დამტკიცებული',
+                        PremiumOffer::STATUS_REJECTED => 'უარყოფილი',
+                        default => $state,
+                    })
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('is_premium')
                     ->label('Premium')
                     ->boolean()
@@ -232,6 +258,13 @@ class PremiumOfferResource extends Resource
                     ->relationship('partner', 'name')
                     ->searchable()
                     ->preload(),
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('სტატუსი')
+                    ->options([
+                        PremiumOffer::STATUS_PENDING => 'მოლოდინში',
+                        PremiumOffer::STATUS_APPROVED => 'დამტკიცებული',
+                        PremiumOffer::STATUS_REJECTED => 'უარყოფილი',
+                    ]),
                 Tables\Filters\TernaryFilter::make('is_premium')
                     ->label('Premium Offer')
                     ->placeholder('All offers')
@@ -272,6 +305,37 @@ class PremiumOfferResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('approve')
+                    ->label('დამტკიცება')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->visible(fn (PremiumOffer $record): bool => $record->status === PremiumOffer::STATUS_PENDING)
+                    ->requiresConfirmation()
+                    ->action(function (PremiumOffer $record): void {
+                        $record->update([
+                            'status' => PremiumOffer::STATUS_APPROVED,
+                            'approved_at' => now(),
+                            'rejection_reason' => null,
+                        ]);
+                    }),
+                Tables\Actions\Action::make('reject')
+                    ->label('უარყოფა')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->visible(fn (PremiumOffer $record): bool => $record->status === PremiumOffer::STATUS_PENDING)
+                    ->form([
+                        Forms\Components\Textarea::make('rejection_reason')
+                            ->label('მიზეზი')
+                            ->required()
+                            ->maxLength(1000),
+                    ])
+                    ->action(function (PremiumOffer $record, array $data): void {
+                        $record->update([
+                            'status' => PremiumOffer::STATUS_REJECTED,
+                            'rejection_reason' => $data['rejection_reason'],
+                            'approved_at' => null,
+                        ]);
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
