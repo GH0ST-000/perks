@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PartnerPortalController extends Controller
 {
@@ -105,6 +106,42 @@ class PartnerPortalController extends Controller
         return view('partner.offers', compact('partner', 'offers'));
     }
 
+    public function createOffer(): View|RedirectResponse
+    {
+        $partner = $this->portal->resolvePartner();
+        if (! $partner) {
+            return redirect()->route('home');
+        }
+
+        return view('partner.offer-form', [
+            'partner' => $partner,
+            'editing' => false,
+            'offerId' => null,
+            'formAction' => route('partner.offers.store'),
+            'existingImageUrl' => null,
+            'initialForm' => $this->offerFormDefaults(),
+        ]);
+    }
+
+    public function editOffer(PremiumOffer $offer): View|RedirectResponse
+    {
+        $partner = $this->portal->resolvePartner();
+        if (! $partner || $offer->partner_id !== $partner->id || ! $offer->partnerCanEdit()) {
+            abort(403);
+        }
+
+        $portalOffer = $this->offers->toPortalArray($offer);
+
+        return view('partner.offer-form', [
+            'partner' => $partner,
+            'editing' => true,
+            'offerId' => $offer->id,
+            'formAction' => route('partner.offers.update', $offer),
+            'existingImageUrl' => $portalOffer['image'],
+            'initialForm' => $this->offerFormDefaults($portalOffer),
+        ]);
+    }
+
     public function storeOffer(Request $request): RedirectResponse
     {
         $partner = $this->portal->resolvePartner();
@@ -112,11 +149,13 @@ class PartnerPortalController extends Controller
             return redirect()->route('home');
         }
 
-        $validated = $request->validate($this->offerRules());
+        $validated = $this->validateOffer($request, route('partner.offers.create'));
 
         $this->offers->create($partner, $validated, $request->file('image'));
 
-        return redirect()->route('partner.offers')->with('success', 'შეთავაზება გაგზავნილია ადმინისტრატორთან დასადასტურებლად.');
+        return redirect()
+            ->route('partner.offers')
+            ->with('success', 'შეთავაზება გაგზავნილია ადმინისტრატორთან დასადასტურებლად.');
     }
 
     public function updateOffer(Request $request, PremiumOffer $offer): RedirectResponse
@@ -128,7 +167,10 @@ class PartnerPortalController extends Controller
 
         $wasApproved = $offer->isApproved();
 
-        $this->offers->update($offer, $request->validate($this->offerRules()), $request->file('image'));
+        $validated = $this->validateOffer($request, route('partner.offers.edit', $offer));
+        $validated['remove_image'] = $request->boolean('remove_image');
+
+        $this->offers->update($offer, $validated, $request->file('image'));
 
         $message = $wasApproved
             ? 'შეთავაზება განახლდა და ხელახლა გაიგზავნა დადასტურებისთვის.'
@@ -147,6 +189,39 @@ class PartnerPortalController extends Controller
         $this->offers->delete($offer);
 
         return redirect()->route('partner.offers')->with('success', 'შეთავაზება წაიშალა.');
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $offer
+     * @return array<string, string>
+     */
+    private function offerFormDefaults(?array $offer = null): array
+    {
+        return [
+            'title' => old('title', $offer['title'] ?? ''),
+            'header_text' => old('header_text', $offer['header_text'] ?? ''),
+            'description' => old('description', $offer['description'] ?? ''),
+            'discount' => old('discount', isset($offer['discount']) ? (string) $offer['discount'] : '20'),
+            'p_coins' => old('p_coins_reward', isset($offer['p_coins']) ? (string) $offer['p_coins'] : '0'),
+            'period' => old('period', $offer['period'] ?? '1 თვე'),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function validateOffer(Request $request, string $redirectRoute): array
+    {
+        $validator = Validator::make($request->all(), $this->offerRules());
+
+        if ($validator->fails()) {
+            throw new \Illuminate\Validation\ValidationException(
+                $validator,
+                redirect($redirectRoute)->withInput()->withErrors($validator)
+            );
+        }
+
+        return $validator->validated();
     }
 
     /**

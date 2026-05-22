@@ -268,3 +268,53 @@ html.dark .partner-history-filter--active:hover {
     color: #ffffff;
     box-shadow: 0 4px 14px -3px rgba(59, 130, 246, 0.35);
 }
+
+/* Offer form image preview actions */
+.partner-image-btn-delete {
+    background-color: #ef4444;
+    color: #ffffff;
+    border: 1px solid #dc2626;
+}
+
+.partner-image-btn-delete:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+.partner-image-btn-delete svg {
+    stroke: #ffffff;
+    color: #ffffff;
+}
+
+.partner-image-btn-change {
+    background-color: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+}
+
+.partner-image-btn-change:hover {
+    background-color: #f8fafc;
+    color: #0f172a;
+}
+
+html.dark .partner-image-btn-change {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border-color: #334155;
+}
+
+html.dark .partner-image-btn-change:hover {
+    background-color: #334155;
+}
+
+/* Leave / unsaved changes modal */
+.partner-leave-overlay {
+    background-color: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(4px);
+}
+
+.partner-leave-panel {
+    box-shadow:
+        0 25px 50px -12px rgba(15, 23, 42, 0.25),
+        0 12px 24px -8px rgba(15, 23, 42, 0.12);
+}
