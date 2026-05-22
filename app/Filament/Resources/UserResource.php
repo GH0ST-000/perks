@@ -55,6 +55,13 @@ class UserResource extends Resource
                             ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? PhoneNumber::normalize($state) : null)
                             ->formatStateUsing(fn (?string $state): ?string => filled($state) ? PhoneNumber::display($state) : null)
                             ->columnSpan(1),
+                        Forms\Components\Select::make('gender')
+                            ->label('სქესი')
+                            ->options(User::genderOptions())
+                            ->required()
+                            ->native(false)
+                            ->helperText('გამოიყენება პარტნიორის სტატისტიკაში (კაცი / ქალი).')
+                            ->columnSpan(1),
                         Forms\Components\TextInput::make('email')
                             ->label('ელფოსტა')
                             ->email()
@@ -157,6 +164,16 @@ class UserResource extends Resource
                     ->copyable()
                     ->icon('heroicon-m-phone')
                     ->toggleable(),
+                Tables\Columns\TextColumn::make('gender')
+                    ->label('სქესი')
+                    ->formatStateUsing(fn (?string $state): string => User::genderOptions()[$state] ?? '—')
+                    ->badge()
+                    ->color(fn (?string $state): string => match ($state) {
+                        User::GENDER_MALE => 'info',
+                        User::GENDER_FEMALE => 'danger',
+                        default => 'gray',
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('company.name')
                     ->label('კომპანია')
                     ->searchable()
@@ -198,6 +215,9 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('gender')
+                    ->label('სქესი')
+                    ->options(User::genderOptions()),
                 Tables\Filters\SelectFilter::make('role')
                     ->options([
                         'user' => 'User',
@@ -349,6 +369,10 @@ class UserResource extends Resource
                         Infolists\Components\TextEntry::make('phone')
                             ->icon('heroicon-m-phone')
                             ->copyable(),
+                        Infolists\Components\TextEntry::make('gender')
+                            ->label('სქესი')
+                            ->formatStateUsing(fn (?string $state): string => User::genderOptions()[$state] ?? '—')
+                            ->badge(),
                         Infolists\Components\TextEntry::make('company.name')
                             ->label('კომპანია')
                             ->badge()

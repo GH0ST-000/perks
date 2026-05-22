@@ -54,8 +54,9 @@
                                         @if($offer['can_edit'])
                                             <button type="button"
                                                 @click="openEdit(@js($offer))"
-                                                class="p-1.5 bg-white/95 dark:bg-slate-800/95 text-slate-700 dark:text-slate-200 rounded-lg shadow-sm hover:text-blue-600 backdrop-blur-sm">
-                                                <i data-lucide="pencil" class="w-3 h-3"></i>
+                                                class="p-1.5 bg-amber-400 dark:bg-amber-500 text-amber-950 rounded-lg shadow-md border border-amber-300/80 dark:border-amber-400/60 hover:bg-amber-500 dark:hover:bg-amber-400 active:scale-95 backdrop-blur-sm"
+                                                title="რედაქტირება">
+                                                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                                             </button>
                                         @endif
                                         @if($offer['can_delete'])
@@ -176,23 +177,32 @@
         {{-- Detail modal --}}
         <div x-show="selected" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" @click.self="selected = null">
             <template x-if="selected">
-                <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[32px] overflow-hidden shadow-2xl" @click.stop>
-                    <div class="relative h-56 md:h-64 bg-slate-200 dark:bg-slate-800">
+                <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[32px] overflow-hidden shadow-2xl flex flex-col max-h-[90vh]" @click.stop>
+                    <div class="relative h-48 md:h-56 bg-slate-200 dark:bg-slate-800 shrink-0">
                         <img x-show="selected?.image" :src="selected?.image" :alt="selected?.title" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <button type="button" @click="selected = null" class="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-md">
+                        <div x-show="!selected?.image" class="w-full h-full flex items-center justify-center text-slate-300">
+                            <i data-lucide="image" class="w-12 h-12"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+                        <button type="button" @click="selected = null" class="absolute top-4 right-4 p-2 bg-black/30 hover:bg-black/50 text-white rounded-full backdrop-blur-md z-10">
                             <i data-lucide="x" class="w-5 h-5"></i>
                         </button>
-                        <div class="absolute bottom-6 left-6 right-6">
-                            <div class="flex items-center gap-2 mb-2 flex-wrap">
-                                <span x-html="selected ? statusBadge(selected.status) : ''"></span>
-                                <span class="px-2 py-0.5 bg-blue-500 text-white text-[9px] font-black uppercase tracking-widest rounded-full" x-text="selected?.period"></span>
-                            </div>
-                            <p x-show="selected?.header_text" class="text-[10px] font-black uppercase tracking-widest text-blue-300 mb-1" x-text="selected?.header_text"></p>
-                            <h3 class="text-xl md:text-2xl font-black text-white" x-text="selected?.title"></h3>
-                        </div>
                     </div>
-                    <div class="p-6 md:p-8 space-y-4">
+
+                    <div class="p-6 md:p-8 overflow-y-auto flex-1 space-y-5">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span x-html="selected ? statusBadge(selected.status) : ''"></span>
+                                <span class="px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-blue-100 dark:border-blue-900/40"
+                                      x-text="selected?.period"></span>
+                            </div>
+                            <p x-show="selected?.header_text"
+                               class="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400"
+                               x-text="selected?.header_text"></p>
+                            <h3 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white leading-tight"
+                                x-text="selected?.title"></h3>
+                        </div>
+
                         <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" x-text="selected?.description"></p>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 text-center">

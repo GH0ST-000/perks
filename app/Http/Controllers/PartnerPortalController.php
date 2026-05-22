@@ -196,16 +196,26 @@ class PartnerPortalController extends Controller
             ->with('success', "შეკვეთა «{$title}» მიღებულია. გიხმობთ მალე.");
     }
 
-    public function history(): View|RedirectResponse
+    public function history(Request $request): View|RedirectResponse
     {
         $partner = $this->portal->resolvePartner();
         if (! $partner) {
             return redirect()->route('home');
         }
 
-        $visits = $this->portal->getVisitHistory($partner);
+        $periodFilters = $this->portal->historyPeriodFilters();
+        $period = (string) $request->query('period', '28');
+        if (! array_key_exists($period, $periodFilters)) {
+            $period = '28';
+        }
+        $history = $this->portal->getVisitHistory($partner, $period);
 
-        return view('partner.history', compact('partner', 'visits'));
+        return view('partner.history', [
+            'partner' => $partner,
+            'visits' => $history['visits'],
+            'period' => $history['period'],
+            'periodFilters' => $periodFilters,
+        ]);
     }
 
     public function settings(): View|RedirectResponse

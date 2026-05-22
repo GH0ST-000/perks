@@ -13,6 +13,10 @@ class User extends Authenticatable implements JWTSubject
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public const GENDER_MALE = 'male';
+
+    public const GENDER_FEMALE = 'female';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -26,6 +30,7 @@ class User extends Authenticatable implements JWTSubject
         'role',
         'email_verified_at',
         'phone',
+        'gender',
         'company_id',
         'partner_id',
         'p_coins',
@@ -68,6 +73,19 @@ class User extends Authenticatable implements JWTSubject
     public function isPartner(): bool
     {
         return $this->role === 'partner';
+    }
+
+    public static function genderOptions(): array
+    {
+        return [
+            self::GENDER_MALE => 'კაცი',
+            self::GENDER_FEMALE => 'ქალი',
+        ];
+    }
+
+    public function genderLabel(): ?string
+    {
+        return self::genderOptions()[$this->gender] ?? null;
     }
 
     public function visits(): \Illuminate\Database\Eloquent\Relations\HasMany
