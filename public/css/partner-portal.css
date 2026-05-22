@@ -229,3 +229,42 @@ html.dark .partner-marketing-icon--executive {
     background-color: rgba(88, 28, 135, 0.25);
     color: #c084fc;
 }
+
+/* Partner history */
+.partner-history-filter {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+.partner-history-filter:hover {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.partner-history-filter--active {
+    background-color: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 4px 14px -3px rgba(37, 99, 235, 0.4);
+}
+
+.partner-history-filter--active:hover {
+    background-color: #1d4ed8;
+    color: #ffffff;
+}
+
+html.dark .partner-history-filter {
+    background-color: #1e293b;
+    color: #94a3b8;
+}
+
+html.dark .partner-history-filter:hover {
+    background-color: #334155;
+    color: #e2e8f0;
+}
+
+html.dark .partner-history-filter--active,
+html.dark .partner-history-filter--active:hover {
+    background-color: #3b82f6;
+    color: #ffffff;
+    box-shadow: 0 4px 14px -3px rgba(59, 130, 246, 0.35);
+}

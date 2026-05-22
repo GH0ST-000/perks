@@ -4,8 +4,9 @@ namespace App\Services;
 
 use App\Models\Partner;
 use App\Models\PremiumOffer;
+use App\Models\User;
 use App\Models\Visit;
-use Carbon\Carbon;
+use DateTimeInterface;
 use Illuminate\Support\Collection;
 
 class PartnerPortalService
@@ -59,9 +60,50 @@ class PartnerPortalService
             'chart_labels' => $chartLabels,
             'chart_values' => $chartValues,
             'chart_points' => $chartPoints,
-            'demographics' => [
-                ['label' => 'კაცი', 'percent' => 45, 'color' => '#3b82f6'],
-                ['label' => 'ქალი', 'percent' => 55, 'color' => '#ec4899'],
+            'demographics' => $this->demographicsForPartner($partner, $start),
+        ];
+    }
+
+    /**
+     * @return list<array{label: string, percent: int, color: string}>
+     */
+    private function demographicsForPartner(Partner $partner, DateTimeInterface $since): array
+    {
+        $visitorIds = Visit::query()
+            ->where('partner_id', $partner->id)
+            ->where('visited_at', '>=', $since)
+            ->distinct()
+            ->pluck('user_id');
+
+        $male = User::query()
+            ->whereIn('id', $visitorIds)
+            ->where('gender', User::GENDER_MALE)
+            ->count();
+
+        $female = User::query()
+            ->whereIn('id', $visitorIds)
+            ->where('gender', User::GENDER_FEMALE)
+            ->count();
+
+        $total = $male + $female;
+
+        if ($total === 0) {
+            return [
+                ['label' => 'კაცი', 'percent' => 0, 'color' => '#3b82f6'],
+                ['label' => 'ქალი', 'percent' => 0, 'color' => '#ec4899'],
+            ];
+        }
+
+        return [
+            [
+                'label' => 'კაცი',
+                'percent' => (int) round(($male / $total) * 100),
+                'color' => '#3b82f6',
+            ],
+            [
+                'label' => 'ქალი',
+                'percent' => (int) round(($female / $total) * 100),
+                'color' => '#ec4899',
             ],
         ];
     }
@@ -74,13 +116,56 @@ class PartnerPortalService
             ->get();
     }
 
-    public function getVisitHistory(Partner $partner): Collection
+    /**
+     * @return array{visits: Collection, period: string, period_label: string}
+     */
+    public function getVisitHistory(Partner $partner, string $period = '28'): array
     {
-        return Visit::query()
+        $filters = $this->historyPeriodFilters();
+        $config = $filters[$period] ?? $filters['28'];
+        $since = $config['since']();
+
+        $visits = Visit::query()
             ->with(['user', 'offerClaim.premiumOffer'])
             ->where('partner_id', $partner->id)
+            ->where('visited_at', '>=', $since)
             ->orderByDesc('visited_at')
-            ->limit(50)
+            ->limit(200)
             ->get();
+
+        return [
+            'visits' => $visits,
+            'period' => $period,
+            'period_label' => $config['label'],
+        ];
+    }
+
+    /**
+     * @return array<string, array{label: string, since: callable(): DateTimeInterface}>
+     */
+    public function historyPeriodFilters(): array
+    {
+        return [
+            '28' => [
+                'label' => '28 დღე',
+                'since' => fn () => now()->subDays(28)->startOfDay(),
+            ],
+            '3' => [
+                'label' => '3 თვე',
+                'since' => fn () => now()->subMonths(3)->startOfDay(),
+            ],
+            '6' => [
+                'label' => '6 თვე',
+                'since' => fn () => now()->subMonths(6)->startOfDay(),
+            ],
+            '9' => [
+                'label' => '9 თვე',
+                'since' => fn () => now()->subMonths(9)->startOfDay(),
+            ],
+            '12' => [
+                'label' => '12 თვე',
+                'since' => fn () => now()->subMonths(12)->startOfDay(),
+            ],
+        ];
     }
 }
