@@ -12,6 +12,12 @@ class PremiumOffer extends Model
 {
     use HasFactory;
 
+    public const STATUS_PENDING = 'pending';
+
+    public const STATUS_APPROVED = 'approved';
+
+    public const STATUS_REJECTED = 'rejected';
+
     protected $fillable = [
         'name',
         'image',
@@ -24,6 +30,10 @@ class PremiumOffer extends Model
         'premium_discount',
         'p_coins_reward',
         'partner_id',
+        'status',
+        'period',
+        'rejection_reason',
+        'approved_at',
         'is_premium',
         'package_purchased',
         'purchased_at',
@@ -41,7 +51,59 @@ class PremiumOffer extends Model
             'package_purchased' => 'boolean',
             'purchased_at' => 'datetime',
             'expires_at' => 'date',
+            'approved_at' => 'datetime',
         ];
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('status', self::STATUS_APPROVED);
+    }
+
+    public function scopePublicVisible($query)
+    {
+        return $query->approved()->whereDate('expires_at', '>=', now());
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->status === self::STATUS_APPROVED;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === self::STATUS_REJECTED;
+    }
+
+    public function partnerCanEdit(): bool
+    {
+        if ($this->status === self::STATUS_APPROVED && $this->day_left <= 0) {
+            return false;
+        }
+
+        return in_array($this->status, [
+            self::STATUS_PENDING,
+            self::STATUS_REJECTED,
+            self::STATUS_APPROVED,
+        ], true);
+    }
+
+    public function partnerCanDelete(): bool
+    {
+        return in_array($this->status, [
+            self::STATUS_PENDING,
+            self::STATUS_REJECTED,
+        ], true);
+    }
+
+    public function displayDiscount(): int
+    {
+        return (int) round($this->standard_discount ?: $this->discount ?: 0);
     }
 
     /**

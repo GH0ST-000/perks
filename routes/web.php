@@ -22,11 +22,31 @@ Route::post('/vacancies/{vacancyId}/apply', [App\Http\Controllers\VacancyControl
 
 // Dashboard
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    if (auth()->user()?->isPartner()) {
+        return redirect()->route('partner.dashboard');
+    }
 
-// Profile routes
-Route::middleware('auth')->group(function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified', 'redirect.partner.users'])->name('dashboard');
+
+Route::middleware(['auth', 'verified', 'partner'])->prefix('partner')->name('partner.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\PartnerPortalController::class, 'dashboard'])->name('dashboard');
+    Route::get('/scanner', [App\Http\Controllers\PartnerPortalController::class, 'scanner'])->name('scanner');
+    Route::post('/scanner/search', [App\Http\Controllers\PartnerPortalController::class, 'scannerSearch'])->name('scanner.search');
+    Route::post('/scanner/verify', [App\Http\Controllers\PartnerPortalController::class, 'scannerVerify'])->name('scanner.verify');
+    Route::get('/offers', [App\Http\Controllers\PartnerPortalController::class, 'offers'])->name('offers');
+    Route::post('/offers', [App\Http\Controllers\PartnerPortalController::class, 'storeOffer'])->name('offers.store');
+    Route::patch('/offers/{offer}', [App\Http\Controllers\PartnerPortalController::class, 'updateOffer'])->name('offers.update');
+    Route::delete('/offers/{offer}', [App\Http\Controllers\PartnerPortalController::class, 'destroyOffer'])->name('offers.destroy');
+    Route::get('/marketing', [App\Http\Controllers\PartnerPortalController::class, 'marketing'])->name('marketing');
+    Route::post('/marketing/order', [App\Http\Controllers\PartnerPortalController::class, 'orderMarketing'])->name('marketing.order');
+    Route::get('/history', [App\Http\Controllers\PartnerPortalController::class, 'history'])->name('history');
+    Route::get('/settings', [App\Http\Controllers\PartnerPortalController::class, 'settings'])->name('settings');
+    Route::patch('/settings', [App\Http\Controllers\PartnerPortalController::class, 'updateSettings'])->name('settings.update');
+});
+
+// Corporate user routes (partners are redirected to partner portal)
+Route::middleware(['auth', 'redirect.partner.users'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

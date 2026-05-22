@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Partner;
 use App\Models\User;
 use App\Models\UserOtp;
+use App\Services\PartnerAccountService;
 use App\Services\SmsService;
+use App\Support\PhoneNumber;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,14 +43,24 @@ class AuthenticatedSessionController extends Controller
             'phone.regex' => 'გთხოვთ, შეიყვანოთ სწორი ქართული ტელეფონის ნომერი (9 ციფრი).',
         ]);
 
-        $phone = '+995' . $request->phone;
+        $phone = PhoneNumber::normalize($request->phone);
 
-        // Check if user exists
         $user = User::where('phone', $phone)->first();
-        if (!$user) {
+
+        if (! $user) {
+            $partner = Partner::query()
+                ->get()
+                ->first(fn (Partner $partner): bool => app(PartnerAccountService::class)->normalizePartnerPhone($partner->phone) === $phone);
+
+            if ($partner) {
+                $user = app(PartnerAccountService::class)->syncLoginUser($partner);
+            }
+        }
+
+        if (! $user) {
             return response()->json([
                 'success' => false,
-                'message' => 'ამ ტელეფონის ნომერზე ანგარიში არ მოიძებნა. გთხოვთ, ჯერ დარეგისტრირდეთ.',
+                'message' => 'ამ ტელეფონის ნომერზე ანგარიში არ მოიძებნა. დაუკავშირდით ადმინისტრატორს.',
             ], 422);
         }
 
@@ -149,7 +162,9 @@ class AuthenticatedSessionController extends Controller
             ->where('id', '!=', $userOtp->id)
             ->delete();
 
-        return redirect()->intended(route('home'));
+        return redirect()->intended(
+            $user->isPartner() ? route('partner.dashboard') : route('dashboard')
+        );
     }
 
     /**

@@ -25,6 +25,12 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request, RegisterUserAction $action): JsonResponse
     {
+        if (! config('perks.registration_enabled')) {
+            return response()->json([
+                'message' => 'Public registration is disabled. Contact your company administrator.',
+            ], 403);
+        }
+
         $user = $action->handle($request->validated());
 
         // Generate token for the newly registered user

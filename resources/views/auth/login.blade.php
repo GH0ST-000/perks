@@ -133,13 +133,9 @@
             </form>
         </div>
 
-        <!-- Register Link -->
         <div class="mt-6 text-center">
             <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors">
-                არ გაქვთ ანგარიში?
-                <a href="{{ route('register') }}" class="font-semibold ml-1 transition-colors text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">
-                    დარეგისტრირდით
-                </a>
+                ანგარიში მხოლოდ კორპორატიული პაკეტის ფარგლებში იქმნება. დაუკავშირდით თქვენს კომპანიის ადმინისტრატორს.
             </p>
         </div>
     </div>

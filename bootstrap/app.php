@@ -15,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
             'roles' => \App\Http\Middleware\CheckRoles::class,
+            'partner' => \App\Http\Middleware\EnsurePartner::class,
+            'redirect.partner.users' => \App\Http\Middleware\RedirectPartnerUsers::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

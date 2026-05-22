@@ -207,17 +207,37 @@
                             </div>
                         @endif
 
-                        <!-- CTA Button -->
+                        <!-- Claim / redemption code -->
                         @auth
-                            <form action="{{ route('offers.claim', $offer) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="w-full py-4 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg shadow-primary-600/30 active:scale-95 flex items-center justify-center gap-2">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                    </svg>
-                                    მიიღე შეთავაზება
-                                </button>
-                            </form>
+                            @if($userClaim && $userClaim->status === \App\Models\OfferClaim::STATUS_PENDING)
+                                <div class="mb-6 p-6 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-2xl">
+                                    <div class="text-sm font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-2">თქვენი კოდი პარტნიორთან</div>
+                                    <div class="flex items-center justify-between gap-4">
+                                        <p class="text-3xl md:text-4xl font-black text-blue-900 dark:text-blue-100 font-mono tracking-wider">{{ $userClaim->redemption_code }}</p>
+                                        <button type="button" onclick="navigator.clipboard.writeText('{{ $userClaim->redemption_code }}')"
+                                            class="shrink-0 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors">
+                                            კოპირება
+                                        </button>
+                                    </div>
+                                    <p class="text-sm text-blue-600 dark:text-blue-400 mt-3">
+                                        აჩვენეთ ეს კოდი ან თქვენი ტელეფონი პარტნიორს. ვიზიტის დადასტურების შემდეგ მიიღებთ P-coins-ს.
+                                    </p>
+                                </div>
+                            @elseif($userClaim && $userClaim->status === \App\Models\OfferClaim::STATUS_USED)
+                                <div class="w-full py-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-lg text-center">
+                                    შეთავაზება გამოყენებულია
+                                </div>
+                            @else
+                                <form action="{{ route('offers.claim', $offer) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg shadow-primary-600/30 active:scale-95 flex items-center justify-center gap-2">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        მიიღე შეთავაზება
+                                    </button>
+                                </form>
+                            @endif
                         @else
                             @if(Route::has('login'))
                                 <a href="{{ route('login') }}" class="block w-full py-4 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg shadow-primary-600/30 text-center active:scale-95">

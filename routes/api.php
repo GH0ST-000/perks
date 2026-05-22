@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'auth'], function (): void {
     // Public routes
     Route::controller(AuthController::class)->group(function (): void {
-        Route::post('register', 'register');
+        if (config('perks.registration_enabled')) {
+            Route::post('register', 'register');
+        }
         Route::post('login', 'login');
     });
 

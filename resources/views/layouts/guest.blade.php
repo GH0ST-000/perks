@@ -82,11 +82,8 @@
                     </button>
                     
                     @guest
-                        <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300 transition-colors">
+                        <a href="{{ route('login') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors">
                             შესვლა
-                        </a>
-                        <a href="{{ route('register') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors">
-                            რეგისტრაცია
                         </a>
                     @else
                         <a href="{{ route('dashboard') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors">
