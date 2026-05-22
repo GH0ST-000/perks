@@ -54,12 +54,36 @@
 
 <div class="space-y-1 md:space-y-2">
     <label class="text-[9px] md:text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">სურათი</label>
-    <label class="flex flex-col items-center justify-center w-full h-32 md:h-36 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl md:rounded-2xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+
+    <div x-show="hasImagePreview" x-cloak class="w-full space-y-2">
+        <div class="relative rounded-xl md:rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
+            <img :src="imagePreview || existingImage" alt="" class="w-full h-36 md:h-44 object-cover block">
+        </div>
+        <div class="flex gap-2">
+            <button type="button"
+                    @click="clearImage()"
+                    class="partner-image-btn-delete flex-1 inline-flex items-center justify-center gap-2 py-3 text-sm font-bold rounded-xl shadow-md transition-colors min-h-[44px]"
+                    title="წაშლა">
+                <span aria-hidden="true" class="text-base leading-none">✕</span>
+                <span>წაშლა</span>
+            </button>
+            <label class="partner-image-btn-change flex-1 inline-flex items-center justify-center py-3 text-sm font-bold rounded-xl shadow-md cursor-pointer transition-colors min-h-[44px]">
+                შეცვლა
+                <input type="file" name="image" accept="image/*" class="hidden" x-ref="imageInput" @change="onImageSelect($event)">
+            </label>
+        </div>
+    </div>
+
+    <label x-show="!hasImagePreview" x-cloak
+           class="flex flex-col items-center justify-center w-full h-32 md:h-36 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl md:rounded-2xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
         <i data-lucide="upload" class="w-6 h-6 text-slate-300 mb-2"></i>
         <span class="text-xs font-bold text-slate-400">ატვირთეთ ფოტო</span>
-        <input type="file" name="image" accept="image/*" class="hidden" @change="imageName = $event.target.files[0]?.name || ''">
-        <span class="text-[10px] text-blue-600 mt-1" x-text="imageName" x-show="imageName"></span>
+        <input type="file" name="image" accept="image/*" class="hidden" x-ref="imageInputEmpty" @change="onImageSelect($event)">
     </label>
+
+    <template x-if="editingId && removeImage">
+        <input type="hidden" name="remove_image" value="1">
+    </template>
 </div>
 
 <div class="space-y-1 md:space-y-2">

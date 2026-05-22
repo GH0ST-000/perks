@@ -35,7 +35,9 @@ Route::middleware(['auth', 'verified', 'partner'])->prefix('partner')->name('par
     Route::post('/scanner/search', [App\Http\Controllers\PartnerPortalController::class, 'scannerSearch'])->name('scanner.search');
     Route::post('/scanner/verify', [App\Http\Controllers\PartnerPortalController::class, 'scannerVerify'])->name('scanner.verify');
     Route::get('/offers', [App\Http\Controllers\PartnerPortalController::class, 'offers'])->name('offers');
+    Route::get('/offers/create', [App\Http\Controllers\PartnerPortalController::class, 'createOffer'])->name('offers.create');
     Route::post('/offers', [App\Http\Controllers\PartnerPortalController::class, 'storeOffer'])->name('offers.store');
+    Route::get('/offers/{offer}/edit', [App\Http\Controllers\PartnerPortalController::class, 'editOffer'])->name('offers.edit');
     Route::patch('/offers/{offer}', [App\Http\Controllers\PartnerPortalController::class, 'updateOffer'])->name('offers.update');
     Route::delete('/offers/{offer}', [App\Http\Controllers\PartnerPortalController::class, 'destroyOffer'])->name('offers.destroy');
     Route::get('/marketing', [App\Http\Controllers\PartnerPortalController::class, 'marketing'])->name('marketing');

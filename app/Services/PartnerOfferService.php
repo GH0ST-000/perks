@@ -61,7 +61,12 @@ class PartnerOfferService
             $offer->rejection_reason = null;
         }
 
-        if ($image) {
+        if (! empty($data['remove_image'])) {
+            if ($offer->image) {
+                Storage::disk('public')->delete($offer->image);
+            }
+            $offer->image = null;
+        } elseif ($image) {
             if ($offer->image) {
                 Storage::disk('public')->delete($offer->image);
             }
