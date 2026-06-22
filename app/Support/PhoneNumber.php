@@ -25,4 +25,9 @@ class PhoneNumber
 
         return $digits;
     }
+
+    public static function toGoSms(string $phone): string
+    {
+        return ltrim(self::normalize($phone), '+');
+    }
 }

@@ -35,11 +35,12 @@ return [
         ],
     ],
 
-    'twilio' => [
-        'sid' => env('TWILIO_SID'),
-        'auth_token' => env('TWILIO_AUTH_TOKEN'),
-        'phone_number' => env('TWILIO_PHONE_NUMBER'),
-        'enabled' => env('TWILIO_ENABLED', false),
+    'gosms' => [
+        'enabled' => env('GOSMS_ENABLED', false),
+        'base_url' => env('GOSMS_BASE_URL', 'https://api.gosms.ge'),
+        'api_key' => env('GOSMS_API_KEY'),
+        'sender_name' => env('GOSMS_SENDER_NAME'),
+        'timeout' => env('GOSMS_TIMEOUT', 15),
     ],
 
     'bog' => [
