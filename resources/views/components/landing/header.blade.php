@@ -1,13 +1,14 @@
 <!-- Header -->
 <header class="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-colors duration-300 w-full">
     <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-        <a href="{{ route('home') }}" class="flex items-center gap-2 group">
-            <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-105 transition-transform">
-                P
-            </div>
-            <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300">
-                Perks
-            </span>
+        <a href="{{ route('home') }}" class="flex items-center group shrink-0">
+            <img
+                src="{{ asset('images/perks-logo.png') }}"
+                alt="Perks"
+                class="h-9 w-auto group-hover:scale-105 transition-transform"
+                width="120"
+                height="36"
+            >
         </a>
 
         <!-- Desktop Nav -->

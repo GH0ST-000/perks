@@ -7,7 +7,7 @@
                 <span class="text-xl font-bold">Perks.ge</span>
             </div>
             <p class="text-gray-400 text-sm leading-relaxed">
-                საქართველოს წამყვანი თანამშრომელთა ბენეფიტების პლატფორმა, რომელიც აკავშირებს კომპანიებს ექსკლუზიურ შეთავაზებებთან ქვეყნის საუკეთესო პარტნიორებთან.
+                ბენეფიტების პლატფორმა, რომელიც აკავშირებს კომპანიებს ექსკლუზიურ შეთავაზებებთან ქვეყნის საუკეთესო პარტნიორებთან.
             </p>
             <div class="flex gap-4">
                 <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors">
