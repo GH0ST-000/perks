@@ -43,7 +43,7 @@
 </div>
 
 <div class="space-y-1 md:space-y-2">
-    <label class="text-[9px] md:text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">P-Coin ჯილდო</label>
+    <label class="text-[9px] md:text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">P-Coin ღირებულება</label>
     <div class="relative">
         <i data-lucide="coins" class="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300 pointer-events-none"></i>
         <input type="number" name="p_coins_reward" required min="0" placeholder="50"

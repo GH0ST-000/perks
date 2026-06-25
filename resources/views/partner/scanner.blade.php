@@ -116,7 +116,7 @@
                 </div>
                 <h2 class="text-2xl md:text-3xl font-black text-slate-800 dark:text-slate-100 mb-1">წარმატებული!</h2>
                 <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm mb-2 max-w-[260px]" x-text="successMessage">დადასტურდა</p>
-                <p x-show="pCoinsAwarded > 0" class="text-amber-600 dark:text-amber-400 text-xs font-bold mb-6 md:mb-8" x-text="'+' + pCoinsAwarded + ' P-coins მომხმარებელს'"></p>
+                <p class="text-green-600 dark:text-green-400 text-sm font-bold mb-6 md:mb-8">ვიზიტი წარმატებით დადასტურდა</p>
                 <p x-show="pCoinsAwarded <= 0" class="mb-6 md:mb-8"></p>
                 <button type="button"
                         @click="reset()"

@@ -83,10 +83,10 @@ class OfferClaimsRelationManager extends RelationManager
                     ->formatStateUsing(fn ($state) => '-' . number_format($state, 0) . '%')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('premiumOffer.p_coins_reward')
-                    ->label('P-Coins')
+                    ->label('P-Coins Cost')
                     ->badge()
                     ->color('warning')
-                    ->formatStateUsing(fn ($state) => '+' . number_format($state) . ' P-coins')
+                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state).' P' : '—')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -141,22 +141,11 @@ class OfferClaimsRelationManager extends RelationManager
                                 'status' => 'used',
                                 'used_at' => now(),
                             ]);
-                            
-                            // Award P-coins if configured
-                            if ($record->premiumOffer->p_coins_reward > 0) {
-                                $record->user->increment('p_coins', $record->premiumOffer->p_coins_reward);
-                                
-                                \Filament\Notifications\Notification::make()
-                                    ->success()
-                                    ->title('Offer Marked as Used')
-                                    ->body("Awarded {$record->premiumOffer->p_coins_reward} P-Coins to {$record->user->name}")
-                                    ->send();
-                            } else {
-                                \Filament\Notifications\Notification::make()
-                                    ->success()
-                                    ->title('Offer Marked as Used')
-                                    ->send();
-                            }
+
+                            \Filament\Notifications\Notification::make()
+                                ->success()
+                                ->title('Offer Marked as Used')
+                                ->send();
                         }),
                     Tables\Actions\DeleteAction::make(),
                 ]),

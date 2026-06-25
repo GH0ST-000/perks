@@ -140,7 +140,7 @@
                             </div>
                         </div>
 
-                        <!-- P-COINS REWARD - Prominent Display -->
+                        <!-- P-Coins Cost -->
                         @if($offer->p_coins_reward > 0)
                             <div class="mb-8 p-6 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl border-2 border-amber-300 dark:border-amber-700 shadow-lg">
                                 <div class="flex items-center justify-between">
@@ -151,17 +151,16 @@
                                             </svg>
                                         </div>
                                         <div>
-                                            <div class="text-sm font-semibold text-amber-700 dark:text-amber-300 uppercase tracking-wider mb-1">შენაძენის დასტურის შემდეგ</div>
+                                            <div class="text-sm font-semibold text-amber-700 dark:text-amber-300 uppercase tracking-wider mb-1">ღირებულება</div>
                                             <div class="text-3xl font-black text-amber-900 dark:text-amber-100">
-                                                +{{ $offer->p_coins_reward }} <span class="text-2xl">P-coins</span>
+                                                {{ $offer->p_coins_reward }} <span class="text-2xl">P-coins</span>
                                             </div>
+                                            @auth
+                                                <div class="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                                                    თქვენი ბალანსი: {{ auth()->user()->p_coins ?? 0 }} P
+                                                </div>
+                                            @endauth
                                         </div>
-                                    </div>
-                                    <div class="hidden md:flex items-center gap-2 text-amber-700 dark:text-amber-300 text-sm font-medium">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                        </svg>
-                                        <span>ვიზიტის დადასტურების შემდეგ</span>
                                     </div>
                                 </div>
                             </div>
@@ -220,7 +219,7 @@
                                         </button>
                                     </div>
                                     <p class="text-sm text-blue-600 dark:text-blue-400 mt-3">
-                                        აჩვენეთ ეს კოდი ან თქვენი ტელეფონი პარტნიორს. ვიზიტის დადასტურების შემდეგ მიიღებთ P-coins-ს.
+                                        აჩვენეთ ეს კოდი ან თქვენი ტელეფონი პარტნიორს ვიზიტის დასადასტურებლად.
                                     </p>
                                 </div>
                             @elseif($userClaim && $userClaim->status === \App\Models\OfferClaim::STATUS_USED)
@@ -228,15 +227,33 @@
                                     შეთავაზება გამოყენებულია
                                 </div>
                             @else
+                                @if($claimCost > 0 && ! $canAffordClaim)
+                                    <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+                                        <p class="text-red-800 dark:text-red-200 font-medium mb-2">
+                                            არასაკმარისი ბალანსი. საჭიროა {{ $claimCost }} P, გაქვთ {{ auth()->user()->p_coins ?? 0 }} P.
+                                        </p>
+                                        <a href="{{ route('wallet.index') }}" class="inline-flex items-center gap-2 text-sm font-bold text-primary-600 dark:text-primary-400 hover:underline">
+                                            P-coins-ის შეძენა საფულიდან →
+                                        </a>
+                                    </div>
+                                    <button type="button" disabled class="w-full py-4 bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-xl font-bold text-lg cursor-not-allowed">
+                                        არასაკმარისი P-coins
+                                    </button>
+                                @else
                                 <form action="{{ route('offers.claim', $offer) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="w-full py-4 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white rounded-xl font-bold text-lg transition-all duration-200 shadow-lg shadow-primary-600/30 active:scale-95 flex items-center justify-center gap-2">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                         </svg>
-                                        მიიღე შეთავაზება
+                                        @if($claimCost > 0)
+                                            მიიღე შეთავაზება ({{ $claimCost }} P)
+                                        @else
+                                            მიიღე შეთავაზება
+                                        @endif
                                     </button>
                                 </form>
+                                @endif
                             @endif
                         @else
                             @if(Route::has('login'))

@@ -60,7 +60,7 @@ class PaymentController extends Controller
                 'amount' => $package->price,
                 'currency' => 'GEL',
                 'status' => 'pending',
-                'description' => "Purchase of {$package->name} ({$package->p_coins} P-Coins)",
+                'description' => "Purchase of {$package->name} ({$package->p_coins} P-Coins) [package:{$package->id}]",
             ]);
 
             // Create BOG order
@@ -233,13 +233,17 @@ class PaymentController extends Controller
      */
     private function getPackageFromPayment(BogPayment $payment): ?PCoinPackage
     {
-        // Try to get package from BOG response basket
-        if (isset($payment->bog_response['purchase_units']['basket'][0]['product_id'])) {
-            $packageId = $payment->bog_response['purchase_units']['basket'][0]['product_id'];
-            return PCoinPackage::find($packageId);
+        $packageId = data_get($payment->bog_response, 'purchase_units.basket.0.product_id')
+            ?? data_get($payment->bog_response, 'basket.0.product_id');
+
+        if ($packageId) {
+            return PCoinPackage::find((int) $packageId);
         }
 
-        // Fallback: match by amount
+        if (preg_match('/\[package:(\d+)\]/', $payment->description ?? '', $matches)) {
+            return PCoinPackage::find((int) $matches[1]);
+        }
+
         return PCoinPackage::where('price', $payment->amount)->first();
     }
 
