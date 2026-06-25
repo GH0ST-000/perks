@@ -99,7 +99,9 @@
         </div>
     @endif
 
+    @if($hasMembership ?? false)
     @include('components.landing.offers', ['offers' => $premiumOffers])
+    @endif
 
     <section id="categories" class="py-20 bg-gray-50 dark:bg-gray-800">
         <div class="max-w-7xl mx-auto px-4">
@@ -125,6 +127,7 @@
         </div>
     </section>
 
+    @auth
     <section id="pricing" class="py-20 bg-white dark:bg-gray-900">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-16">
@@ -137,7 +140,7 @@
                     <h3 class="text-xl font-bold dark:text-white mb-2">Member</h3>
                     <p class="text-gray-500 text-sm mb-6"></p>
                     <div class="flex items-end gap-1 mb-8">
-                        <span class="text-4xl font-bold dark:text-white">19₾</span>
+                        <span class="text-4xl font-bold dark:text-white">{{ number_format(config('perks.membership_plans.member.amount', 19), 0) }}₾</span>
                         <span class="text-gray-500 mb-1">/თვეში</span>
                     </div>
 
@@ -160,9 +163,9 @@
                         </li>
                     </ul>
 
-                    <button class="w-full py-4 px-5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm flex items-center justify-center gap-2 border-2 border-primary-600 text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:border-primary-500 dark:hover:bg-gray-800">
+                    <a href="{{ route('subscriptions.index', ['plan' => 'member']) }}" class="w-full py-4 px-5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm flex items-center justify-center gap-2 border-2 border-primary-600 text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:border-primary-500 dark:hover:bg-gray-800">
                         მოთხოვნა
-                    </button>
+                    </a>
                 </div>
 
                 <div class="rounded-3xl p-8 border border-primary-600 bg-primary-50/50 dark:bg-primary-900/10 relative hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
@@ -172,7 +175,7 @@
                     <h3 class="text-xl font-bold dark:text-white mb-2">Limited</h3>
                     <p class="text-gray-500 text-sm mb-6"></p>
                     <div class="flex items-end gap-1 mb-8">
-                        <span class="text-4xl font-bold dark:text-white">29₾</span>
+                        <span class="text-4xl font-bold dark:text-white">{{ number_format(config('perks.membership_plans.limited.amount', 29), 0) }}₾</span>
                         <span class="text-gray-500 mb-1">/თვეში</span>
                     </div>
 
@@ -199,13 +202,14 @@
                         </li>
                     </ul>
 
-                    <button class="w-full py-4 px-5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm flex items-center justify-center gap-2 bg-primary-600 text-white hover:bg-primary-700 shadow-md shadow-primary-600/20 dark:shadow-none">
+                    <a href="{{ route('subscriptions.index', ['plan' => 'limited']) }}" class="w-full py-4 px-5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm flex items-center justify-center gap-2 bg-primary-600 text-white hover:bg-primary-700 shadow-md shadow-primary-600/20 dark:shadow-none">
                         მოთხოვნა
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
+    @endauth
 
     @if(isset($testimonials) && $testimonials->count() > 0)
         <section id="testimonials" class="py-20 bg-gray-50 dark:bg-gray-800">

@@ -238,7 +238,8 @@
                     </div>
 {{--                    <span id="user-portal-text" style="font-size: 18px; font-weight: 600; color: #ffffff;">User Portal</span>--}}
                 </div>
-                <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <x-membership-badge size="sm" />
                     <div style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--bg-tertiary); border-radius: 24px;">
                         <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <span style="color: #ffffff; font-size: 12px; font-weight: 600;">P</span>

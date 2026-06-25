@@ -40,12 +40,11 @@ class RedemptionsRelationManager extends RelationManager
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->options([
-                        'pending' => 'Pending',
-                        'completed' => 'Completed',
+                        'pending' => 'Pending (awaiting scan)',
                         'used' => 'Used',
                         'expired' => 'Expired',
                     ])
-                    ->default('completed')
+                    ->default('pending')
                     ->required(),
                 Forms\Components\DateTimePicker::make('redeemed_at')
                     ->label('Redeemed At')
@@ -92,7 +91,6 @@ class RedemptionsRelationManager extends RelationManager
                     ->label('Status')
                     ->colors([
                         'warning' => 'pending',
-                        'success' => 'completed',
                         'primary' => 'used',
                         'danger' => 'expired',
                     ])
@@ -118,7 +116,6 @@ class RedemptionsRelationManager extends RelationManager
                     ->label('Status')
                     ->options([
                         'pending' => 'Pending',
-                        'completed' => 'Completed',
                         'used' => 'Used',
                         'expired' => 'Expired',
                     ]),
@@ -151,7 +148,7 @@ class RedemptionsRelationManager extends RelationManager
                     ->label('Mark as Used')
                     ->icon('heroicon-o-check-badge')
                     ->color('success')
-                    ->visible(fn ($record) => $record->status === 'completed')
+                    ->visible(fn ($record) => $record->status === 'pending')
                     ->action(function ($record) {
                         $record->update([
                             'status' => 'used',

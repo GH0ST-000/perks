@@ -14,6 +14,44 @@
                     </div>
                 @endif
 
+                @if(session('info'))
+                    <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200 px-4 py-3 rounded-xl">
+                        {{ session('info') }}
+                    </div>
+                @endif
+
+                @if(! ($hasMembership ?? false))
+                    <div class="mb-10">
+                        <h1 class="text-3xl font-bold dark:text-white mb-2">შეთავაზებები</h1>
+                    </div>
+                    <div class="text-center py-20 bg-gray-50 dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700">
+                        <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-3">შეთავაზებები ხელმისაწვდომია მემბერშიპით</h3>
+                        <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                            შეთავაზებების სანახავად და მისაღებად გაააქტიურეთ Member ან Limited პაკეტი.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                            @auth
+                                <a href="{{ route('subscriptions.index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-colors">
+                                    პაკეტის გააქტიურება
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-colors">
+                                    შესვლა
+                                </a>
+                                @if(Route::has('register'))
+                                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-primary-600 text-primary-600 dark:text-primary-400 rounded-xl font-semibold transition-colors hover:bg-primary-50 dark:hover:bg-gray-700">
+                                        რეგისტრაცია
+                                    </a>
+                                @endif
+                            @endauth
+                        </div>
+                    </div>
+                @else
                 <div class="flex flex-col gap-6 mb-10">
                     <div>
                         <h1 class="text-3xl font-bold dark:text-white mb-2">შეთავაზებები</h1>
@@ -194,6 +232,7 @@
                             მთავარ გვერდზე დაბრუნება
                         </a>
                     </div>
+                @endif
                 @endif
             </div>
         </section>

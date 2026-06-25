@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\MembershipService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -104,6 +105,11 @@ class PremiumOffer extends Model
     public function displayDiscount(): int
     {
         return (int) round($this->standard_discount ?: $this->discount ?: 0);
+    }
+
+    public function pCoinsForCardType(string $cardType): int
+    {
+        return app(MembershipService::class)->pCoinsForCardType($this, $cardType);
     }
 
     /**

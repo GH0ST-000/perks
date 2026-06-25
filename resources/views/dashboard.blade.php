@@ -11,13 +11,21 @@
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 24px; position: relative; overflow: hidden;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                 <div>
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
                         <span style="font-size: 24px; font-weight: 700; color: #ffffff;">P PERKS</span>
-                        <span style="font-size: 12px; font-weight: 600; color: #10b981; background-color: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px;">ACTIVE</span>
+                        <x-membership-badge size="md" />
+                        @if($activeSubscription ?? null)
+                            <span style="font-size: 11px; font-weight: 600; color: #10b981; background-color: rgba(16,185,129,0.2); padding: 4px 8px; border-radius: 12px;">აქტიური</span>
+                        @endif
                     </div>
                     <p style="font-size: 12px; color: rgba(255,255,255,0.7); margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 1px;">CARD HOLDER</p>
                     <p style="font-size: 20px; font-weight: 600; color: #ffffff; margin: 0 0 8px 0;">{{ auth()->user()->name }}</p>
                     <p style="font-size: 14px; color: rgba(255,255,255,0.8); margin: 0;">P-{{ str_pad(auth()->id(), 4, '0', STR_PAD_LEFT) }}</p>
+                    @if($activeSubscription ?? null)
+                        <p style="font-size: 12px; color: rgba(255,255,255,0.65); margin: 8px 0 0 0;">
+                            ვადა: {{ $activeSubscription->current_period_end?->format('d.m.Y') }}
+                        </p>
+                    @endif
                 </div>
                 <div style="width: 80px; height: 80px; background-color: rgba(255,255,255,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
                     <span class="material-icons" style="font-size: 48px; color: rgba(255,255,255,0.5);">qr_code</span>

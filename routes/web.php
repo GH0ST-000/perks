@@ -26,7 +26,12 @@ Route::get('/dashboard', function () {
         return redirect()->route('partner.dashboard');
     }
 
-    return view('dashboard');
+    $membership = app(\App\Services\MembershipService::class);
+    $user = auth()->user();
+    $activeSubscription = $membership->activeSubscription($user);
+    $membershipPlan = $membership->plan($user);
+
+    return view('dashboard', compact('activeSubscription', 'membershipPlan'));
 })->middleware(['auth', 'verified', 'redirect.partner.users'])->name('dashboard');
 
 Route::middleware(['auth', 'verified', 'partner'])->prefix('partner')->name('partner.')->group(function () {

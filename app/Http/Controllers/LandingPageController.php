@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PremiumOffer;
 use App\Models\Category;
 use App\Models\CompanyRequest;
+use App\Services\MembershipService;
 use App\Models\PartnerRequest;
 use App\Models\BlogPost;
 use App\Models\Slider;
@@ -13,16 +14,29 @@ use Illuminate\Http\Request;
 
 class LandingPageController extends Controller
 {
+    private function userHasOfferAccess(): bool
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        return app(MembershipService::class)->hasActiveMembership($user);
+    }
+
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        // Get premium offers with partner relationship (only non-expired and marked as premium)
-        // Note: Premium visibility on Home Page is part of the Marketing Package benefit
-        $premiumOffers = PremiumOffer::with(['partner', 'partner.categories'])
-            ->publicVisible()
-            ->where('is_premium', true)
-            ->orderBy('id', 'desc')
-            ->limit(4)
-            ->get();
+        $hasMembership = $this->userHasOfferAccess();
+
+        $premiumOffers = $hasMembership
+            ? PremiumOffer::with(['partner', 'partner.categories'])
+                ->publicVisible()
+                ->where('is_premium', true)
+                ->orderBy('id', 'desc')
+                ->limit(4)
+                ->get()
+            : collect();
 
         // Get all categories for the categories section
         $categories = Category::orderBy('name')->get();
@@ -37,16 +51,20 @@ class LandingPageController extends Controller
             ->orderBy('order', 'asc')
             ->get();
 
-        return view('welcome', compact('premiumOffers', 'categories', 'sliders', 'testimonials'));
+        return view('welcome', compact('premiumOffers', 'categories', 'sliders', 'testimonials', 'hasMembership'));
     }
 
     public function allOffers(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        // Get all categories for filtering
         $categories = Category::orderBy('name')->get();
+        $hasMembership = $this->userHasOfferAccess();
 
-        // Start query (all non-expired offers - both premium and regular)
-        // Premium offers will be marked with a badge in the UI
+        if (! $hasMembership) {
+            $offers = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 12);
+
+            return view('offers.index', compact('offers', 'categories', 'hasMembership'));
+        }
+
         $query = PremiumOffer::with(['partner', 'partner.categories'])
             ->publicVisible();
 
@@ -79,11 +97,18 @@ class LandingPageController extends Controller
         // Get filtered offers with pagination
         $offers = $query->orderBy('id', 'desc')->paginate(12)->appends($request->query());
 
-        return view('offers.index', compact('offers', 'categories'));
+        return view('offers.index', compact('offers', 'categories', 'hasMembership'));
     }
 
     public function showOffer(PremiumOffer $offer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
     {
+        if (! $this->userHasOfferAccess()) {
+            return redirect()->route('offers.index')->with(
+                'error',
+                'შეთავაზებების სანახავად გაააქტიურეთ Member ან Limited მემბერშიპი.'
+            );
+        }
+
         if ($offer->status !== PremiumOffer::STATUS_APPROVED || $offer->day_left <= 0) {
             return redirect()->route('offers.index')->with('error', 'This offer is not available.');
         }
@@ -100,6 +125,11 @@ class LandingPageController extends Controller
             ->get();
 
         $userClaim = null;
+        $membership = app(MembershipService::class);
+        $hasMembership = true;
+        $displayPCoins = $membership->pCoinsForOffer($offer, auth()->user());
+        $membershipPlan = $membership->plan(auth()->user());
+
         if (auth()->check()) {
             $userClaim = \App\Models\OfferClaim::query()
                 ->where('user_id', auth()->id())
@@ -107,7 +137,14 @@ class LandingPageController extends Controller
                 ->first();
         }
 
-        return view('offers.show', compact('offer', 'relatedOffers', 'userClaim'));
+        return view('offers.show', compact(
+            'offer',
+            'relatedOffers',
+            'userClaim',
+            'hasMembership',
+            'displayPCoins',
+            'membershipPlan',
+        ));
     }
 
     public function companies(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -214,12 +251,19 @@ class LandingPageController extends Controller
     public function claimOffer(PremiumOffer $offer): \Illuminate\Http\RedirectResponse
     {
         $user = auth()->user();
+        $membership = app(MembershipService::class);
 
         if ($offer->status !== PremiumOffer::STATUS_APPROVED || $offer->day_left <= 0) {
             return redirect()->back()->with('error', 'ეს შეთავაზება ხელმისაწვდომი არ არის.');
         }
 
-        // Check if user already claimed this offer
+        if (! $membership->hasActiveMembership($user)) {
+            return redirect()->route('subscriptions.index')->with(
+                'error',
+                'შეთავაზების მისაღებად გაააქტიურეთ Member ან Limited მემბერშიპი.'
+            );
+        }
+
         $existingClaim = \App\Models\OfferClaim::where('user_id', $user->id)
             ->where('premium_offer_id', $offer->id)
             ->first();
@@ -228,29 +272,14 @@ class LandingPageController extends Controller
             return redirect()->back()->with('info', 'თქვენ უკვე მიიღეთ ეს შეთავაზება.');
         }
 
-        // Determine card type and discount based on user's subscription
-        $cardType = 'standard';
-        $discount = $offer->standard_discount;
-
-        // Check if user has active premium subscription
-        $activeSubscription = $user->subscriptions()
-            ->where('status', 'active')
-            ->where(function($query) {
-                $query->whereNull('expires_at')
-                      ->orWhere('expires_at', '>', now());
-            })
-            ->first();
-
-        if ($activeSubscription) {
-            $cardType = 'premium';
-            $discount = $offer->premium_discount;
-        }
+        $cardType = $membership->cardTypeFor($user) ?? 'standard';
+        $discount = $membership->discountFor($offer, $user);
 
         $claim = app(\App\Services\OfferClaimService::class)->createClaim(
             $user,
             $offer,
             $cardType,
-            (float) $discount
+            $discount
         );
 
         return redirect()->back()->with(

@@ -5,28 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Gift;
 use App\Models\GiftRedemption;
 use App\Models\WalletTransaction;
+use App\Services\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class GiftController extends Controller
 {
+    public function __construct(
+        private WalletService $wallet,
+    ) {}
+
     /**
      * Display a listing of available gifts.
      */
     public function index()
     {
         $user = auth()->user();
-        
-        $gifts = Gift::where('is_active', true)
+
+        $gifts = Gift::with('partner')
+            ->where('is_active', true)
+            ->whereNotNull('partner_id')
             ->orderBy('sort_order')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Get user's redemptions for each gift
         $userRedemptions = $user->giftRedemptions()
             ->whereIn('gift_id', $gifts->pluck('id'))
-            ->whereIn('status', ['completed', 'pending'])
+            ->whereIn('status', [GiftRedemption::STATUS_PENDING, GiftRedemption::STATUS_USED])
             ->get()
             ->keyBy('gift_id');
 
@@ -44,52 +49,63 @@ class GiftController extends Controller
     {
         $user = auth()->user();
 
-        // Check if gift is available
-        if (!$gift->isAvailable()) {
+        if (! $gift->isAvailable()) {
             return back()->with('error', 'ეს საჩუქარი არ არის ხელმისაწვდომი');
         }
 
-        // Check if user has enough P coins
+        if (! $gift->partner_id) {
+            return back()->with('error', 'ეს საჩუქარი ჯერ არ არის დაკავშირებული პარტნიორთან');
+        }
+
         if ($user->p_coins < $gift->p_coins_cost) {
             return back()->with('error', 'არასაკმარისი P ქულები');
+        }
+
+        $existingRedemption = $user->giftRedemptions()
+            ->where('gift_id', $gift->id)
+            ->where('status', GiftRedemption::STATUS_PENDING)
+            ->first();
+
+        if ($existingRedemption) {
+            return back()->with('info', 'თქვენ უკვე გაქვთ აქტიური კოდი ამ საჩუქრისთვის: '.$existingRedemption->redemption_code);
         }
 
         try {
             DB::beginTransaction();
 
-            // Deduct P coins from user
-            $user->decrement('p_coins', $gift->p_coins_cost);
+            $this->wallet->debit(
+                $user,
+                $gift->p_coins_cost,
+                'purchase',
+                'საჩუქრის გადაცვლა: '.$gift->name,
+                Gift::class,
+                $gift->id,
+            );
 
-            // Create wallet transaction
-            WalletTransaction::create([
-                'user_id' => $user->id,
-                'type' => 'debit',
-                'amount' => -$gift->p_coins_cost,
-                'balance_after' => $user->fresh()->p_coins,
-                'description' => 'საჩუქრის გადაცვლა: ' . $gift->name,
-                'reference_type' => Gift::class,
-                'reference_id' => $gift->id,
-            ]);
-
-            // Create redemption record
             $redemption = GiftRedemption::create([
                 'user_id' => $user->id,
                 'gift_id' => $gift->id,
                 'p_coins_spent' => $gift->p_coins_cost,
-                'redemption_code' => 'GIFT-' . strtoupper(Str::random(10)),
-                'status' => 'completed',
+                'status' => GiftRedemption::STATUS_PENDING,
                 'redeemed_at' => now(),
-                'expires_at' => now()->addMonths(3), // Expires in 3 months
+                'expires_at' => now()->addMonths(3),
             ]);
 
-            // Decrease gift stock
+            $redemption->update([
+                'redemption_code' => $redemption->redemptionCodeFor(),
+            ]);
+
             $gift->decreaseStock();
 
             DB::commit();
 
-            return back()->with('success', 'საჩუქარი წარმატებით გადაიცვალა! თქვენი კოდი: ' . $redemption->redemption_code);
+            return back()->with(
+                'success',
+                'საჩუქარი წარმატებით გადაიცვალა! თქვენი კოდი პარტნიორთან: '.$redemption->redemption_code
+            );
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->with('error', 'დაფიქსირდა შეცდომა. გთხოვთ სცადოთ თავიდან.');
         }
     }
@@ -100,7 +116,7 @@ class GiftController extends Controller
     public function myGifts()
     {
         $redemptions = auth()->user()->giftRedemptions()
-            ->with('gift')
+            ->with(['gift.partner'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -109,4 +125,3 @@ class GiftController extends Controller
         ]);
     }
 }
-

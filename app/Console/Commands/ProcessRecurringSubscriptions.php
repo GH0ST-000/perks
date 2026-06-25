@@ -31,7 +31,8 @@ class ProcessRecurringSubscriptions extends Command
         $this->info('Processing recurring subscriptions...');
 
         // Get subscriptions that need to be renewed today
-        $subscriptions = Subscription::where('status', 'active')
+        $subscriptions = Subscription::where('status', Subscription::STATUS_ACTIVE)
+            ->whereIn('plan', [Subscription::PLAN_MEMBER, Subscription::PLAN_LIMITED])
             ->whereDate('next_billing_date', '<=', now())
             ->whereNotNull('bog_card_id')
             ->get();

@@ -12,10 +12,23 @@ class Subscription extends Model
 {
     use HasFactory;
 
+    public const STATUS_PENDING = 'pending';
+
+    public const STATUS_ACTIVE = 'active';
+
+    public const STATUS_CANCELLED = 'cancelled';
+
+    public const STATUS_EXPIRED = 'expired';
+
+    public const PLAN_MEMBER = 'member';
+
+    public const PLAN_LIMITED = 'limited';
+
     protected $fillable = [
         'user_id',
         'name',
         'type',
+        'plan',
         'amount',
         'currency',
         'status',
@@ -58,7 +71,7 @@ class Subscription extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('status', 'active');
+        return $query->where('status', self::STATUS_ACTIVE);
     }
 
     public function scopeCancelled($query)
@@ -73,8 +86,14 @@ class Subscription extends Model
 
     public function isActive(): bool
     {
-        return $this->status === 'active' && 
-               (!$this->expires_at || $this->expires_at->isFuture());
+        return $this->status === self::STATUS_ACTIVE &&
+               (! $this->expires_at || $this->expires_at->isFuture()) &&
+               (! $this->current_period_end || $this->current_period_end->isFuture());
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === self::STATUS_PENDING;
     }
 
     public function isCancelled(): bool

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FamilyMember;
+use App\Services\MembershipService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,6 +24,12 @@ class FamilyMemberController extends Controller
      */
     public function store(Request $request)
     {
+        $user = auth()->user();
+
+        if (! app(MembershipService::class)->hasActiveMembership($user)) {
+            return back()->with('error', 'ოჯახის წევრის დასამატებლად საჭიროა აქტიური მემბერშიპი.');
+        }
+
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
