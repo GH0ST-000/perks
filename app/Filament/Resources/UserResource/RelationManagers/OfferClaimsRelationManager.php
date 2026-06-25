@@ -83,10 +83,10 @@ class OfferClaimsRelationManager extends RelationManager
                     ->formatStateUsing(fn ($state) => '-' . number_format($state, 0) . '%')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('premiumOffer.p_coins_reward')
-                    ->label('P-Coins Cost')
+                    ->label('P-Coins')
                     ->badge()
                     ->color('warning')
-                    ->formatStateUsing(fn ($state) => $state > 0 ? number_format($state).' P' : '—')
+                    ->formatStateUsing(fn ($state) => '+' . number_format($state) . ' P-coins')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()

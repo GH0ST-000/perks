@@ -89,6 +89,7 @@ class PartnerScannerService
         return DB::transaction(function () use ($partner, $claim) {
             $offer = $claim->premiumOffer;
             $user = $claim->user;
+            $pCoins = (int) ($offer?->p_coins_reward ?? 0);
 
             $categoryId = $partner->categories()->first()?->id;
 
@@ -113,10 +114,14 @@ class PartnerScannerService
                 'verification_expires_at' => null,
             ]);
 
+            if ($pCoins > 0 && $user) {
+                $user->increment('p_coins', $pCoins);
+            }
+
             return [
                 'user_name' => $user?->name ?? 'მომხმარებელი',
                 'offer_name' => $offer?->name ?? 'შეთავაზება',
-                'p_coins_awarded' => 0,
+                'p_coins_awarded' => $pCoins,
             ];
         });
     }

@@ -107,14 +107,14 @@ class PremiumOfferResource extends Resource
                             ->helperText('Discount for premium card holders (Gold)')
                             ->columnSpan(1),
                         Forms\Components\TextInput::make('p_coins_reward')
-                            ->label('P-Coins Cost')
+                            ->label('P-Coins Reward')
                             ->numeric()
                             ->default(0)
                             ->minValue(0)
                             ->step(1)
                             ->required()
                             ->suffix('P-coins')
-                            ->helperText('P-coins charged when a user claims this offer')
+                            ->helperText('P-coins awarded after visit confirmation')
                             ->columnSpan(1),
                     ])
                     ->columns(2),
