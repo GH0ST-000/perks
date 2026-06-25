@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\GiftRedemption;
 use App\Models\OfferClaim;
 use App\Models\Partner;
 use App\Models\PremiumOffer;
 use App\Models\User;
 use App\Models\Visit;
-use App\Support\PhoneNumber;
+use App\Services\MembershipService;
+use App\Services\SmsService;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,8 +17,13 @@ use Illuminate\Support\Str;
 
 class PartnerScannerService
 {
+    private const TYPE_OFFER_CLAIM = 'offer_claim';
+
+    private const TYPE_GIFT_REDEMPTION = 'gift_redemption';
+
     public function __construct(
-        private SmsService $sms
+        private SmsService $sms,
+        private MembershipService $membership,
     ) {}
 
     /**
@@ -24,10 +31,16 @@ class PartnerScannerService
      */
     public function search(Partner $partner, string $query): array
     {
+        $giftRedemption = $this->findPendingGiftRedemption($partner, $query);
+
+        if ($giftRedemption) {
+            return $this->prepareGiftSearchResult($partner, $giftRedemption);
+        }
+
         $claim = $this->findPendingClaim($partner, $query);
 
         if (! $claim) {
-            throw new \InvalidArgumentException('შეთავაზება ვერ მოიძებნა ამ კოდით ან ტელეფონზე.');
+            throw new \InvalidArgumentException('შეთავაზება ან საჩუქარი ვერ მოიძებნა ამ კოდით ან ტელეფონზე.');
         }
 
         $offer = $claim->premiumOffer;
@@ -35,26 +48,7 @@ class PartnerScannerService
             throw new \InvalidArgumentException('ეს შეთავაზება ვადაგასულია ან არ არის აქტიური.');
         }
 
-        $verificationCode = $this->issueVerificationCode($claim);
-        $user = $claim->user;
-
-        if ($user?->phone) {
-            $this->sms->sendVerificationCode($user->phone, $verificationCode);
-        } else {
-            Log::info('Partner scanner verification (no user phone)', [
-                'claim_id' => $claim->id,
-                'redemption_code' => $claim->redemption_code,
-                'verification_code' => $verificationCode,
-            ]);
-        }
-
-        return [
-            'token' => $this->createScannerToken($claim, $partner),
-            'user_name' => $user?->name ?? 'მომხმარებელი',
-            'offer_name' => $offer->name,
-            'phone_masked' => $user?->phone ? $this->maskPhone($user->phone) : null,
-            'redemption_code' => $claim->redemption_code,
-        ];
+        return $this->prepareOfferSearchResult($partner, $claim, $offer);
     }
 
     /**
@@ -68,9 +62,155 @@ class PartnerScannerService
             throw new \InvalidArgumentException('არასწორი სესია.');
         }
 
+        $type = $payload['type'] ?? self::TYPE_OFFER_CLAIM;
+        $id = (int) ($payload['id'] ?? $payload['claim_id'] ?? 0);
+
+        if ($type === self::TYPE_GIFT_REDEMPTION) {
+            return $this->verifyAndCompleteGift($partner, $id, $code);
+        }
+
+        return $this->verifyAndCompleteOffer($partner, $id, $code);
+    }
+
+    public function findPendingClaim(Partner $partner, string $query): ?OfferClaim
+    {
+        $query = trim($query);
+        $base = OfferClaim::query()
+            ->with(['user', 'premiumOffer'])
+            ->where('status', OfferClaim::STATUS_PENDING)
+            ->whereHas('premiumOffer', fn ($q) => $q->where('partner_id', $partner->id));
+
+        if (preg_match('/^P-(\d+)$/i', $query, $matches)) {
+            return (clone $base)
+                ->where('redemption_code', 'P-'.$matches[1])
+                ->first();
+        }
+
+        if (preg_match('/^G-(\d+)$/i', $query)) {
+            return null;
+        }
+
+        $digits = preg_replace('/\D/', '', $query) ?? '';
+        if (strlen($digits) < 9) {
+            return null;
+        }
+
+        $phone = PhoneNumber::normalize($digits);
+        $user = User::query()->where('phone', $phone)->first();
+
+        if (! $user) {
+            return null;
+        }
+
+        if ($this->findPendingGiftRedemptionForUser($partner, $user)) {
+            return null;
+        }
+
+        return (clone $base)
+            ->where('user_id', $user->id)
+            ->orderByDesc('claimed_at')
+            ->first();
+    }
+
+    public function findPendingGiftRedemption(Partner $partner, string $query): ?GiftRedemption
+    {
+        $query = trim($query);
+
+        if (preg_match('/^G-(\d+)$/i', $query, $matches)) {
+            return GiftRedemption::query()
+                ->with(['user', 'gift'])
+                ->where('status', GiftRedemption::STATUS_PENDING)
+                ->where('redemption_code', 'G-'.$matches[1])
+                ->whereHas('gift', fn ($q) => $q->where('partner_id', $partner->id))
+                ->first();
+        }
+
+        if (preg_match('/^P-(\d+)$/i', $query)) {
+            return null;
+        }
+
+        $digits = preg_replace('/\D/', '', $query) ?? '';
+        if (strlen($digits) < 9) {
+            return null;
+        }
+
+        $phone = PhoneNumber::normalize($digits);
+        $user = User::query()->where('phone', $phone)->first();
+
+        if (! $user) {
+            return null;
+        }
+
+        return $this->findPendingGiftRedemptionForUser($partner, $user);
+    }
+
+    /**
+     * @return array{token: string, user_name: string, offer_name: string, phone_masked: string|null, redemption_code: string}
+     */
+    private function prepareOfferSearchResult(Partner $partner, OfferClaim $claim, PremiumOffer $offer): array
+    {
+        $verificationCode = $this->issueOfferVerificationCode($claim);
+        $user = $claim->user;
+
+        if ($user?->phone) {
+            $this->sms->sendVerificationCode($user->phone, $verificationCode);
+        } else {
+            Log::info('Partner scanner verification (no user phone)', [
+                'claim_id' => $claim->id,
+                'redemption_code' => $claim->redemption_code,
+                'verification_code' => $verificationCode,
+            ]);
+        }
+
+        return [
+            'token' => $this->createScannerToken(self::TYPE_OFFER_CLAIM, $claim->id, $partner),
+            'user_name' => $user?->name ?? 'მომხმარებელი',
+            'offer_name' => $offer->name,
+            'phone_masked' => $user?->phone ? $this->maskPhone($user->phone) : null,
+            'redemption_code' => $claim->redemption_code,
+        ];
+    }
+
+    /**
+     * @return array{token: string, user_name: string, offer_name: string, phone_masked: string|null, redemption_code: string}
+     */
+    private function prepareGiftSearchResult(Partner $partner, GiftRedemption $redemption): array
+    {
+        if ($redemption->isExpired()) {
+            throw new \InvalidArgumentException('ეს საჩუქარი ვადაგასულია.');
+        }
+
+        $gift = $redemption->gift;
+        $verificationCode = $this->issueGiftVerificationCode($redemption);
+        $user = $redemption->user;
+
+        if ($user?->phone) {
+            $this->sms->sendVerificationCode($user->phone, $verificationCode);
+        } else {
+            Log::info('Partner scanner gift verification (no user phone)', [
+                'gift_redemption_id' => $redemption->id,
+                'redemption_code' => $redemption->redemption_code,
+                'verification_code' => $verificationCode,
+            ]);
+        }
+
+        return [
+            'token' => $this->createScannerToken(self::TYPE_GIFT_REDEMPTION, $redemption->id, $partner),
+            'user_name' => $user?->name ?? 'მომხმარებელი',
+            'offer_name' => $gift?->name ?? 'საჩუქარი',
+            'phone_masked' => $user?->phone ? $this->maskPhone($user->phone) : null,
+            'redemption_code' => $redemption->redemption_code,
+        ];
+    }
+
+    /**
+     * @return array{user_name: string, offer_name: string, p_coins_awarded: int}
+     */
+    private function verifyAndCompleteOffer(Partner $partner, int $claimId, string $code): array
+    {
         $claim = OfferClaim::query()
             ->with(['user', 'premiumOffer'])
-            ->where('id', $payload['claim_id'])
+            ->where('id', $claimId)
             ->where('status', OfferClaim::STATUS_PENDING)
             ->first();
 
@@ -78,18 +218,14 @@ class PartnerScannerService
             throw new \InvalidArgumentException('შეთავაზება უკვე გამოყენებულია ან ვერ მოიძებნა.');
         }
 
-        if (! $claim->verification_code || ! $claim->verification_expires_at || $claim->verification_expires_at->isPast()) {
-            throw new \InvalidArgumentException('ვერიფიკაციის კოდი ვადაგასულია. ხელახლა ძებნა გააკეთეთ.');
-        }
-
-        if ($claim->verification_code !== $code) {
-            throw new \InvalidArgumentException('არასწორი ვერიფიკაციის კოდი.');
-        }
+        $this->assertVerificationCode($claim->verification_code, $claim->verification_expires_at, $code);
 
         return DB::transaction(function () use ($partner, $claim) {
             $offer = $claim->premiumOffer;
             $user = $claim->user;
-            $pCoins = (int) ($offer?->p_coins_reward ?? 0);
+            $pCoins = $offer
+                ? $this->membership->pCoinsForCardType($offer, $claim->card_type)
+                : 0;
 
             $categoryId = $partner->categories()->first()?->id;
 
@@ -126,41 +262,75 @@ class PartnerScannerService
         });
     }
 
-    public function findPendingClaim(Partner $partner, string $query): ?OfferClaim
+    /**
+     * @return array{user_name: string, offer_name: string, p_coins_awarded: int}
+     */
+    private function verifyAndCompleteGift(Partner $partner, int $redemptionId, string $code): array
     {
-        $query = trim($query);
-        $base = OfferClaim::query()
-            ->with(['user', 'premiumOffer'])
-            ->where('status', OfferClaim::STATUS_PENDING)
-            ->whereHas('premiumOffer', fn ($q) => $q->where('partner_id', $partner->id));
+        $redemption = GiftRedemption::query()
+            ->with(['user', 'gift'])
+            ->where('id', $redemptionId)
+            ->where('status', GiftRedemption::STATUS_PENDING)
+            ->whereHas('gift', fn ($q) => $q->where('partner_id', $partner->id))
+            ->first();
 
-        if (preg_match('/^P-(\d+)$/i', $query, $matches)) {
-            return (clone $base)
-                ->where('redemption_code', 'P-'.$matches[1])
-                ->first();
+        if (! $redemption) {
+            throw new \InvalidArgumentException('საჩუქარი უკვე გამოყენებულია ან ვერ მოიძებნა.');
         }
 
-        $digits = preg_replace('/\D/', '', $query) ?? '';
-        if (strlen($digits) < 9) {
-            return null;
+        if ($redemption->isExpired()) {
+            throw new \InvalidArgumentException('ეს საჩუქარი ვადაგასულია.');
         }
 
-        $phone = PhoneNumber::normalize($digits);
-        $user = User::query()->where('phone', $phone)->first();
+        $this->assertVerificationCode($redemption->verification_code, $redemption->verification_expires_at, $code);
 
-        if (! $user) {
-            return null;
-        }
+        return DB::transaction(function () use ($partner, $redemption) {
+            $gift = $redemption->gift;
+            $user = $redemption->user;
+            $categoryId = $partner->categories()->first()?->id;
 
-        return (clone $base)
+            Visit::create([
+                'user_id' => $user->id,
+                'partner_id' => $partner->id,
+                'category_id' => $categoryId,
+                'gift_redemption_id' => $redemption->id,
+                'visited_at' => now(),
+                'notes' => sprintf(
+                    'საჩუქარი: %s | კოდი: %s',
+                    $gift?->name ?? '—',
+                    $redemption->redemption_code
+                ),
+            ]);
+
+            $redemption->update([
+                'status' => GiftRedemption::STATUS_USED,
+                'used_at' => now(),
+                'verification_code' => null,
+                'verification_expires_at' => null,
+            ]);
+
+            return [
+                'user_name' => $user?->name ?? 'მომხმარებელი',
+                'offer_name' => $gift?->name ?? 'საჩუქარი',
+                'p_coins_awarded' => 0,
+            ];
+        });
+    }
+
+    private function findPendingGiftRedemptionForUser(Partner $partner, User $user): ?GiftRedemption
+    {
+        return GiftRedemption::query()
+            ->with(['user', 'gift'])
             ->where('user_id', $user->id)
-            ->orderByDesc('claimed_at')
+            ->where('status', GiftRedemption::STATUS_PENDING)
+            ->whereHas('gift', fn ($q) => $q->where('partner_id', $partner->id))
+            ->orderByDesc('redeemed_at')
             ->first();
     }
 
-    private function issueVerificationCode(OfferClaim $claim): string
+    private function issueOfferVerificationCode(OfferClaim $claim): string
     {
-        $code = str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+        $code = $this->generateVerificationCode();
 
         $claim->update([
             'verification_code' => $code,
@@ -170,17 +340,46 @@ class PartnerScannerService
         return $code;
     }
 
-    private function createScannerToken(OfferClaim $claim, Partner $partner): string
+    private function issueGiftVerificationCode(GiftRedemption $redemption): string
+    {
+        $code = $this->generateVerificationCode();
+
+        $redemption->update([
+            'verification_code' => $code,
+            'verification_expires_at' => now()->addMinutes(10),
+        ]);
+
+        return $code;
+    }
+
+    private function generateVerificationCode(): string
+    {
+        return str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+    }
+
+    private function assertVerificationCode(?string $storedCode, $expiresAt, string $code): void
+    {
+        if (! $storedCode || ! $expiresAt || $expiresAt->isPast()) {
+            throw new \InvalidArgumentException('ვერიფიკაციის კოდი ვადაგასულია. ხელახლა ძებნა გააკეთეთ.');
+        }
+
+        if ($storedCode !== $code) {
+            throw new \InvalidArgumentException('არასწორი ვერიფიკაციის კოდი.');
+        }
+    }
+
+    private function createScannerToken(string $type, int $id, Partner $partner): string
     {
         return Crypt::encryptString(json_encode([
-            'claim_id' => $claim->id,
+            'type' => $type,
+            'id' => $id,
             'partner_id' => $partner->id,
             'exp' => now()->addMinutes(15)->timestamp,
         ]));
     }
 
     /**
-     * @return array{claim_id: int, partner_id: int, exp: int}
+     * @return array{type?: string, id?: int, claim_id?: int, partner_id: int, exp: int}
      */
     private function decodeScannerToken(string $token): array
     {
@@ -190,7 +389,11 @@ class PartnerScannerService
             throw new \InvalidArgumentException('არასწორი სესია.');
         }
 
-        if (! isset($payload['claim_id'], $payload['partner_id'], $payload['exp'])) {
+        if (! isset($payload['partner_id'], $payload['exp'])) {
+            throw new \InvalidArgumentException('არასწორი სესია.');
+        }
+
+        if (! isset($payload['id']) && ! isset($payload['claim_id'])) {
             throw new \InvalidArgumentException('არასწორი სესია.');
         }
 

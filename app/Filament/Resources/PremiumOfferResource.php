@@ -93,7 +93,7 @@ class PremiumOfferResource extends Resource
                             ->step(0.01)
                             ->required()
                             ->suffix('%')
-                            ->helperText('Discount for standard card holders (Silver)')
+                            ->helperText('Discount for Member plan (standard card)')
                             ->columnSpan(1),
                         Forms\Components\TextInput::make('premium_discount')
                             ->label('Premium Card Discount')
@@ -104,7 +104,7 @@ class PremiumOfferResource extends Resource
                             ->step(0.01)
                             ->required()
                             ->suffix('%')
-                            ->helperText('Discount for premium card holders (Gold)')
+                            ->helperText('Discount for Limited plan (premium card)')
                             ->columnSpan(1),
                         Forms\Components\TextInput::make('p_coins_reward')
                             ->label('P-Coins Reward')
@@ -114,7 +114,7 @@ class PremiumOfferResource extends Resource
                             ->step(1)
                             ->required()
                             ->suffix('P-coins')
-                            ->helperText('P-coins awarded after visit confirmation')
+                            ->helperText('P-coins for Member plan; Limited earns 1.5× after visit confirmation')
                             ->columnSpan(1),
                     ])
                     ->columns(2),

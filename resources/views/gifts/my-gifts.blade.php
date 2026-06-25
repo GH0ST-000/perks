@@ -36,6 +36,9 @@
                             <!-- Gift Details -->
                             <div style="flex: 1;">
                                 <h3 style="font-size: 18px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">{{ $redemption->gift->name }}</h3>
+                                @if($redemption->gift->partner)
+                                    <p style="font-size: 13px; color: #3b82f6; margin: 0 0 8px 0;">{{ $redemption->gift->partner->name }}</p>
+                                @endif
                                 <p style="font-size: 14px; color: #a0aec0; margin: 0 0 12px 0;">{{ $redemption->gift->description }}</p>
                                 
                                 <!-- Redemption Code -->
@@ -43,7 +46,7 @@
                                     <div style="background-color: #1a1d29; border: 1px solid #2d3142; border-radius: 8px; padding: 12px; display: inline-flex; align-items: center; gap: 12px;">
                                         <span class="material-icons" style="font-size: 20px; color: #3b82f6;">qr_code</span>
                                         <div>
-                                            <p style="font-size: 11px; color: #9ca3af; margin: 0 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px;">პრომო კოდი</p>
+                                            <p style="font-size: 11px; color: #9ca3af; margin: 0 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px;">კოდი პარტნიორთან</p>
                                             <p style="font-size: 16px; font-weight: 700; color: #ffffff; margin: 0; font-family: monospace;">{{ $redemption->redemption_code }}</p>
                                         </div>
                                         <button onclick="copyCode('{{ $redemption->redemption_code }}')" style="background: none; border: none; cursor: pointer; padding: 8px;">
@@ -71,7 +74,12 @@
                         <!-- Right Side: Status & Price -->
                         <div style="text-align: right;">
                             <!-- Status Badge -->
-                            @if($redemption->status === 'completed')
+                            @if($redemption->status === 'pending')
+                                <div style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background-color: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 12px; font-weight: 600; border-radius: 12px; margin-bottom: 12px;">
+                                    <span class="material-icons" style="font-size: 16px;">check_circle</span>
+                                    აქტიური
+                                </div>
+                            @elseif($redemption->status === 'completed')
                                 <div style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background-color: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 12px; font-weight: 600; border-radius: 12px; margin-bottom: 12px;">
                                     <span class="material-icons" style="font-size: 16px;">check_circle</span>
                                     აქტიური

@@ -73,6 +73,13 @@
                         <!-- Gift Description -->
                         <p style="font-size: 14px; color: var(--text-secondary); margin: 0 0 20px 0; line-height: 1.6;">{{ $gift->description }}</p>
 
+                        @if($gift->partner)
+                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0 0 12px 0;">
+                                <span class="material-icons" style="font-size: 14px; vertical-align: middle;">store</span>
+                                {{ $gift->partner->name }}
+                            </p>
+                        @endif
+
                         <!-- Type Badge -->
                         <div style="margin-bottom: 16px;">
                             @if($gift->type === 'voucher')
@@ -98,7 +105,7 @@
                             $userRedemption = $userRedemptions->get($gift->id);
                         @endphp
 
-                        @if($userRedemption)
+                        @if($userRedemption && $userRedemption->status === \App\Models\GiftRedemption::STATUS_PENDING)
                             <!-- Already Redeemed - Show Code -->
                             <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px;">
                                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
@@ -107,7 +114,7 @@
                                 </div>
                                 <div style="background-color: var(--bg-card); border: 1px solid #3b82f6; border-radius: 6px; padding: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
                                     <div style="flex: 1;">
-                                        <p style="font-size: 10px; color: var(--text-tertiary); margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">პრომო კოდი</p>
+                                            <p style="font-size: 10px; color: var(--text-tertiary); margin: 0 0 4px 0; text-transform: uppercase; letter-spacing: 0.5px;">კოდი პარტნიორთან</p>
                                         <p style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0; font-family: monospace; word-break: break-all;">{{ $userRedemption->redemption_code }}</p>
                                     </div>
                                     <button onclick="copyCodeFromCard('{{ $userRedemption->redemption_code }}')" style="background: none; border: none; cursor: pointer; padding: 8px; flex-shrink: 0;">
@@ -121,8 +128,11 @@
                                     </p>
                                 @endif
                             </div>
+                        @elseif($userRedemption && $userRedemption->status === \App\Models\GiftRedemption::STATUS_USED)
+                            <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; text-align: center;">
+                                <span style="font-size: 12px; font-weight: 600; color: var(--text-tertiary);">გამოყენებულია</span>
+                            </div>
                         @else
-                            <!-- Not Redeemed Yet - Show Button -->
                             @if($gift->isAvailable())
                                 @if($user->p_coins >= $gift->p_coins_cost)
                                     <form method="POST" action="{{ route('gifts.redeem', $gift) }}" style="width: 100%;">

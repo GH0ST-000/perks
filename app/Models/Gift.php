@@ -10,6 +10,7 @@ class Gift extends Model
     use HasFactory;
 
     protected $fillable = [
+        'partner_id',
         'name',
         'description',
         'image',
@@ -28,6 +29,11 @@ class Gift extends Model
         'sort_order' => 'integer',
         'metadata' => 'array',
     ];
+
+    public function partner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Partner::class);
+    }
 
     public function redemptions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

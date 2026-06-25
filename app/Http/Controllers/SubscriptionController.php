@@ -6,100 +6,109 @@ use App\Models\BogPayment;
 use App\Models\Subscription;
 use App\Models\PaymentMethod;
 use App\Services\BogPaymentService;
+use App\Services\MembershipService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class SubscriptionController extends Controller
 {
     public function __construct(
-        private BogPaymentService $bogService
+        private BogPaymentService $bogService,
+        private MembershipService $membership,
     ) {}
 
     /**
-     * Show subscription plans
+     * Show membership plans
      */
     public function index()
     {
         $user = Auth::user();
-        $activeSubscription = $user->subscriptions()->where('status', 'active')->first();
+        $activeSubscription = $this->membership->activeSubscription($user);
         $paymentMethods = $user->paymentMethods()->get();
+        $plans = config('perks.membership_plans', []);
+        $selectedPlan = request('plan');
 
-        return view('subscriptions.index', compact('activeSubscription', 'paymentMethods'));
+        return view('subscriptions.index', compact('activeSubscription', 'paymentMethods', 'plans', 'selectedPlan'));
     }
 
     /**
-     * Initiate subscription with card saving
+     * Initiate membership subscription with card saving
      */
     public function subscribe(Request $request)
     {
         $request->validate([
-            'plan' => 'required|in:monthly,yearly',
-            'amount' => 'required|numeric|min:1',
+            'plan' => 'required|in:member,limited',
         ]);
 
         $user = Auth::user();
+        $plan = $request->plan;
+        $planConfig = $this->membership->planConfig($plan);
 
-        // Check if user already has active subscription
-        if ($user->subscriptions()->where('status', 'active')->exists()) {
-            return back()->with('error', 'You already have an active subscription.');
+        if (! $planConfig) {
+            return back()->with('error', 'არჩეული პაკეტი ვერ მოიძებნა.');
+        }
+
+        if ($this->membership->hasActiveMembership($user)) {
+            return back()->with('error', 'თქვენ უკვე გაქვთ აქტიური მემბერშიპი.');
+        }
+
+        if ($user->subscriptions()->where('status', Subscription::STATUS_PENDING)->exists()) {
+            return back()->with('error', 'გაქვთ მიმდინარე გადახდა. დაელოდეთ დასრულებას ან სცადეთ თავიდან.');
         }
 
         try {
             DB::beginTransaction();
 
-            // Create subscription record
+            $amount = (float) $planConfig['amount'];
             $subscription = Subscription::create([
                 'user_id' => $user->id,
-                'name' => ucfirst($request->plan) . ' Subscription',
-                'type' => $request->plan,
-                'amount' => $request->amount,
+                'name' => $planConfig['name'],
+                'plan' => $plan,
+                'type' => 'monthly',
+                'amount' => $amount,
                 'currency' => 'GEL',
-                'status' => 'active',
+                'status' => Subscription::STATUS_PENDING,
                 'current_period_start' => now(),
-                'current_period_end' => $request->plan === 'monthly' ? now()->addMonth() : now()->addYear(),
-                'next_billing_date' => $request->plan === 'monthly' ? now()->addMonth() : now()->addYear(),
+                'current_period_end' => now()->addMonth(),
+                'next_billing_date' => now()->addMonth(),
             ]);
 
-            // Create initial payment
-            $externalOrderId = 'PERKS-SUB-' . Str::upper(Str::random(12)) . '-' . time();
-            
+            $externalOrderId = 'PERKS-SUB-'.Str::upper(Str::random(12)).'-'.time();
+
             $payment = BogPayment::create([
                 'user_id' => $user->id,
                 'external_order_id' => $externalOrderId,
                 'type' => 'subscription_initial',
-                'amount' => $request->amount,
+                'amount' => $amount,
                 'currency' => 'GEL',
                 'status' => 'pending',
-                'description' => "Initial payment for {$subscription->name}",
+                'description' => "Membership: {$planConfig['name']}",
                 'subscription_id' => $subscription->id,
             ]);
 
-            // Create BOG order with card binding
             $orderData = [
                 'callback_url' => route('subscription.callback'),
                 'redirect_url' => route('subscription.success', ['subscription' => $subscription->id]),
                 'external_order_id' => $externalOrderId,
-                'amount' => (float) $request->amount,
+                'amount' => $amount,
                 'currency' => 'GEL',
                 'basket' => [
                     [
-                        'product_id' => 'subscription_' . $request->plan,
+                        'product_id' => 'membership_'.$plan,
                         'quantity' => 1,
-                        'unit_price' => (float) $request->amount,
-                        'product_name' => $subscription->name,
+                        'unit_price' => $amount,
+                        'product_name' => $planConfig['name'].' Membership',
                     ],
                 ],
                 'locale' => 'ka',
-                'card_binding_intent' => 'AUTOMATIC_PAYMENTS', // For recurring payments
+                'card_binding_intent' => 'AUTOMATIC_PAYMENTS',
             ];
 
             $bogResponse = $this->bogService->createOrderWithCardBinding($orderData);
 
-            // Update payment with BOG order ID
             $payment->update([
                 'bog_order_id' => $bogResponse['id'] ?? null,
                 'bog_response' => $bogResponse,
@@ -108,7 +117,6 @@ class SubscriptionController extends Controller
 
             DB::commit();
 
-            // Redirect to BOG payment page
             return redirect($bogResponse['_links']['redirect']['href']);
 
         } catch (\Exception $e) {
@@ -117,12 +125,12 @@ class SubscriptionController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'user_id' => $user->id,
+                'plan' => $plan,
             ]);
 
-            // Show detailed error in development
-            $errorMessage = config('app.debug') 
-                ? 'Failed to initiate subscription: ' . $e->getMessage()
-                : 'Failed to initiate subscription. Please try again.';
+            $errorMessage = config('app.debug')
+                ? 'Failed to initiate subscription: '.$e->getMessage()
+                : 'გამოწერის დაწყება ვერ მოხერხდა. სცადეთ თავიდან.';
 
             return back()->with('error', $errorMessage);
         }
@@ -141,30 +149,27 @@ class SubscriptionController extends Controller
             $externalOrderId = $request->input('external_order_id');
             $cardId = $request->input('card_id');
 
-            // Find payment
             $payment = BogPayment::where('external_order_id', $externalOrderId)->first();
 
-            if (!$payment) {
+            if (! $payment) {
                 Log::error('Payment not found', ['external_order_id' => $externalOrderId]);
+
                 return response()->json(['error' => 'Payment not found'], 404);
             }
 
-            // Update payment
             $payment->update([
                 'bog_order_id' => $orderId,
                 'callback_data' => $request->all(),
                 'card_id' => $cardId,
             ]);
 
-            // Handle payment status
             if ($status === 'success' || $status === 'COMPLETED') {
                 $this->handleSuccessfulSubscription($payment, $request->all());
             } elseif ($status === 'failed' || $status === 'FAILED') {
                 $payment->update(['status' => 'failed']);
-                
-                // Cancel subscription
+
                 if ($payment->subscription) {
-                    $payment->subscription->update(['status' => 'cancelled']);
+                    $payment->subscription->update(['status' => Subscription::STATUS_CANCELLED]);
                 }
             }
 
@@ -183,7 +188,7 @@ class SubscriptionController extends Controller
     /**
      * Handle successful subscription payment
      */
-    private function handleSuccessfulSubscription(BogPayment $payment, array $callbackData)
+    private function handleSuccessfulSubscription(BogPayment $payment, array $callbackData): void
     {
         if ($payment->isCompleted()) {
             return;
@@ -198,11 +203,10 @@ class SubscriptionController extends Controller
                 'payment_method' => $callbackData['payment_method'] ?? 'card',
             ]);
 
-            // Save card information
             $paymentMethod = null;
             if (isset($callbackData['card_id'])) {
                 $cardData = $callbackData['card'] ?? [];
-                
+
                 $paymentMethod = PaymentMethod::updateOrCreate(
                     [
                         'user_id' => $payment->user_id,
@@ -222,12 +226,26 @@ class SubscriptionController extends Controller
                 );
             }
 
-            // Update subscription with card info
-            if ($payment->subscription && $paymentMethod) {
-                $payment->subscription->update([
-                    'bog_card_id' => $callbackData['card_id'],
-                    'payment_method_id' => $paymentMethod->id,
-                ]);
+            if ($payment->subscription) {
+                $subscription = $payment->subscription;
+
+                if ($payment->type === 'subscription_recurring') {
+                    $subscription->renew();
+                } elseif ($subscription->isPending()) {
+                    $subscription->update([
+                        'status' => Subscription::STATUS_ACTIVE,
+                        'current_period_start' => now(),
+                        'current_period_end' => now()->addMonth(),
+                        'next_billing_date' => now()->addMonth(),
+                    ]);
+                }
+
+                if ($paymentMethod) {
+                    $subscription->update([
+                        'bog_card_id' => $callbackData['card_id'],
+                        'payment_method_id' => $paymentMethod->id,
+                    ]);
+                }
             }
 
             DB::commit();
@@ -250,22 +268,22 @@ class SubscriptionController extends Controller
     /**
      * Process recurring subscription payment
      */
-    public function processRecurringPayment(Subscription $subscription)
+    public function processRecurringPayment(Subscription $subscription): void
     {
-        if (!$subscription->isActive() || !$subscription->bog_card_id) {
+        if (! $subscription->isActive() || ! $subscription->bog_card_id) {
             Log::warning('Cannot process recurring payment', [
                 'subscription_id' => $subscription->id,
                 'status' => $subscription->status,
             ]);
+
             return;
         }
 
         try {
             DB::beginTransaction();
 
-            // Create payment record
-            $externalOrderId = 'PERKS-REC-' . Str::upper(Str::random(12)) . '-' . time();
-            
+            $externalOrderId = 'PERKS-REC-'.Str::upper(Str::random(12)).'-'.time();
+
             $payment = BogPayment::create([
                 'user_id' => $subscription->user_id,
                 'external_order_id' => $externalOrderId,
@@ -278,7 +296,6 @@ class SubscriptionController extends Controller
                 'card_id' => $subscription->bog_card_id,
             ]);
 
-            // Execute payment with saved card
             $paymentData = [
                 'callback_url' => route('subscription.callback'),
                 'external_order_id' => $externalOrderId,
@@ -286,7 +303,7 @@ class SubscriptionController extends Controller
                 'currency' => $subscription->currency,
                 'basket' => [
                     [
-                        'product_id' => 'subscription_recurring',
+                        'product_id' => 'membership_recurring_'.$subscription->plan,
                         'quantity' => 1,
                         'unit_price' => (float) $subscription->amount,
                         'product_name' => $subscription->name,
@@ -299,7 +316,6 @@ class SubscriptionController extends Controller
 
             $bogResponse = $this->bogService->executeCardPayment($paymentData);
 
-            // Update payment
             $payment->update([
                 'bog_order_id' => $bogResponse['id'] ?? null,
                 'bog_response' => $bogResponse,
@@ -322,9 +338,6 @@ class SubscriptionController extends Controller
         }
     }
 
-    /**
-     * Cancel subscription
-     */
     public function cancel(Subscription $subscription)
     {
         if ($subscription->user_id !== Auth::id()) {
@@ -333,24 +346,23 @@ class SubscriptionController extends Controller
 
         $subscription->cancel();
 
-        return back()->with('success', 'Subscription cancelled successfully.');
+        return back()->with('success', 'მემბერშიპი წარმატებით გაუქმდა.');
     }
 
-    /**
-     * Subscription success page
-     */
     public function subscriptionSuccess(Subscription $subscription)
     {
         if ($subscription->user_id !== Auth::id()) {
             abort(403);
         }
 
+        if ($subscription->isPending() && $subscription->bogPayments()->where('status', 'completed')->exists()) {
+            $subscription->update(['status' => Subscription::STATUS_ACTIVE]);
+            $subscription->refresh();
+        }
+
         return view('subscriptions.success', compact('subscription'));
     }
 
-    /**
-     * Delete saved payment method
-     */
     public function deletePaymentMethod(PaymentMethod $paymentMethod)
     {
         if ($paymentMethod->user_id !== Auth::id()) {
@@ -358,14 +370,13 @@ class SubscriptionController extends Controller
         }
 
         try {
-            // Delete card from BOG if it has bog_card_id
             if ($paymentMethod->bog_card_id) {
                 $this->bogService->deleteCard($paymentMethod->bog_card_id);
             }
 
             $paymentMethod->delete();
 
-            return back()->with('success', 'Payment method deleted successfully.');
+            return back()->with('success', 'გადახდის მეთოდი წაიშალა.');
 
         } catch (\Exception $e) {
             Log::error('Failed to delete payment method', [
@@ -373,8 +384,7 @@ class SubscriptionController extends Controller
                 'payment_method_id' => $paymentMethod->id,
             ]);
 
-            return back()->with('error', 'Failed to delete payment method.');
+            return back()->with('error', 'გადახდის მეთოდის წაშლა ვერ მოხერხდა.');
         }
     }
 }
-

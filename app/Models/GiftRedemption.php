@@ -9,11 +9,19 @@ class GiftRedemption extends Model
 {
     use HasFactory;
 
+    public const STATUS_PENDING = 'pending';
+
+    public const STATUS_USED = 'used';
+
+    public const STATUS_EXPIRED = 'expired';
+
     protected $fillable = [
         'user_id',
         'gift_id',
         'p_coins_spent',
         'redemption_code',
+        'verification_code',
+        'verification_expires_at',
         'status',
         'notes',
         'redeemed_at',
@@ -26,6 +34,7 @@ class GiftRedemption extends Model
         'redeemed_at' => 'datetime',
         'used_at' => 'datetime',
         'expires_at' => 'datetime',
+        'verification_expires_at' => 'datetime',
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -40,22 +49,21 @@ class GiftRedemption extends Model
 
     public function isPending(): bool
     {
-        return $this->status === 'pending';
-    }
-
-    public function isCompleted(): bool
-    {
-        return $this->status === 'completed';
+        return $this->status === self::STATUS_PENDING;
     }
 
     public function isUsed(): bool
     {
-        return $this->status === 'used';
+        return $this->status === self::STATUS_USED;
     }
 
     public function isExpired(): bool
     {
-        return $this->status === 'expired' || ($this->expires_at && $this->expires_at->isPast());
+        return $this->status === self::STATUS_EXPIRED || ($this->expires_at && $this->expires_at->isPast());
+    }
+
+    public function redemptionCodeFor(): string
+    {
+        return 'G-'.$this->id;
     }
 }
-

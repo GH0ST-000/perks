@@ -14,6 +14,7 @@ class Visit extends Model
         'user_id',
         'partner_id',
         'offer_claim_id',
+        'gift_redemption_id',
         'category_id',
         'visited_at',
         'notes',
@@ -44,5 +45,10 @@ class Visit extends Model
     public function offerClaim(): BelongsTo
     {
         return $this->belongsTo(OfferClaim::class);
+    }
+
+    public function giftRedemption(): BelongsTo
+    {
+        return $this->belongsTo(GiftRedemption::class);
     }
 }

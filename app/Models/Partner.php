@@ -52,6 +52,11 @@ class Partner extends Model
         return $this->hasMany(PremiumOffer::class);
     }
 
+    public function gifts(): HasMany
+    {
+        return $this->hasMany(Gift::class);
+    }
+
     public function loginUser(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(User::class)->where('role', 'partner');

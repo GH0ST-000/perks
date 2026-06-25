@@ -35,6 +35,14 @@ class GiftResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Gift Information')
                     ->schema([
+                        Forms\Components\Select::make('partner_id')
+                            ->label('პარტნიორის კომპანია')
+                            ->relationship('partner', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->helperText('საჩუქრის გადაცვლის კოდი ამ პარტნიორის სკანერში გაივლის')
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('name')
                             ->label('Gift Name')
                             ->required()
@@ -121,6 +129,11 @@ class GiftResource extends Resource
                     ->disk('public')
                     ->size(60)
                     ->defaultImageUrl(url('/images/gift-placeholder.png')),
+                Tables\Columns\TextColumn::make('partner.name')
+                    ->label('პარტნიორი')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable()
@@ -274,6 +287,10 @@ class GiftResource extends Resource
                             ->disk('public')
                             ->size(200)
                             ->defaultImageUrl(url('/images/gift-placeholder.png')),
+                        Infolists\Components\TextEntry::make('partner.name')
+                            ->label('პარტნიორის კომპანია')
+                            ->badge()
+                            ->color('info'),
                         Infolists\Components\TextEntry::make('name')
                             ->size('lg')
                             ->weight('bold'),
