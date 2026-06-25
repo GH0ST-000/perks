@@ -152,7 +152,7 @@
                                                     <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 24 24">
                                                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                                                     </svg>
-                                                    <span class="text-xs font-bold text-amber-900 dark:text-amber-100">+{{ $offer->p_coins_reward }} P-coins</span>
+                                                    <span class="text-xs font-bold text-amber-900 dark:text-amber-100">{{ $offer->p_coins_reward }} P</span>
                                                 </div>
                                                 <svg class="w-3 h-3 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
