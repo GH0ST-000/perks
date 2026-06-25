@@ -100,21 +100,14 @@ class LandingPageController extends Controller
             ->get();
 
         $userClaim = null;
-        $claimCost = 0;
-        $canAffordClaim = false;
-
         if (auth()->check()) {
-            $claimService = app(\App\Services\OfferClaimService::class);
-            $claimCost = $claimService->claimCost($offer);
-            $canAffordClaim = $claimService->userCanAfford(auth()->user(), $offer);
-
             $userClaim = \App\Models\OfferClaim::query()
                 ->where('user_id', auth()->id())
                 ->where('premium_offer_id', $offer->id)
                 ->first();
         }
 
-        return view('offers.show', compact('offer', 'relatedOffers', 'userClaim', 'claimCost', 'canAffordClaim'));
+        return view('offers.show', compact('offer', 'relatedOffers', 'userClaim'));
     }
 
     public function companies(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -253,38 +246,17 @@ class LandingPageController extends Controller
             $discount = $offer->premium_discount;
         }
 
-        $claimService = app(\App\Services\OfferClaimService::class);
+        $claim = app(\App\Services\OfferClaimService::class)->createClaim(
+            $user,
+            $offer,
+            $cardType,
+            (float) $discount
+        );
 
-        if (! $claimService->userCanAfford($user, $offer)) {
-            $cost = $claimService->claimCost($offer);
-
-            return redirect()->back()->with(
-                'error',
-                "არასაკმარისი P-coins ბალანსი. საჭიროა {$cost} P, გაქვთ {$user->p_coins} P. შეავსეთ საფულე."
-            );
-        }
-
-        try {
-            $claim = $claimService->createClaim(
-                $user,
-                $offer,
-                $cardType,
-                (float) $discount
-            );
-        } catch (\RuntimeException $e) {
-            if ($e->getMessage() === 'insufficient_balance') {
-                return redirect()->back()->with('error', 'არასაკმარისი P-coins ბალანსი. შეავსეთ საფულე.');
-            }
-
-            throw $e;
-        }
-
-        $cost = $claimService->claimCost($offer);
-        $message = $cost > 0
-            ? "შეთავაზება წარმატებით მიღებულია! ჩამოიჭრა {$cost} P-coins. თქვენი კოდი: {$claim->redemption_code}"
-            : 'შეთავაზება წარმატებით მიღებულია! თქვენი კოდი: '.$claim->redemption_code;
-
-        return redirect()->back()->with('success', $message);
+        return redirect()->back()->with(
+            'success',
+            'შეთავაზება წარმატებით მიღებულია! თქვენი კოდი: '.$claim->redemption_code
+        );
     }
 }
 
