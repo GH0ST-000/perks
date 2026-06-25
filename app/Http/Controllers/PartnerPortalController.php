@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PremiumOffer;
 use App\Services\PartnerMarketingService;
+use App\Services\PartnerMarketingSubscriptionService;
 use App\Services\PartnerOfferService;
 use App\Services\PartnerPortalService;
 use App\Services\PartnerScannerService;
@@ -19,6 +20,7 @@ class PartnerPortalController extends Controller
         private PartnerPortalService $portal,
         private PartnerOfferService $offers,
         private PartnerMarketingService $marketing,
+        private PartnerMarketingSubscriptionService $marketingSubscriptions,
         private PartnerScannerService $scanner
     ) {}
 
@@ -250,6 +252,7 @@ class PartnerPortalController extends Controller
         return view('partner.marketing', [
             'partner' => $partner,
             'packages' => $this->marketing->packages(),
+            'activeSubscription' => $partner->activeMarketingSubscription,
         ]);
     }
 
@@ -264,11 +267,11 @@ class PartnerPortalController extends Controller
             'package' => ['required', 'in:social,platinum,executive'],
         ]);
 
-        $title = $this->marketing->packageTitle($validated['package']);
-
-        return redirect()
-            ->route('partner.marketing')
-            ->with('success', "შეკვეთა «{$title}» მიღებულია. გიხმობთ მალე.");
+        return $this->marketingSubscriptions->initiate(
+            $partner,
+            $request->user(),
+            $validated['package']
+        );
     }
 
     public function history(Request $request): View|RedirectResponse

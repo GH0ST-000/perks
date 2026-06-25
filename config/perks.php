@@ -7,11 +7,12 @@ return [
     | Public registration
     |--------------------------------------------------------------------------
     |
-    | When false, users cannot self-register. Admins create accounts in the
-    | Filament panel (corporate offer members log in via phone OTP).
+    | When true, anyone can self-register with phone OTP, claim offers, and
+    | redeem them via the partner scanner. When false, only admin-created
+    | accounts can log in.
     |
     */
 
-    'registration_enabled' => (bool) env('REGISTRATION_ENABLED', false),
+    'registration_enabled' => (bool) env('REGISTRATION_ENABLED', true),
 
 ];

@@ -17,12 +17,16 @@ class PaymentMethod extends Model
         'last_four',
         'expiry_month',
         'expiry_year',
+        'cardholder_name',
+        'bog_card_id',
+        'is_verified',
         'is_default',
         'metadata',
     ];
 
     protected $casts = [
         'is_default' => 'boolean',
+        'is_verified' => 'boolean',
         'metadata' => 'array',
     ];
 

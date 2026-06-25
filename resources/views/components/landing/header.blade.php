@@ -33,6 +33,11 @@
             </button>
 
             @guest
+                @if(config('perks.registration_enabled'))
+                    <a href="{{ route('register') }}" class="px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                        რეგისტრაცია
+                    </a>
+                @endif
                 <a href="{{ route('login') }}" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium text-sm transition-colors shadow-md">
                     შესვლა
                 </a>
@@ -130,6 +135,9 @@
         </div>
 
         @guest
+            @if(config('perks.registration_enabled'))
+                <a href="{{ route('register') }}" class="block w-full text-center px-4 py-2 text-gray-700 dark:text-gray-300 rounded-lg font-medium text-sm mb-2">რეგისტრაცია</a>
+            @endif
             <div class="pt-4">
                 <a href="{{ route('login') }}" class="block w-full text-center px-4 py-2 bg-primary-600 text-white rounded-lg font-medium text-sm">შესვლა</a>
             </div>

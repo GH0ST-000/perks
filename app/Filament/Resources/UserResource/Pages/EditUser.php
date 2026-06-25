@@ -23,12 +23,6 @@ class EditUser extends EditRecord
                 'data.phone' => 'ეს ტელეფონის ნომერი უკვე რეგისტრირებულია.',
             ]);
         }
-
-        if (empty($state['company_id'])) {
-            throw ValidationException::withMessages([
-                'data.company_id' => 'აირჩიეთ კომპანია.',
-            ]);
-        }
     }
 
     protected function getHeaderActions(): array

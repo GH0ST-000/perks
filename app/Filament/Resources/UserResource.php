@@ -36,8 +36,8 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('კორპორატიული წევრი')
-                    ->description('კორპორატიული თანამშრომელი — შეძლებს საიტზე შესვლას ტელეფონის OTP-ით. პარტნიორ კომპანიის დასამატებლად გადადით: მართვა → პარტნიორ კომპანიები.')
+                Forms\Components\Section::make('მომხმარებელი')
+                    ->description('მომხმარებელი შეძლებს საიტზე შესვლას ტელეფონის OTP-ით, შეთავაზების მიღებას და სკანერით გამოყენებას. კომპანიის მიბმა არასავალდებულოა.')
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->label('სახელი და გვარი')
@@ -74,7 +74,7 @@ class UserResource extends Resource
                             ->relationship('company', 'name')
                             ->searchable()
                             ->preload()
-                            ->required()
+                            ->helperText('არასავალდებულო — მიბმა მხოლოდ კორპორატიული პაკეტისთვის.')
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('name')
                                     ->required()

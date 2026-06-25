@@ -33,7 +33,7 @@
                                             {{ $partner ? $partner->name : 'Partner Location' }}
                                         </h3>
                                         <p style="font-size: 14px; color: var(--text-tertiary); margin: 0;">
-                                            {{ $visit->created_at->format('d/m/Y H:i') }}
+                                            {{ ($visit->visited_at ?? $visit->created_at)->format('d/m/Y H:i') }}
                                         </p>
                                     </div>
 

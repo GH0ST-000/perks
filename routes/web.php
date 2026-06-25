@@ -42,6 +42,8 @@ Route::middleware(['auth', 'verified', 'partner'])->prefix('partner')->name('par
     Route::delete('/offers/{offer}', [App\Http\Controllers\PartnerPortalController::class, 'destroyOffer'])->name('offers.destroy');
     Route::get('/marketing', [App\Http\Controllers\PartnerPortalController::class, 'marketing'])->name('marketing');
     Route::post('/marketing/order', [App\Http\Controllers\PartnerPortalController::class, 'orderMarketing'])->name('marketing.order');
+    Route::get('/marketing/success/{subscription}', [App\Http\Controllers\PartnerMarketingSubscriptionController::class, 'success'])->name('marketing.success');
+    Route::post('/marketing/{subscription}/cancel', [App\Http\Controllers\PartnerMarketingSubscriptionController::class, 'cancel'])->name('marketing.cancel');
     Route::get('/history', [App\Http\Controllers\PartnerPortalController::class, 'history'])->name('history');
     Route::get('/settings', [App\Http\Controllers\PartnerPortalController::class, 'settings'])->name('settings');
     Route::patch('/settings', [App\Http\Controllers\PartnerPortalController::class, 'updateSettings'])->name('settings.update');
@@ -88,5 +90,6 @@ Route::middleware(['auth', 'redirect.partner.users'])->group(function () {
 // Public callback routes (no auth required)
 Route::post('/payment/callback', [App\Http\Controllers\PaymentController::class, 'handleCallback'])->name('payment.callback');
 Route::post('/subscription/callback', [App\Http\Controllers\SubscriptionController::class, 'handleCallback'])->name('subscription.callback');
+Route::post('/partner/marketing/callback', [App\Http\Controllers\PartnerMarketingSubscriptionController::class, 'handleCallback'])->name('partner.marketing.callback');
 
 require __DIR__.'/auth.php';

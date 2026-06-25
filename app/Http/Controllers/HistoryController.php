@@ -20,8 +20,8 @@ class HistoryController extends Controller
 
         // Get visits
         $visits = $user->visits()
-            ->with('company')
-            ->orderBy('created_at', 'desc')
+            ->with('partner')
+            ->orderByDesc('visited_at')
             ->paginate(20);
 
         // Merge and sort by date
@@ -37,7 +37,7 @@ class HistoryController extends Controller
                 return [
                     'type' => 'visit',
                     'data' => $visit,
-                    'date' => $visit->created_at,
+                    'date' => $visit->visited_at ?? $visit->created_at,
                 ];
             }))
             ->sortByDesc('date')

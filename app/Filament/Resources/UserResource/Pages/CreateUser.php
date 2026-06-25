@@ -36,12 +36,6 @@ class CreateUser extends CreateRecord
                 'data.phone' => 'ეს ტელეფონის ნომერი უკვე რეგისტრირებულია.',
             ]);
         }
-
-        if (empty($state['company_id'])) {
-            throw ValidationException::withMessages([
-                'data.company_id' => 'აირჩიეთ კომპანია.',
-            ]);
-        }
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array
@@ -65,6 +59,6 @@ class CreateUser extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return 'კორპორატიული მომხმარებელი დაემატა — შეძლებს შესვლას ტელეფონის OTP-ით';
+        return 'მომხმარებელი დაემატა — შეძლებს შესვლას ტელეფონის OTP-ით';
     }
 }

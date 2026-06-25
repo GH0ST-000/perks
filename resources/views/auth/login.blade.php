@@ -134,9 +134,16 @@
         </div>
 
         <div class="mt-6 text-center">
-            <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors">
-                ანგარიში მხოლოდ კორპორატიული პაკეტის ფარგლებში იქმნება. დაუკავშირდით თქვენს კომპანიის ადმინისტრატორს.
-            </p>
+            @if(config('perks.registration_enabled'))
+                <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors">
+                    არ გაქვთ ანგარიში?
+                    <a href="{{ route('register') }}" class="text-blue-600 dark:text-blue-400 font-semibold hover:underline">დარეგისტრირდით</a>
+                </p>
+            @else
+                <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors">
+                    ანგარიშის შესაქმნელად დაუკავშირდით ადმინისტრატორს.
+                </p>
+            @endif
         </div>
     </div>
 
@@ -283,7 +290,13 @@
                         startResendTimer();
                         showToast('success', 'წარმატება', 'დადასტურების კოდი გაიგზავნა!');
                     } else {
-                        showToast('error', 'შეცდომა', data.message || 'OTP-ის გაგზავნა ვერ მოხერხდა. გთხოვთ, სცადოთ ხელახლა.');
+                        const message = data.message || 'OTP-ის გაგზავნა ვერ მოხერხდა. გთხოვთ, სცადოთ ხელახლა.';
+                        showToast('error', 'შეცდომა', message);
+                        if (data.register_url) {
+                            setTimeout(() => {
+                                window.location.href = data.register_url;
+                            }, 2000);
+                        }
                         sendOtpBtn.disabled = false;
                         sendOtpText.classList.remove('hidden');
                         sendOtpLoading.classList.add('hidden');
