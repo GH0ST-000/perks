@@ -18,6 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'partner' => \App\Http\Middleware\EnsurePartner::class,
             'redirect.partner.users' => \App\Http\Middleware\RedirectPartnerUsers::class,
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'payment/callback',
+            'subscription/callback',
+            'partner/marketing/callback',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

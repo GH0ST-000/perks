@@ -51,9 +51,14 @@ class AuthenticatedSessionController extends Controller
         }
 
         if (! $user) {
+            $message = config('perks.registration_enabled')
+                ? 'ამ ტელეფონის ნომერზე ანგარიში არ მოიძებნა. გთხოვთ, დარეგისტრირდეთ.'
+                : 'ამ ტელეფონის ნომერზე ანგარიში არ მოიძებნა. დაუკავშირდით ადმინისტრატორს.';
+
             return response()->json([
                 'success' => false,
-                'message' => 'ამ ტელეფონის ნომერზე ანგარიში არ მოიძებნა. დაუკავშირდით ადმინისტრატორს.',
+                'message' => $message,
+                'register_url' => config('perks.registration_enabled') ? route('register') : null,
             ], 422);
         }
 

@@ -64,9 +64,17 @@ class PartnerMarketingService
 
     public function packageTitle(string $id): ?string
     {
+        return $this->package($id)['title'] ?? null;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function package(string $id): ?array
+    {
         foreach ($this->packages() as $package) {
             if ($package['id'] === $id) {
-                return $package['title'];
+                return $package;
             }
         }
 

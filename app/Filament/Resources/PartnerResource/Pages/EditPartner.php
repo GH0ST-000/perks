@@ -15,8 +15,7 @@ class EditPartner extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
-                ->after(fn () => app(PartnerAccountService::class)->removeLoginUser($this->record)),
+            Actions\DeleteAction::make(),
         ];
     }
 

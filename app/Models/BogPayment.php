@@ -22,6 +22,7 @@ class BogPayment extends Model
         'description',
         'card_id',
         'subscription_id',
+        'partner_marketing_subscription_id',
         'bog_response',
         'callback_data',
         'paid_at',
@@ -44,6 +45,11 @@ class BogPayment extends Model
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(Subscription::class);
+    }
+
+    public function partnerMarketingSubscription(): BelongsTo
+    {
+        return $this->belongsTo(PartnerMarketingSubscription::class);
     }
 
     public function scopePending($query)

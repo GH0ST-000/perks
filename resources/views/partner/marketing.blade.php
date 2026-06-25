@@ -1,9 +1,49 @@
-<x-partner-layout :partner="$partner">
+<x-partner-layout :partner="$partner" headerTitle="მარკეტინგი">
     <div class="space-y-4 md:space-y-8" x-data="{ ordering: null }">
 
         @if(session('success'))
             <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-4 py-3 rounded-xl text-sm animate-fade-in">
                 {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-xl text-sm animate-fade-in">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if($activeSubscription)
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-5 md:p-6">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <p class="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-1">აქტიური გამოწერა</p>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ $activeSubscription->package_title }}</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">
+                            ყოველთვიური ღირებულება: <strong>₾{{ number_format($activeSubscription->amount, 0) }}</strong>
+                        </p>
+                        <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-slate-600 dark:text-slate-300">
+                            <div>
+                                <span class="text-slate-400 dark:text-slate-500 block text-xs">დაწყება</span>
+                                {{ $activeSubscription->started_at?->format('d.m.Y') ?? '—' }}
+                            </div>
+                            <div>
+                                <span class="text-slate-400 dark:text-slate-500 block text-xs">ბოლო ჩამოჭრა</span>
+                                {{ $activeSubscription->last_billed_at?->format('d.m.Y H:i') ?? '—' }}
+                            </div>
+                            <div>
+                                <span class="text-slate-400 dark:text-slate-500 block text-xs">შემდეგი ჩამოჭრა</span>
+                                {{ $activeSubscription->next_billing_date?->format('d.m.Y') ?? '—' }}
+                            </div>
+                        </div>
+                    </div>
+                    <form action="{{ route('partner.marketing.cancel', $activeSubscription) }}" method="POST" onsubmit="return confirm('გსურთ გამოწერის გაუქმება?');">
+                        @csrf
+                        <button type="submit" class="px-4 py-2.5 rounded-xl border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-bold hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                            გამოწერის გაუქმება
+                        </button>
+                    </form>
+                </div>
             </div>
         @endif
 
@@ -16,6 +56,8 @@
                         'platinum' => 'partner-marketing-icon--platinum',
                         default => 'partner-marketing-icon--executive',
                     };
+                    $hasActive = (bool) $activeSubscription;
+                    $isCurrent = $hasActive && $activeSubscription->package_id === $package['id'];
                 @endphp
                 <div class="partner-marketing-card-wrap h-full">
                 <div @class([
@@ -41,6 +83,7 @@
                         </div>
                         <div class="text-right leading-none">
                             <span class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">₾{{ $package['price'] }}</span>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-1">ყოველთვიურად</p>
                         </div>
                     </div>
 
@@ -59,22 +102,32 @@
                         @endforeach
                     </ul>
 
-                    <form action="{{ route('partner.marketing.order') }}" method="POST" class="mt-auto"
-                        @submit="ordering = '{{ $package['id'] }}'">
-                        @csrf
-                        <input type="hidden" name="package" value="{{ $package['id'] }}">
-                        <button type="submit"
-                            @class([
-                                'w-full font-bold py-3.5 md:py-4 rounded-xl md:rounded-2xl transition-all flex items-center justify-center gap-2 min-h-[52px] disabled:opacity-70',
-                                'partner-btn-primary shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 active:scale-[0.98]' => ($package['button'] ?? 'finish') === 'primary',
-                                'partner-btn-finish shadow-md active:scale-[0.98]' => ($package['button'] ?? 'finish') !== 'primary',
-                            ])
-                            :disabled="ordering === '{{ $package['id'] }}'">
-                            <span x-show="ordering === '{{ $package['id'] }}'" x-cloak
-                                class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                            <span x-text="ordering === '{{ $package['id'] }}' ? 'მუშავდება...' : 'შეკვეთა'">შეკვეთა</span>
+                    @if($isCurrent)
+                        <div class="mt-auto w-full py-3.5 md:py-4 rounded-xl md:rounded-2xl text-center text-sm font-bold bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                            აქტიური პაკეტი
+                        </div>
+                    @elseif($hasActive)
+                        <button type="button" disabled class="mt-auto w-full py-3.5 md:py-4 rounded-xl md:rounded-2xl text-sm font-bold opacity-50 cursor-not-allowed partner-btn-finish">
+                            ჯერ გააუქმეთ მიმდინარე გამოწერა
                         </button>
-                    </form>
+                    @else
+                        <form action="{{ route('partner.marketing.order') }}" method="POST" class="mt-auto"
+                            @submit="ordering = '{{ $package['id'] }}'">
+                            @csrf
+                            <input type="hidden" name="package" value="{{ $package['id'] }}">
+                            <button type="submit"
+                                @class([
+                                    'w-full font-bold py-3.5 md:py-4 rounded-xl md:rounded-2xl transition-all flex items-center justify-center gap-2 min-h-[52px] disabled:opacity-70',
+                                    'partner-btn-primary shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 active:scale-[0.98]' => ($package['button'] ?? 'finish') === 'primary',
+                                    'partner-btn-finish shadow-md active:scale-[0.98]' => ($package['button'] ?? 'finish') !== 'primary',
+                                ])
+                                :disabled="ordering === '{{ $package['id'] }}'">
+                                <span x-show="ordering === '{{ $package['id'] }}'" x-cloak
+                                    class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                <span x-text="ordering === '{{ $package['id'] }}' ? 'მუშავდება...' : 'გამოწერა'">გამოწერა</span>
+                            </button>
+                        </form>
+                    @endif
                 </div>
                 </div>
             @endforeach
