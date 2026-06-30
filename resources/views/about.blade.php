@@ -1,6 +1,6 @@
 @extends('layouts.landing')
 
-@section('title', 'ჩვენი ისტორია - Perks')
+@section('title', 'ჩვენს შესახებ | Perks')
 
 @section('content')
 @include('components.landing.header')
@@ -11,7 +11,7 @@
     <section class="relative pt-12 pb-16 md:pt-16 md:pb-24 overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-slate-900 dark:via-slate-950 dark:to-slate-950"></div>
         <div class="max-w-3xl mx-auto px-4 relative z-10 text-center">
-            <h1 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">ჩვენი ისტორია</h1>
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">ჩვენს შესახებ</h1>
             <div class="h-1 w-24 mx-auto rounded-full bg-gradient-to-r from-primary-500 to-purple-500 mb-10"></div>
             <div class="rounded-3xl bg-white border border-gray-200 shadow-sm dark:bg-slate-900/80 dark:border-slate-700/80 dark:shadow-none p-6 md:p-10 text-left space-y-6 text-gray-600 dark:text-slate-300 leading-relaxed text-base md:text-lg">
                 <p>

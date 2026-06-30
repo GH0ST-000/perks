@@ -1,5 +1,7 @@
 @extends('layouts.landing')
 
+@section('title', $vacancy->title . ' | Perks')
+
 @section('content')
     @include('components.landing.header')
 

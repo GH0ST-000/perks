@@ -1,4 +1,4 @@
-<x-partner-layout :partner="$partner">
+<x-partner-layout :partner="$partner" title="პარამეტრები" headerTitle="პარამეტრები">
     <div class="space-y-4 md:space-y-6 max-w-xl">
         @if(session('success'))
             <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-4 py-3 rounded-xl text-sm">

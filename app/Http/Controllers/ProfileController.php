@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Support\PhoneNumber;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,8 +40,8 @@ class ProfileController extends Controller
         }
 
         // Update phone number
-        if ($request->has('phone')) {
-            $user->phone = $request->input('phone');
+        if ($request->filled('phone')) {
+            $user->phone = PhoneNumber::normalize($request->input('phone'));
         }
 
         if ($user->isDirty('email')) {

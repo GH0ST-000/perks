@@ -1,4 +1,4 @@
-<x-partner-layout :partner="$partner" headerTitle="მარკეტინგი">
+<x-partner-layout :partner="$partner" title="მარკეტინგი" headerTitle="მარკეტინგი">
     <div class="space-y-4 md:space-y-8" x-data="{ ordering: null }">
 
         @if(session('success'))

@@ -2,25 +2,31 @@
 
 namespace App\Filament\Resources\PartnerResource\RelationManagers;
 
+use App\Filament\Support\CategorySelect;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoriesRelationManager extends RelationManager
 {
     protected static string $relationship = 'categories';
 
+    protected static ?string $title = 'კატეგორიები';
 
     public function table(Table $table): Table
     {
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('აიკონი')
+                    ->disk('public')
+                    ->square()
+                    ->size(40),
                 Tables\Columns\TextColumn::make('name')
+                    ->label('სახელი')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
@@ -48,6 +54,11 @@ class CategoriesRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make()
                     ->preloadRecordSelect()
+                    ->recordSelectOptionsQuery(fn ($query) => $query->orderBy('name'))
+                    ->recordSelect(
+                        fn (Forms\Components\Select $select) => CategorySelect::configure($select)
+                            ->label('კატეგორია')
+                    )
                     ->form(fn (Tables\Actions\AttachAction $action): array => [
                         $action->getRecordSelect(),
                         Forms\Components\TextInput::make('discount_percentage')

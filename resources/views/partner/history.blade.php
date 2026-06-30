@@ -1,4 +1,4 @@
-<x-partner-layout :partner="$partner">
+<x-partner-layout :partner="$partner" title="ისტორია" headerTitle="ისტორია">
     <div class="space-y-4 md:space-y-6">
 
         {{-- Period filters --}}

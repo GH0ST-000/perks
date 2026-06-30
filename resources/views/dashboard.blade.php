@@ -1,4 +1,4 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="მომხმარებლის პორტალი">
     <!-- Welcome Section -->
     <div style="margin-bottom: 32px;">
         <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">გამარჯობა, {{ auth()->user()->name }} </h1>
@@ -42,15 +42,6 @@
                     <span class="material-icons" style="font-size: 20px; color: #a0aec0; cursor: pointer;">visibility</span>
                 </div>
                 <p style="font-size: 32px; font-weight: 700; color: #ffffff; margin: 0;">{{ auth()->user()->p_coins ?? 0 }} P</p>
-            </div>
-
-            <!-- Savings Card -->
-            <div style="background-color: #252836; border-radius: 16px; padding: 20px; border: 1px solid #2d3142; position: relative;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                    <span style="font-size: 12px; font-weight: 500; color: #a0aec0; text-transform: uppercase;">დანაზოგი</span>
-                    <span class="material-icons" style="font-size: 20px; color: #a0aec0;">trending_up</span>
-                </div>
-                <p style="font-size: 32px; font-weight: 700; color: #ffffff; margin: 0;">0 ₾</p>
             </div>
 
             <!-- Visits Card -->

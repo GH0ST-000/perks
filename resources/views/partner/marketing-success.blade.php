@@ -1,4 +1,4 @@
-<x-partner-layout :partner="$partner" headerTitle="გადახდა წარმატებულია">
+<x-partner-layout :partner="$partner" title="გადახდა წარმატებულია" headerTitle="გადახდა წარმატებულია">
     <div class="max-w-lg mx-auto bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-8 text-center shadow-sm">
         <div class="w-16 h-16 mx-auto mb-5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
             <i data-lucide="circle-check" class="w-8 h-8 text-emerald-500"></i>

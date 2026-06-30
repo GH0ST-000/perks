@@ -1,4 +1,4 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="ისტორია">
     <!-- Page Header -->
     <div style="margin-bottom: 32px;">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">

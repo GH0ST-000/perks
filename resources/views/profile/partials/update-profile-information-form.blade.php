@@ -122,21 +122,25 @@
             @endif
         </div>
 
-        <!-- Phone Number (optional) -->
+        <!-- Phone Number -->
         <div>
             <label for="phone" style="display: block; font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;">
-                ტელეფონის ნომერი <span style="color: var(--text-tertiary); font-weight: 400;">(არასავალდებულო)</span>
+                ტელეფონის ნომერი <span style="color: #ef4444;">*</span>
             </label>
             <input 
                 id="phone" 
                 name="phone" 
                 type="tel" 
-                value="{{ old('phone', $user->phone ?? '') }}" 
+                value="{{ old('phone', $user->phone ? \App\Support\PhoneNumber::display($user->phone) : '') }}" 
                 autocomplete="tel"
-                placeholder="+995 XXX XXX XXX"
+                placeholder="5XX XXX XXX"
+                required
+                pattern="[0-9]{9}"
+                maxlength="9"
                 style="width: 100%; padding: 12px 16px; background-color: var(--bg-secondary); border: 1px solid var(--border-hover); border-radius: 10px; color: var(--text-primary); font-size: 14px; transition: all 0.2s;"
                 onfocus="this.style.borderColor='#3b82f6'; this.style.outline='none'; this.style.backgroundColor='var(--bg-primary)';"
                 onblur="this.style.borderColor='var(--border-hover)'; this.style.backgroundColor='var(--bg-secondary)';"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);"
             />
             @error('phone')
                 <p style="margin-top: 8px; font-size: 14px; color: #ef4444;">{{ $message }}</p>

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\FamilyMemberResource\Pages;
 use App\Models\FamilyMember;
+use App\Services\FamilyMemberService;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -67,9 +68,22 @@ class FamilyMemberResource extends Resource
                             ])
                             ->required()
                             ->columnSpan(1),
+                        Forms\Components\Select::make('status')
+                            ->label('სტატუსი')
+                            ->options([
+                                FamilyMember::STATUS_PENDING => 'მოლოდინში',
+                                FamilyMember::STATUS_APPROVED => 'დადასტურებული',
+                                FamilyMember::STATUS_REJECTED => 'უარყოფილი',
+                            ])
+                            ->default(FamilyMember::STATUS_PENDING)
+                            ->disabled()
+                            ->dehydrated()
+                            ->columnSpan(1),
                         Forms\Components\Toggle::make('is_active')
                             ->label('Active')
-                            ->default(true)
+                            ->default(false)
+                            ->disabled()
+                            ->dehydrated()
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
@@ -116,6 +130,19 @@ class FamilyMemberResource extends Resource
                         'other' => 'Other',
                         default => $state,
                     }),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('სტატუსი')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        FamilyMember::STATUS_APPROVED => 'success',
+                        FamilyMember::STATUS_REJECTED => 'danger',
+                        default => 'warning',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        FamilyMember::STATUS_APPROVED => 'დადასტურებული',
+                        FamilyMember::STATUS_REJECTED => 'უარყოფილი',
+                        default => 'მოლოდინში',
+                    }),
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Active')
                     ->boolean(),
@@ -126,6 +153,13 @@ class FamilyMemberResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('სტატუსი')
+                    ->options([
+                        FamilyMember::STATUS_PENDING => 'მოლოდინში',
+                        FamilyMember::STATUS_APPROVED => 'დადასტურებული',
+                        FamilyMember::STATUS_REJECTED => 'უარყოფილი',
+                    ]),
                 Tables\Filters\SelectFilter::make('relationship')
                     ->options([
                         'spouse' => 'Spouse',
@@ -141,8 +175,25 @@ class FamilyMemberResource extends Resource
                     ->falseLabel('Inactive only'),
             ])
             ->actions([
+                Tables\Actions\Action::make('approve')
+                    ->label('დადასტურება')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('ნათესავის დადასტურება')
+                    ->modalDescription(fn () => 'დადასტურების შემდეგ მომხმარებლის წევრობას დაემატება '.config('perks.family_member_monthly_addon', 10).' ₾/თვე.')
+                    ->visible(fn (FamilyMember $record) => $record->status === FamilyMember::STATUS_PENDING)
+                    ->action(fn (FamilyMember $record) => app(FamilyMemberService::class)->approve($record)),
+                Tables\Actions\Action::make('reject')
+                    ->label('უარყოფა')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->visible(fn (FamilyMember $record) => $record->status === FamilyMember::STATUS_PENDING)
+                    ->action(fn (FamilyMember $record) => app(FamilyMemberService::class)->reject($record)),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->action(fn (FamilyMember $record) => app(FamilyMemberService::class)->remove($record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -170,7 +221,14 @@ class FamilyMemberResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        $pending = static::getModel()::where('status', FamilyMember::STATUS_PENDING)->count();
+
+        return $pending > 0 ? (string) $pending : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
     }
 }
 

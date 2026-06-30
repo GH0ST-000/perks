@@ -12,6 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PartnerPortalController extends Controller
@@ -67,6 +68,16 @@ class PartnerPortalController extends Controller
             return response()->json($result);
         } catch (\InvalidArgumentException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
+        } catch (\Throwable $e) {
+            Log::error('Partner scanner search failed', [
+                'partner_id' => $partner->id,
+                'query' => $validated['query'],
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'message' => 'სამწუხაროდ ძებნა ვერ მოხერხდა. სცადეთ ხელახლა.',
+            ], 500);
         }
     }
 

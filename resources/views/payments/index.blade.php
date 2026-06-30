@@ -1,4 +1,4 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="გადახდები">
     <div style="max-width: 1400px; margin: 0 auto; padding: 0;">
         <!-- Success Message -->
         @if(session('success'))

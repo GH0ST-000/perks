@@ -52,7 +52,7 @@ class SubscriptionController extends Controller
         }
 
         if ($this->membership->hasActiveMembership($user)) {
-            return back()->with('error', 'თქვენ უკვე გაქვთ აქტიური მემბერშიპი.');
+            return back()->with('error', 'თქვენ უკვე გაქვთ აქტიური წევრობა.');
         }
 
         if ($user->subscriptions()->where('status', Subscription::STATUS_PENDING)->exists()) {
@@ -346,7 +346,7 @@ class SubscriptionController extends Controller
 
         $subscription->cancel();
 
-        return back()->with('success', 'მემბერშიპი წარმატებით გაუქმდა.');
+        return back()->with('success', 'წევრობა წარმატებით გაუქმდა.');
     }
 
     public function subscriptionSuccess(Subscription $subscription)

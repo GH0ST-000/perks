@@ -1,4 +1,4 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="წევრობა">
     <div style="max-width: 1400px; margin: 0 auto; padding: 0;">
         @if(session('success'))
             <div id="success-message" style="background-color: #10b981; color: #ffffff; padding: 12px 20px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
@@ -21,7 +21,7 @@
                 <line x1="8" x2="8" y1="2" y2="6"/>
                 <line x1="3" x2="21" y1="10" y2="10"/>
             </svg>
-            <span style="font-size: 18px; font-weight: 600; color: var(--text-primary);">მემბერშიპი</span>
+            <span style="font-size: 18px; font-weight: 600; color: var(--text-primary);">წევრობა</span>
         </div>
 
         @if($activeSubscription)
@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <form action="{{ route('subscriptions.cancel', $activeSubscription) }}" method="POST" onsubmit="return confirm('დარწმუნებული ხართ, რომ გსურთ მემბერშიპის გაუქმება?');">
+            <form action="{{ route('subscriptions.cancel', $activeSubscription) }}" method="POST" onsubmit="return confirm('დარწმუნებული ხართ, რომ გსურთ წევრობის გაუქმება?');">
                 @csrf
                 <button type="submit" style="padding: 12px 24px; background-color: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; font-weight: 600; cursor: pointer;">
                     გაუქმება
@@ -62,7 +62,7 @@
         @else
         <div style="background-color: var(--bg-card); border-radius: var(--card-radius); padding: 28px; box-shadow: var(--shadow-card); margin-bottom: 24px;">
             <h2 style="font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0;">აირჩიე პაკეტი</h2>
-            <p style="color: var(--text-secondary); margin: 0 0 24px 0;">ყოველთვიური ბენეფიტების პაკეტი — შეთავაზებების მისაღებად საჭიროა აქტიური მემბერშიპი</p>
+            <p style="color: var(--text-secondary); margin: 0 0 24px 0;">ყოველთვიური ბენეფიტების პაკეტი — შეთავაზებების მისაღებად საჭიროა აქტიური წევრობა</p>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 900px; margin: 0 auto;">
                 {{-- Member --}}
@@ -72,7 +72,7 @@
                     <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--text-secondary);">
                         <li>✓ სტანდარტული ფასდაკლებები</li>
                         <li>✓ ექსკლუზიური შეთავაზებები</li>
-                        <li>✓ P-Coin დაგროვება</li>
+                        <li>✓ {{ config('perks.membership_plans.member.p_coins_label') }}</li>
                         <li>✓ ოჯახის წევრის დამატება</li>
                     </ul>
                     <form action="{{ route('subscriptions.subscribe') }}" method="POST">
@@ -92,7 +92,7 @@
                     <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--text-secondary);">
                         <li>✓ პრემიუმ ფასდაკლებები</li>
                         <li>✓ ექსკლუზიური შეთავაზებები</li>
-                        <li>✓ 1.5× P-Coin დაგროვება</li>
+                        <li>✓ {{ config('perks.membership_plans.limited.p_coins_label') }}</li>
                         <li>✓ პერსონალური ასისტენტი</li>
                         <li>✓ ოჯახის წევრის დამატება</li>
                     </ul>

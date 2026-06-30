@@ -2,7 +2,7 @@
     $isEdit = $editing ?? false;
 @endphp
 
-<x-partner-layout :partner="$partner">
+<x-partner-layout :partner="$partner" :title="$isEdit ? 'შეთავაზების რედაქტირება' : 'ახალი შეთავაზება'" :headerTitle="$isEdit ? 'შეთავაზების რედაქტირება' : 'ახალი შეთავაზება'">
     <div class="max-w-2xl mx-auto animate-fade-in relative" x-data="partnerOfferForm()">
 
         @if($errors->any())

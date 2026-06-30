@@ -22,21 +22,19 @@ class LandingPageController extends Controller
             return false;
         }
 
-        return app(MembershipService::class)->hasActiveMembership($user);
+        return app(MembershipService::class)->canActivateOffers($user);
     }
 
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $hasMembership = $this->userHasOfferAccess();
 
-        $premiumOffers = $hasMembership
-            ? PremiumOffer::with(['partner', 'partner.categories'])
-                ->publicVisible()
-                ->where('is_premium', true)
-                ->orderBy('id', 'desc')
-                ->limit(4)
-                ->get()
-            : collect();
+        $premiumOffers = PremiumOffer::with(['partner', 'partner.categories'])
+            ->publicVisible()
+            ->where('is_premium', true)
+            ->orderBy('id', 'desc')
+            ->limit(4)
+            ->get();
 
         // Get all categories for the categories section
         $categories = Category::orderBy('name')->get();
@@ -58,12 +56,6 @@ class LandingPageController extends Controller
     {
         $categories = Category::orderBy('name')->get();
         $hasMembership = $this->userHasOfferAccess();
-
-        if (! $hasMembership) {
-            $offers = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 12);
-
-            return view('offers.index', compact('offers', 'categories', 'hasMembership'));
-        }
 
         $query = PremiumOffer::with(['partner', 'partner.categories'])
             ->publicVisible();
@@ -102,13 +94,6 @@ class LandingPageController extends Controller
 
     public function showOffer(PremiumOffer $offer): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
     {
-        if (! $this->userHasOfferAccess()) {
-            return redirect()->route('offers.index')->with(
-                'error',
-                'შეთავაზებების სანახავად გაააქტიურეთ Member ან Limited მემბერშიპი.'
-            );
-        }
-
         if ($offer->status !== PremiumOffer::STATUS_APPROVED || $offer->day_left <= 0) {
             return redirect()->route('offers.index')->with('error', 'This offer is not available.');
         }
@@ -126,9 +111,11 @@ class LandingPageController extends Controller
 
         $userClaim = null;
         $membership = app(MembershipService::class);
-        $hasMembership = true;
-        $displayPCoins = $membership->pCoinsForOffer($offer, auth()->user());
-        $membershipPlan = $membership->plan(auth()->user());
+        $hasMembership = auth()->check() && $membership->canActivateOffers(auth()->user());
+        $displayPCoins = auth()->check()
+            ? $membership->pCoinsForOffer($offer, auth()->user())
+            : $offer->p_coins_reward;
+        $membershipPlan = auth()->check() ? $membership->plan(auth()->user()) : null;
 
         if (auth()->check()) {
             $userClaim = \App\Models\OfferClaim::query()
@@ -257,10 +244,10 @@ class LandingPageController extends Controller
             return redirect()->back()->with('error', 'ეს შეთავაზება ხელმისაწვდომი არ არის.');
         }
 
-        if (! $membership->hasActiveMembership($user)) {
+        if (! $membership->canActivateOffers($user)) {
             return redirect()->route('subscriptions.index')->with(
                 'error',
-                'შეთავაზების მისაღებად გაააქტიურეთ Member ან Limited მემბერშიპი.'
+                'შეთავაზების მისაღებად გაააქტიურეთ Member ან Limited პაკეტი.'
             );
         }
 

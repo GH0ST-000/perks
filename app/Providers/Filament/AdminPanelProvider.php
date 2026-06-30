@@ -30,7 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('Perk')
             // ->brandLogo(asset('images/logo.svg'))
             ->brandLogoHeight('2rem')
-            ->favicon(asset('images/favicon.ico'))
+            ->favicon(asset('images/favicon.png'))
             ->colors([
                 'primary' => Color::Amber,
             ])

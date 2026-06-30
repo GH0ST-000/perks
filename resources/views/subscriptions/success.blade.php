@@ -1,4 +1,4 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="პაკეტი გააქტიურდა">
     <div style="max-width: 800px; margin: 0 auto; padding: 40px 0;">
         <div style="background-color: var(--bg-card); border-radius: var(--card-radius); padding: 48px; border: none; box-shadow: var(--shadow-card); text-align: center;">
             <!-- Success Icon -->
@@ -8,12 +8,12 @@
                 </svg>
             </div>
 
-            <h1 style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin: 0 0 12px 0;">გამოწერა წარმატებით გააქტიურდა!</h1>
-            <p style="font-size: 16px; color: var(--text-secondary); margin: 0 0 32px 0;">თქვენი გამოწერა აქტიურია და ავტომატურად განახლდება</p>
+            <h1 style="font-size: 28px; font-weight: 700; color: var(--text-primary); margin: 0 0 12px 0;">პაკეტი წარმატებით გააქტიურდა!</h1>
+            <p style="font-size: 16px; color: var(--text-secondary); margin: 0 0 32px 0;">თქვენი წევრობა აქტიურია და ავტომატურად განახლდება</p>
 
             <!-- Subscription Details -->
             <div style="background-color: var(--bg-secondary); border-radius: 12px; padding: 24px; margin-bottom: 32px; text-align: left;">
-                <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0 0 16px 0;">გამოწერის დეტალები</h3>
+                <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0 0 16px 0;">პაკეტის დეტალები</h3>
                 
                 <div style="display: grid; gap: 12px;">
                     <div style="display: flex; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
@@ -47,14 +47,14 @@
             <div style="background-color: #dbeafe; border-radius: 12px; padding: 16px; margin-bottom: 32px; text-align: left; border-left: 4px solid #3b82f6;">
                 <p style="margin: 0; color: #1e40af; font-size: 14px; line-height: 1.6;">
                     <strong>მნიშვნელოვანი:</strong><br>
-                    თქვენი გამოწერა ავტომატურად განახლდება თითოეული პერიოდის ბოლოს. შეგიძლიათ ნებისმიერ დროს გააუქმოთ გამოწერა თქვენი ანგარიშის პარამეტრებიდან.
+                    თქვენი წევრობა ავტომატურად განახლდება თითოეული პერიოდის ბოლოს. შეგიძლიათ ნებისმიერ დროს გააუქმოთ პაკეტი თქვენი ანგარიშის პარამეტრებიდან.
                 </p>
             </div>
 
             <!-- Action Buttons -->
             <div style="display: flex; gap: 12px; justify-content: center;">
                 <a href="{{ route('subscriptions.index') }}" style="padding: 14px 28px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 600; transition: all 0.3s; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); display: inline-block;" onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(59, 130, 246, 0.3)';">
-                    გამოწერების მართვა
+                    წევრობის მართვა
                 </a>
                 <a href="{{ route('dashboard') }}" style="padding: 14px 28px; background-color: var(--bg-secondary); color: var(--text-primary); text-decoration: none; border-radius: 10px; font-weight: 600; transition: all 0.3s; border: 1px solid var(--border-color); display: inline-block;" onmouseover="this.style.backgroundColor='var(--bg-card)';" onmouseout="this.style.backgroundColor='var(--bg-secondary)';">
                     მთავარ გვერდზე

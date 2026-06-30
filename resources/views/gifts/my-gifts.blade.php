@@ -1,17 +1,17 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="ჩემი ინდივიუალური">
     <!-- Page Header -->
     <div style="margin-bottom: 32px;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <span class="material-icons" style="font-size: 32px; color: #10b981;">inventory</span>
-                <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin: 0;">ჩემი საჩუქრები</h1>
+                <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin: 0;">ჩემი ინდივიუალური</h1>
             </div>
             <a href="{{ route('gifts.index') }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background-color: #252836; color: #ffffff; font-size: 14px; font-weight: 600; border-radius: 8px; text-decoration: none; border: 1px solid #2d3142; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#2d3142';" onmouseout="this.style.backgroundColor='#252836';">
                 <span class="material-icons" style="font-size: 20px;">arrow_back</span>
-                საჩუქრებზე დაბრუნება
+                ინდივიუალურზე დაბრუნება
             </a>
         </div>
-        <p style="font-size: 16px; color: #a0aec0; margin: 0;">თქვენი გადაცვლილი საჩუქრების ისტორია</p>
+        <p style="font-size: 16px; color: #a0aec0; margin: 0;">თქვენი გადაცვლილი შესაძლებლობების ისტორია</p>
     </div>
 
     @if($redemptions->count() > 0)
@@ -111,11 +111,11 @@
             <div style="width: 120px; height: 120px; background-color: #252836; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
                 <span class="material-icons" style="font-size: 64px; color: #9ca3af;">inventory</span>
             </div>
-            <h3 style="font-size: 24px; font-weight: 600; color: #ffffff; margin: 0 0 12px 0;">არ გაქვთ გადაცვლილი საჩუქრები</h3>
-            <p style="font-size: 16px; color: #a0aec0; margin: 0 0 24px 0;">დაიწყეთ თქვენი P ქულების გადაცვლა საჩუქრებზე</p>
+            <h3 style="font-size: 24px; font-weight: 600; color: #ffffff; margin: 0 0 12px 0;">არ გაქვთ გადაცვლილი შესაძლებლობები</h3>
+            <p style="font-size: 16px; color: #a0aec0; margin: 0 0 24px 0;">მიიღეთ წვდომა უნიკალურ შესაძლებლობებზე პარტნიორებისგან</p>
             <a href="{{ route('gifts.index') }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; font-size: 14px; font-weight: 600; border-radius: 8px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                <span class="material-icons" style="font-size: 20px;">card_giftcard</span>
-                საჩუქრების ნახვა
+                <span class="material-icons" style="font-size: 20px;">auto_awesome</span>
+                ინდივიუალურის ნახვა
             </a>
         </div>
     @endif

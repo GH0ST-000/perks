@@ -1,5 +1,7 @@
 @extends('layouts.landing')
 
+@section('title', 'ბლოგი | Perks')
+
 @section('content')
     @include('components.landing.header')
 

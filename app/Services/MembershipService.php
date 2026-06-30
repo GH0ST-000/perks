@@ -39,6 +39,15 @@ class MembershipService
         return $this->activeSubscription($user) !== null;
     }
 
+    public function canActivateOffers(User $user): bool
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $this->hasActiveMembership($user);
+    }
+
     public function plan(User $user): ?string
     {
         return $this->activeSubscription($user)?->plan;

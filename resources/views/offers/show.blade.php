@@ -1,5 +1,7 @@
 @extends('layouts.landing')
 
+@section('title', $offer->name . ' | Perks')
+
 @section('content')
     @include('components.landing.header')
 
@@ -233,16 +235,16 @@
                                 </div>
                             @else
                                 @if(! $hasMembership)
-                                    <div class="mb-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
-                                        <p class="text-amber-900 dark:text-amber-100 font-medium mb-2">
-                                            შეთავაზების მისაღებად საჭიროა აქტიური Member ან Limited მემბერშიპი.
+                                    <div class="mb-4 p-4 rounded-xl border border-amber-300 bg-amber-100 text-gray-900 dark:border-amber-600 dark:bg-amber-950 dark:text-gray-100">
+                                        <p class="font-medium mb-2">
+                                            შეთავაზების მისაღებად საჭიროა აქტიური Member ან Limited პაკეტი.
                                         </p>
                                         <a href="{{ route('subscriptions.index') }}" class="inline-flex items-center gap-2 text-sm font-bold text-primary-600 dark:text-primary-400 hover:underline">
                                             პაკეტის გააქტიურება →
                                         </a>
                                     </div>
                                     <button type="button" disabled class="w-full py-4 bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-xl font-bold text-lg cursor-not-allowed">
-                                        საჭიროა მემბერშიპი
+                                        საჭიროა პაკეტი
                                     </button>
                                 @else
                                 <form action="{{ route('offers.claim', $offer) }}" method="POST">
