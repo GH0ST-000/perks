@@ -54,7 +54,7 @@ class VisitsRelationManager extends RelationManager
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('category.image')
                     ->label('აიკონი')
-                    ->disk('public')
+                    ->getStateUsing(fn ($record): ?string => $record->category?->imageUrl())
                     ->square()
                     ->size(32),
                 Tables\Columns\TextColumn::make('category.name')

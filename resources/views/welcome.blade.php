@@ -116,7 +116,7 @@
                         <div class="mx-auto mb-4 group-hover:scale-105 transition-transform">
                             @if($category->image)
                                 <x-category-icon
-                                    :src="Storage::url($category->image)"
+                                    :src="$category->imageUrl()"
                                     :alt="$category->name"
                                     size="lg"
                                     class="mx-auto"
