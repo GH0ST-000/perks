@@ -102,7 +102,7 @@
                                class="inline-flex items-center gap-2 whitespace-nowrap pb-2 text-sm font-bold transition-all border-b-2 {{ request('category') == $category->id ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-800 dark:text-gray-400' }}">
                                 @if($category->image)
                                     <x-category-icon
-                                        :src="Storage::url($category->image)"
+                                        :src="$category->imageUrl()"
                                         alt=""
                                         size="sm"
                                     />

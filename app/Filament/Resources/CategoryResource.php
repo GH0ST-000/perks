@@ -111,7 +111,7 @@ class CategoryResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('აიკონი')
-                    ->disk('public')
+                    ->getStateUsing(fn (Category $record): ?string => $record->imageUrl())
                     ->square()
                     ->size(48),
                 Tables\Columns\TextColumn::make('name')
@@ -191,7 +191,7 @@ class CategoryResource extends Resource
                     ->schema([
                         Infolists\Components\ImageEntry::make('image')
                             ->label('აიკონი')
-                            ->disk('public')
+                            ->getStateUsing(fn (Category $record): ?string => $record->imageUrl())
                             ->size(120)
                             ->columnSpanFull(),
                         Infolists\Components\TextEntry::make('name')

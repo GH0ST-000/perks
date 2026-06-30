@@ -10,9 +10,9 @@ return new class extends Migration
      * @var array<string, array{name?: string, image: string}>
      */
     private array $aliases = [
-        'ჯამრთელობა' => ['name' => 'ჯანმრთელობა', 'image' => 'categories/icons/janmrteloba.png'],
-        'სასტუმრო' => ['name' => 'დასვენება', 'image' => 'categories/icons/dasveneba.png'],
-        'ფიტნესი' => ['name' => 'სპორტი და ფიტნესი', 'image' => 'categories/icons/sporti-da-fitnesi.png'],
+        'ჯამრთელობა' => ['name' => 'ჯანმრთელობა', 'image' => 'images/categories/icons/janmrteloba.png'],
+        'სასტუმრო' => ['name' => 'დასვენება', 'image' => 'images/categories/icons/dasveneba.png'],
+        'ფიტნესი' => ['name' => 'სპორტი და ფიტნესი', 'image' => 'images/categories/icons/sporti-da-fitnesi.png'],
     ];
 
     public function up(): void

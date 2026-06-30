@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Storage;
+use App\Support\CategoryIcons;
 use Illuminate\Support\Str;
 
 class Category extends Model
@@ -48,11 +48,7 @@ class Category extends Model
 
     public function imageUrl(): ?string
     {
-        if (! $this->image) {
-            return null;
-        }
-
-        return Storage::disk('public')->url($this->image);
+        return CategoryIcons::url($this->image);
     }
 
     public function selectOptionHtml(): string

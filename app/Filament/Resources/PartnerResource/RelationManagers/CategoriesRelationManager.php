@@ -22,7 +22,7 @@ class CategoriesRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('აიკონი')
-                    ->disk('public')
+                    ->getStateUsing(fn ($record): ?string => $record->imageUrl())
                     ->square()
                     ->size(40),
                 Tables\Columns\TextColumn::make('name')
