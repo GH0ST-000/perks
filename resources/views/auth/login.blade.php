@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="შესვლა">
     <div class="w-full">
         <!-- Logo -->
         <div class="flex justify-center mb-6">

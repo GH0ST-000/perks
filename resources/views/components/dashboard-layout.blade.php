@@ -1,4 +1,4 @@
-@props(['header' => null])
+@props(['header' => null, 'title' => null])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Perks') }} - User Portal</title>
+    <title>{{ config('app.name', 'Perks') }} - {{ $title ?? 'მომხმარებლის პორტალი' }}</title>
+
+    @include('partials.favicon')
 
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
@@ -27,6 +29,7 @@
             --bg-tertiary: #e9ecef;
             --bg-card: #ffffff;
             --bg-sidebar: #ffffff;
+            --bg-input: #ffffff;
             --bg-hover: #f1f3f5;
             --text-primary: #1a1d2e;
             --text-secondary: #6b7280;
@@ -46,6 +49,7 @@
             --bg-tertiary: #2d3142;
             --bg-card: #252836;
             --bg-sidebar: #1f2937;
+            --bg-input: #2d3142;
             --bg-hover: #374151;
             --text-primary: #ffffff;
             --text-secondary: #a0aec0;
@@ -109,6 +113,22 @@
             background-color: var(--bg-hover) !important;
         }
 
+        .dashboard-select {
+            appearance: auto;
+            color: var(--text-primary);
+            background-color: var(--bg-input);
+        }
+
+        .dashboard-select option {
+            color: #1a1d2e;
+            background-color: #ffffff;
+        }
+
+        [data-theme="dark"] .dashboard-select option {
+            color: #f9fafb;
+            background-color: #252836;
+        }
+
         .nav-link {
             color: var(--text-secondary) !important;
         }
@@ -165,10 +185,7 @@
             <div style="padding: 20px 16px; border-bottom: 1px solid rgba(0,0,0,0.06);">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                            <span style="color: #ffffff; font-size: 20px; font-weight: 700;">P</span>
-                        </div>
-                        <span style="font-size: 18px; font-weight: 700; color: var(--text-primary);">PERKS</span>
+                        <img src="{{ asset('images/perks-logo.png') }}" alt="Perks" style="height: 36px; width: auto;">
                     </div>
                     <!-- Close button for mobile -->
                     <button onclick="toggleSidebar()" style="display: none; background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px;" id="close-sidebar-btn">
@@ -192,10 +209,10 @@
                         <span style="font-size: 14px; font-weight: 500;">ჩემი საფულე</span>
                     </a>
 
-                    <!-- საჩუქრები (Gifts) -->
+                    <!-- ინდივიუალური -->
                     <a href="{{ route('gifts.index') }}" onclick="closeSidebarOnMobile()" style="display: flex; align-items: center; height: 48px; padding: 0 16px; text-decoration: none; border-radius: 12px; margin: 4px 0; {{ request()->routeIs('gifts.*') ? 'background-color: #3b82f6; color: #ffffff;' : 'color: var(--text-secondary);' }} transition: all 0.2s;" @if(!request()->routeIs('gifts.*')) onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)';" onmouseout="this.style.backgroundColor='transparent';" @endif>
-                        <span class="material-icons" style="margin-right: 16px; font-size: 20px; {{ request()->routeIs('gifts.*') ? 'color: #ffffff;' : 'color: var(--text-secondary);' }}">card_giftcard</span>
-                        <span style="font-size: 14px; font-weight: 500;">საჩუქრები</span>
+                        <span class="material-icons" style="margin-right: 16px; font-size: 20px; {{ request()->routeIs('gifts.*') ? 'color: #ffffff;' : 'color: var(--text-secondary);' }}">auto_awesome</span>
+                        <span style="font-size: 14px; font-weight: 500;">ინდივიუალური</span>
                     </a>
 
                     <!-- ისტორია (History) -->
@@ -233,9 +250,9 @@
                     <button onclick="toggleSidebar()" id="mobile-menu-btn" style="display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 8px; margin-right: 8px;">
                         <span class="material-icons" style="font-size: 24px;">menu</span>
                     </button>
-                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                        <span style="color: #ffffff; font-size: 18px; font-weight: 600;">P</span>
-                    </div>
+                    <a href="{{ route('dashboard') }}" style="display: flex; align-items: center;">
+                        <img src="{{ asset('images/perks-logo.png') }}" alt="Perks" style="height: 32px; width: auto;">
+                    </a>
 {{--                    <span id="user-portal-text" style="font-size: 18px; font-weight: 600; color: #ffffff;">User Portal</span>--}}
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">

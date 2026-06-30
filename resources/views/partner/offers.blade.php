@@ -7,7 +7,7 @@
     ];
 @endphp
 
-<x-partner-layout :partner="$partner">
+<x-partner-layout :partner="$partner" title="შეთავაზებები" headerTitle="შეთავაზებები">
     <div x-data="partnerOffersIndex()" class="animate-fade-in">
 
         @if(session('success'))

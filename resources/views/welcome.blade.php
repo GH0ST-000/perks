@@ -1,5 +1,7 @@
 @extends('layouts.landing')
 
+@section('title', 'Perks - ბენეფიტები თანამშრომლებისთვის')
+
 @php
     use Illuminate\Support\Facades\Storage;
     $lcpSlider = isset($sliders) && $sliders->count() > 0 ? $sliders->first() : null;
@@ -99,9 +101,7 @@
         </div>
     @endif
 
-    @if($hasMembership ?? false)
     @include('components.landing.offers', ['offers' => $premiumOffers])
-    @endif
 
     <section id="categories" class="py-20 bg-gray-50 dark:bg-gray-800">
         <div class="max-w-7xl mx-auto px-4">
@@ -110,13 +110,24 @@
                 <p class="text-gray-500 max-w-2xl mx-auto">აირჩიე სასურველი კატეგორია</p>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-5">
                 @forelse($categories as $category)
-                    <a href="{{ route('offers.index', ['category' => $category->id]) }}" class="bg-white dark:bg-gray-700 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-center group border border-gray-100 dark:border-gray-600 hover:scale-105">
-                        <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-primary-600 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-{{ $category->icon ?? 'circle' }} text-xl"></i>
+                    <a href="{{ route('offers.index', ['category' => $category->id]) }}" class="bg-white dark:bg-gray-700 p-5 md:p-6 rounded-2xl shadow-sm hover:shadow-md transition-all text-center group border border-gray-100 dark:border-gray-600 hover:-translate-y-0.5">
+                        <div class="mx-auto mb-4 group-hover:scale-105 transition-transform">
+                            @if($category->image)
+                                <x-category-icon
+                                    :src="Storage::url($category->image)"
+                                    :alt="$category->name"
+                                    size="lg"
+                                    class="mx-auto"
+                                />
+                            @elseif($category->icon)
+                                <i class="fa-solid fa-{{ $category->icon }} text-2xl text-primary-600"></i>
+                            @else
+                                <i class="fa-solid fa-circle text-2xl text-gray-300"></i>
+                            @endif
                         </div>
-                        <h3 class="font-bold text-gray-800 dark:text-gray-200">{{ $category->name }}</h3>
+                        <h3 class="font-bold text-sm md:text-base text-gray-800 dark:text-gray-200 leading-snug">{{ $category->name }}</h3>
                     </a>
                 @empty
                     <div class="col-span-full text-center py-8 text-gray-500">
@@ -127,7 +138,6 @@
         </div>
     </section>
 
-    @auth
     <section id="pricing" class="py-20 bg-white dark:bg-gray-900">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-16">
@@ -155,7 +165,7 @@
                         </li>
                         <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
-                            P-Coin-ის დაგროვების სისტემა
+                            {{ config('perks.membership_plans.member.p_coins_label') }}
                         </li>
                         <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
@@ -163,7 +173,7 @@
                         </li>
                     </ul>
 
-                    <a href="{{ route('subscriptions.index', ['plan' => 'member']) }}" class="w-full py-4 px-5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm flex items-center justify-center gap-2 border-2 border-primary-600 text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:border-primary-500 dark:hover:bg-gray-800">
+                    <a href="{{ route('companies') }}#contact-form" class="w-full py-4 px-5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm flex items-center justify-center gap-2 border-2 border-primary-600 text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:border-primary-500 dark:hover:bg-gray-800">
                         მოთხოვნა
                     </a>
                 </div>
@@ -190,7 +200,7 @@
                         </li>
                         <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
-                            1.5-ჯერ მეტი P-Coin დაგროვების სისტემა
+                            {{ config('perks.membership_plans.limited.p_coins_label') }}
                         </li>
                         <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
@@ -202,14 +212,13 @@
                         </li>
                     </ul>
 
-                    <a href="{{ route('subscriptions.index', ['plan' => 'limited']) }}" class="w-full py-4 px-5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm flex items-center justify-center gap-2 bg-primary-600 text-white hover:bg-primary-700 shadow-md shadow-primary-600/20 dark:shadow-none">
+                    <a href="{{ route('companies') }}#contact-form" class="w-full py-4 px-5 rounded-lg font-medium transition-all duration-200 active:scale-95 text-sm flex items-center justify-center gap-2 bg-primary-600 text-white hover:bg-primary-700 shadow-md shadow-primary-600/20 dark:shadow-none">
                         მოთხოვნა
                     </a>
                 </div>
             </div>
         </div>
     </section>
-    @endauth
 
     @if(isset($testimonials) && $testimonials->count() > 0)
         <section id="testimonials" class="py-20 bg-gray-50 dark:bg-gray-800">

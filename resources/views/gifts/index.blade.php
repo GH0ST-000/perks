@@ -1,11 +1,11 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="ინდივიუალური">
     <!-- Page Header -->
     <div style="margin-bottom: 32px;">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-            <span class="material-icons" style="font-size: 32px; color: #a855f7;">card_giftcard</span>
-            <h1 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin: 0;">საჩუქრები</h1>
+            <span class="material-icons" style="font-size: 32px; color: #a855f7;">auto_awesome</span>
+            <h1 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin: 0;">ინდივიუალური</h1>
         </div>
-        <p style="font-size: 16px; color: var(--text-secondary); margin: 0;">გადაცვალეთ თქვენი P ქულები საჩუქრებზე</p>
+        <p style="font-size: 16px; color: var(--text-secondary); margin: 0;">მიიღეთ წვდომა უნიკალურ შესაძლებლობებზე პარტნიორებისგან</p>
     </div>
 
     <!-- Success/Error Messages -->
@@ -164,7 +164,7 @@
         <div style="margin-top: 40px; text-align: center;">
             <a href="{{ route('gifts.my-gifts') }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background-color: var(--bg-card); color: var(--text-primary); font-size: 14px; font-weight: 600; border-radius: 8px; text-decoration: none; border: 1px solid var(--border-color); transition: all 0.2s;" onmouseover="this.style.backgroundColor='var(--bg-hover)';" onmouseout="this.style.backgroundColor='var(--bg-card)';">
                 <span class="material-icons" style="font-size: 20px;">history</span>
-                ჩემი გადაცვლილი საჩუქრები
+                ჩემი ინდივიუალური
             </a>
         </div>
     @else
@@ -173,8 +173,8 @@
             <div style="width: 120px; height: 120px; background-color: var(--bg-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
                 <span class="material-icons" style="font-size: 64px; color: var(--text-tertiary);">card_giftcard</span>
             </div>
-            <h3 style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin: 0 0 12px 0;">საჩუქრები მალე დაემატება</h3>
-            <p style="font-size: 16px; color: var(--text-secondary); margin: 0;">ამჟამად ხელმისაწვდომი საჩუქრები არ არის</p>
+            <h3 style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin: 0 0 12px 0;">ინდივიუალური შესაძლებლობები მალე დაემატება</h3>
+            <p style="font-size: 16px; color: var(--text-secondary); margin: 0;">ამჟამად ხელმისაწვდომი შესაძლებლობები არ არის</p>
         </div>
     @endif
 

@@ -1,4 +1,4 @@
-<x-partner-layout :partner="$partner">
+<x-partner-layout :partner="$partner" title="პანელი" headerTitle="პანელი">
     <div class="space-y-4 md:space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
             <x-partner.stat-card

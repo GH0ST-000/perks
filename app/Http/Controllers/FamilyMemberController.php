@@ -3,31 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\FamilyMember;
+use App\Services\FamilyMemberService;
 use App\Services\MembershipService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class FamilyMemberController extends Controller
 {
-    /**
-     * Display a listing of the family members.
-     */
+    public function __construct(
+        private FamilyMemberService $familyMemberService,
+        private MembershipService $membership,
+    ) {}
+
     public function index()
     {
-        $familyMembers = auth()->user()->familyMembers()->latest()->get();
+        $user = auth()->user();
+        $familyMembers = $user->familyMembers()->latest()->get();
+        $activeSubscription = $this->membership->activeSubscription($user);
+        $monthlyAddon = $this->familyMemberService->monthlyAddon();
+        $approvedCount = $this->familyMemberService->approvedCount($user);
 
-        return view('family-members.index', compact('familyMembers'));
+        return view('family-members.index', compact(
+            'familyMembers',
+            'activeSubscription',
+            'monthlyAddon',
+            'approvedCount',
+        ));
     }
 
-    /**
-     * Store a newly created family member in storage.
-     */
     public function store(Request $request)
     {
         $user = auth()->user();
 
-        if (! app(MembershipService::class)->hasActiveMembership($user)) {
-            return back()->with('error', 'ოჯახის წევრის დასამატებლად საჭიროა აქტიური მემბერშიპი.');
+        if (! $this->membership->hasActiveMembership($user)) {
+            return back()->with('error', 'ოჯახის წევრის დასამატებლად საჭიროა აქტიური წევრობა.');
         }
 
         $validator = Validator::make($request->all(), [
@@ -50,31 +59,30 @@ class FamilyMemberController extends Controller
                 ->withInput();
         }
 
-        auth()->user()->familyMembers()->create($request->only([
-            'first_name',
-            'last_name',
-            'personal_number',
-            'relationship'
-        ]));
+        $member = $user->familyMembers()->create([
+            ...$request->only(['first_name', 'last_name', 'personal_number', 'relationship']),
+            'status' => FamilyMember::STATUS_PENDING,
+            'is_active' => false,
+        ]);
 
         return redirect()->route('family-members.index')
-            ->with('success', 'ოჯახის წევრი წარმატებით დაემატა');
+            ->with('success', 'მოთხოვნა გაგზავნილია. ადმინისტრატორის დადასტურების შემდეგ თქვენს წევრობას დაემატება '.$this->familyMemberService->monthlyAddon().' ₾/თვე.');
     }
 
-    /**
-     * Update the specified family member in storage.
-     */
     public function update(Request $request, FamilyMember $familyMember)
     {
-        // Ensure the family member belongs to the authenticated user
         if ($familyMember->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
+        }
+
+        if ($familyMember->status === FamilyMember::STATUS_APPROVED) {
+            return back()->with('error', 'დადასტურებული წევრის რედაქტირება შეუძლებელია. წაშალეთ და თავიდან დაამატეთ.');
         }
 
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'personal_number' => 'required|string|size:11|unique:family_members,personal_number,' . $familyMember->id,
+            'personal_number' => 'required|string|size:11|unique:family_members,personal_number,'.$familyMember->id,
             'relationship' => 'required|in:spouse,child,parent,sibling,other',
         ], [
             'first_name.required' => 'სახელის შეყვანა სავალდებულოა',
@@ -95,27 +103,26 @@ class FamilyMemberController extends Controller
             'first_name',
             'last_name',
             'personal_number',
-            'relationship'
+            'relationship',
         ]));
+
+        if ($familyMember->status === FamilyMember::STATUS_REJECTED) {
+            $this->familyMemberService->submit($familyMember);
+        }
 
         return redirect()->route('family-members.index')
             ->with('success', 'ოჯახის წევრის ინფორმაცია განახლდა');
     }
 
-    /**
-     * Remove the specified family member from storage.
-     */
     public function destroy(FamilyMember $familyMember)
     {
-        // Ensure the family member belongs to the authenticated user
         if ($familyMember->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
 
-        $familyMember->delete();
+        $this->familyMemberService->remove($familyMember);
 
         return redirect()->route('family-members.index')
             ->with('success', 'ოჯახის წევრი წაიშალა');
     }
 }
-

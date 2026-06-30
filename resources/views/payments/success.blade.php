@@ -1,4 +1,4 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="გადახდა წარმატებულია">
     <div style="max-width: 800px; margin: 0 auto; padding: 40px 0;">
         <div style="background-color: var(--bg-card); border-radius: var(--card-radius); padding: 48px; border: none; box-shadow: var(--shadow-card); text-align: center;">
             <!-- Success Icon -->

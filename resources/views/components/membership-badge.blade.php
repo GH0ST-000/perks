@@ -35,6 +35,6 @@
     <a href="{{ route('subscriptions.index') }}" {{ $attributes->merge([
         'style' => "display: inline-flex; align-items: center; font-size: {$fontSize}; font-weight: 600; padding: {$padding}; border-radius: 999px; text-decoration: none; {$styles}",
     ]) }}>
-        მემბერშიპი
+        გაწევრიანება
     </a>
 @endif

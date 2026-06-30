@@ -23,9 +23,9 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationLabel = 'კატეგორიები';
 
-    protected static ?string $modelLabel = 'Category';
+    protected static ?string $modelLabel = 'კატეგორია';
 
-    protected static ?string $pluralModelLabel = 'Categories';
+    protected static ?string $pluralModelLabel = 'კატეგორიები';
 
     protected static ?int $navigationSort = 2;
 
@@ -33,9 +33,10 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Category Information')
+                Forms\Components\Section::make('კატეგორიის ინფორმაცია')
                     ->schema([
                         Forms\Components\TextInput::make('name')
+                            ->label('სახელი')
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
@@ -44,58 +45,43 @@ class CategoryResource extends Resource
                             })
                             ->columnSpan(2),
                         Forms\Components\TextInput::make('slug')
+                            ->label('Slug')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
                             ->columnSpan(2),
-                        Forms\Components\Select::make('icon')
-                            ->label('Icon')
-                            ->options([
-                                'utensils' => 'Restaurant / Food',
-                                'hotel' => 'Hotel / Accommodation',
-                                'dumbbell' => 'Fitness / Gym',
-                                'heart' => 'Wellness / Health',
-                                'film' => 'Entertainment / Cinema',
-                                'music' => 'Music / Concert',
-                                'bag-shopping' => 'Shopping / Retail',
-                                'mug-hot' => 'Cafe / Coffee',
-                                'cake-candles' => 'Bakery / Dessert',
-                                'pizza-slice' => 'Pizza',
-                                'wine-glass' => 'Bar / Wine',
-                                'spa' => 'Spa / Beauty',
-                                'person-swimming' => 'Pool / Water',
-                                'ticket' => 'Events / Tickets',
-                                'palette' => 'Art / Gallery',
-                                'book' => 'Education / Books',
-                                'gamepad' => 'Gaming',
-                                'car' => 'Transport / Car Service',
-                                'plane' => 'Travel / Flight',
-                                'cart-shopping' => 'Supermarket / Grocery',
-                            ])
-                            ->searchable()
-                            ->columnSpan(2),
+                        Forms\Components\ViewField::make('image')
+                            ->label('აიკონის არჩევა')
+                            ->view('filament.forms.components.category-icon-picker')
+                            ->helperText('დააკლიკეთ სასურველ აიკონს ბიბლიოთეკიდან.')
+                            ->columnSpanFull(),
+                        Forms\Components\FileUpload::make('custom_icon')
+                            ->label('ან ატვირთეთ საკუთარი აიკონი')
+                            ->helperText('თუ საჭიროა სხვა სურათი, ატვირთეთ აქ (გადააჭარბებს ბიბლიოთეკის არჩევანს).')
+                            ->image()
+                            ->disk('public')
+                            ->directory('categories/custom')
+                            ->visibility('public')
+                            ->imageEditor()
+                            ->imagePreviewHeight('100')
+                            ->maxSize(5120)
+                            ->dehydrated(false)
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('small_text')
-                            ->label('Small Text')
+                            ->label('მოკლე ტექსტი')
                             ->maxLength(255)
                             ->columnSpanFull(),
                         Forms\Components\TextInput::make('star')
+                            ->label('ვარსკვლავი')
                             ->numeric()
                             ->default(0)
                             ->minValue(0)
                             ->maxValue(5)
                             ->required()
                             ->columnSpan(1),
-                        Forms\Components\FileUpload::make('image')
-                            ->image()
-                            ->disk('public')
-                            ->directory('categories')
-                            ->visibility('public')
-                            ->imageEditor()
-                            ->maxSize(5120)
-                            ->columnSpan(1),
                     ])
                     ->columns(2),
-                Forms\Components\Section::make('Description')
+                Forms\Components\Section::make('აღწერა')
                     ->schema([
                         Forms\Components\RichEditor::make('description')
                             ->toolbarButtons([
@@ -124,14 +110,12 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
+                    ->label('აიკონი')
                     ->disk('public')
-                    ->size(50),
-                Tables\Columns\TextColumn::make('icon')
-                    ->label('Icon')
-                    ->formatStateUsing(fn (string $state = null): string => $state ? ucfirst($state) : 'N/A')
-                    ->badge()
-                    ->color('info'),
+                    ->square()
+                    ->size(48),
                 Tables\Columns\TextColumn::make('name')
+                    ->label('სახელი')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
@@ -196,30 +180,30 @@ class CategoryResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('name');
     }
 
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
             ->schema([
-                Infolists\Components\Section::make('Category Information')
+                Infolists\Components\Section::make('კატეგორიის ინფორმაცია')
                     ->schema([
                         Infolists\Components\ImageEntry::make('image')
+                            ->label('აიკონი')
                             ->disk('public')
-                            ->size(200),
+                            ->size(120)
+                            ->columnSpanFull(),
                         Infolists\Components\TextEntry::make('name')
+                            ->label('სახელი')
                             ->size('lg')
                             ->weight('bold'),
-                        Infolists\Components\TextEntry::make('icon')
-                            ->label('Icon')
-                            ->badge()
-                            ->color('info'),
                         Infolists\Components\TextEntry::make('slug')
+                            ->label('Slug')
                             ->copyable()
                             ->color('gray'),
                         Infolists\Components\TextEntry::make('small_text')
-                            ->label('Small Text'),
+                            ->label('მოკლე ტექსტი'),
                         Infolists\Components\TextEntry::make('star')
                             ->badge()
                             ->color(fn (int $state): string => match (true) {

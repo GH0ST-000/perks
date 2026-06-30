@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="რეგისტრაცია">
     <div class="w-full">
         <!-- Header -->
         <div class="text-center mb-8">

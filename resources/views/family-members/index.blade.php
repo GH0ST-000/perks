@@ -1,4 +1,4 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="Perks Family">
     <div style="max-width: 1400px; margin: 0 auto; padding: 0;">
         <!-- Success Message -->
         @if(session('success'))
@@ -8,7 +8,13 @@
             </div>
         @endif
 
-        <!-- Error Messages -->
+        <!-- Error Message -->
+        @if(session('error'))
+            <div style="background-color: #ef4444; color: #ffffff; padding: 12px 20px; border-radius: 8px; margin-bottom: 24px;">
+                {{ session('error') }}
+            </div>
+        @endif
+
         @if($errors->any())
             <div id="error-message" style="background-color: #ef4444; color: #ffffff; padding: 12px 20px; border-radius: 8px; margin-bottom: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -31,6 +37,22 @@
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
                 </svg>
                 გააზიარე ბენეფიტები შენს საყვარელ ადამიანებს
+            </p>
+            @if($activeSubscription ?? null)
+                <p style="font-size: 14px; color: var(--text-secondary); margin: 12px 0 0 0;">
+                    თითოეული დადასტურებული ნათესავი: <strong>+{{ number_format($monthlyAddon, 0) }} ₾/თვე</strong>
+                    · მიმდინარე წევრობა: <strong>{{ number_format($activeSubscription->amount, 0) }} ₾/თვე</strong>
+                    @if($approvedCount > 0)
+                        ({{ $approvedCount }} დადასტურებული წევრი)
+                    @endif
+                </p>
+            @endif
+        </div>
+
+        <div style="background-color: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;">
+            <p style="font-size: 14px; color: var(--text-primary); margin: 0; line-height: 1.6;">
+                ნათესავის დამატების შემდეგ მოთხოვნა გადის ადმინისტრატორთან დასადასტურებლად.
+                დადასტურების შემდეგ თქვენს ყოველთვიურ წევრობას დაემატება <strong>{{ number_format($monthlyAddon, 0) }} ₾</strong>.
             </p>
         </div>
 
@@ -106,6 +128,7 @@
                     <select 
                         name="relationship" 
                         required
+                        class="dashboard-select"
                         style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background-color: var(--bg-input); color: var(--text-primary); transition: all 0.2s; cursor: pointer;"
                         onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)';"
                         onblur="this.style.borderColor='var(--border-color)'; this.style.boxShadow='none';">
@@ -173,7 +196,17 @@
                                 </div>
                                 <div style="flex: 1; min-width: 0;">
                                     <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $member->full_name }}</h3>
-                                    <span style="display: inline-block; background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 500;">{{ $member->relationship_name }}</span>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;">
+                                        <span style="display: inline-block; background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 500;">{{ $member->relationship_name }}</span>
+                                        @php
+                                            $statusStyle = match($member->status) {
+                                                'approved' => 'background-color: rgba(16, 185, 129, 0.15); color: #10b981;',
+                                                'rejected' => 'background-color: rgba(239, 68, 68, 0.15); color: #ef4444;',
+                                                default => 'background-color: rgba(245, 158, 11, 0.15); color: #d97706;',
+                                            };
+                                        @endphp
+                                        <span style="display: inline-block; {{ $statusStyle }} padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">{{ $member->status_name }}</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -184,7 +217,7 @@
 
                             <div style="display: flex; gap: 8px;">
                                 <button 
-                                    onclick="showDeleteModal({{ $member->id }}, '{{ $member->full_name }}')"
+                                    onclick="showDeleteModal({{ $member->id }}, '{{ $member->full_name }}', {{ $member->status === 'approved' ? 'true' : 'false' }})"
                                     style="flex: 1; padding: 8px; background-color: #ef4444; color: #ffffff; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;"
                                     onmouseover="this.style.backgroundColor='#dc2626';"
                                     onmouseout="this.style.backgroundColor='#ef4444';">
@@ -234,6 +267,7 @@
                 <!-- Message -->
                 <p style="font-size: 14px; color: var(--text-secondary); margin: 0 0 24px 0; text-align: center; line-height: 1.6;">
                     გსურთ <strong id="memberName" style="color: var(--text-primary);"></strong>-ის წაშლა? <br>
+                    <span id="deleteSubscriptionNote" style="font-size: 13px; color: #f59e0b; display: none;">დადასტურებული წევრის წაშლისას წევრობიდან მოიხსნება {{ number_format($monthlyAddon, 0) }} ₾/თვე.</span>
                     <span style="font-size: 13px; color: #ef4444;">ეს მოქმედება შეუქცევადია.</span>
                 </p>
 
@@ -312,9 +346,10 @@
     <script>
         let currentDeleteFormId = null;
 
-        function showDeleteModal(memberId, memberName) {
+        function showDeleteModal(memberId, memberName, isApproved) {
             currentDeleteFormId = memberId;
             document.getElementById('memberName').textContent = memberName;
+            document.getElementById('deleteSubscriptionNote').style.display = isApproved ? 'inline' : 'none';
             const modal = document.getElementById('deleteModal');
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';

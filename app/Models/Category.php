@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Category extends Model
@@ -43,5 +44,22 @@ class Category extends Model
         return $this->belongsToMany(Partner::class, 'partner_category')
             ->withPivot('discount_percentage', 'points_per_visit')
             ->withTimestamps();
+    }
+
+    public function imageUrl(): ?string
+    {
+        if (! $this->image) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->image);
+    }
+
+    public function selectOptionHtml(): string
+    {
+        return view('filament.components.category-select-option', [
+            'name' => $this->name,
+            'imageUrl' => $this->imageUrl(),
+        ])->render();
     }
 }

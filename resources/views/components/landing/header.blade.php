@@ -13,12 +13,12 @@
 
         <!-- Desktop Nav -->
         <nav class="hidden lg:flex items-center gap-8">
+            <a href="{{ route('about') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">ჩვენს შესახებ</a>
             <a href="{{ route('offers.index') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">შეთავაზებები</a>
 
             <a href="{{ route('companies') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">კომპანიებისთვის</a>
             <a href="{{ route('partners') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">პარტნიორებისთვის</a>
             <a href="{{ route('blog.index') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">ბლოგი</a>
-            <a href="{{ route('about') }}" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">ჩვენი ისტორია</a>
         </nav>
 
         <!-- Desktop Actions -->
@@ -43,30 +43,45 @@
                 </a>
             @else
                 <div class="relative" x-data="{ open: false }">
-                    <button @click="open = !open" @click.outside="open = false" class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-{{--                        <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm">--}}
-{{--                            {{ substr(auth()->user()->name, 0, 1) }}--}}
-{{--                        </div>--}}
-                        @if(auth()->check() && auth()->user()->profile_photo)
-                            @php
-                                $user = auth()->user();
-                                $profilePhoto = $user->profile_photo;
-                                $photoUrl = null;
-                                if ($profilePhoto) {
-                                    if (str_starts_with($profilePhoto, 'http://') || str_starts_with($profilePhoto, 'https://')) {
-                                        $photoUrl = $profilePhoto;
-                                    } elseif (str_starts_with($profilePhoto, 'data:image')) {
-                                        $photoUrl = $profilePhoto;
-                                    } else {
-                                        $photoUrl = asset('storage/' . ltrim($profilePhoto, '/'));
-                                    }
+                    <button
+                        @click="open = !open"
+                        @click.outside="open = false"
+                        type="button"
+                        aria-label="ჩემი ანგარიში"
+                        title="ჩემი ანგარიში"
+                        class="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                    >
+                        @php
+                            $user = auth()->user();
+                            $profilePhoto = $user->profile_photo;
+                            $photoUrl = null;
+                            if ($profilePhoto) {
+                                if (str_starts_with($profilePhoto, 'http://') || str_starts_with($profilePhoto, 'https://')) {
+                                    $photoUrl = $profilePhoto;
+                                } elseif (str_starts_with($profilePhoto, 'data:image')) {
+                                    $photoUrl = $profilePhoto;
+                                } else {
+                                    $photoUrl = asset('storage/' . ltrim($profilePhoto, '/'));
                                 }
-                            @endphp
-                            <img src="{{ $photoUrl }}" alt="{{ $user->name }}" style="width: 25px !important;height: 25px !important;" class="w-full h-full rounded-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            }
+                        @endphp
+                        @if($photoUrl)
+                            <img
+                                src="{{ $photoUrl }}"
+                                alt="{{ $user->name }}"
+                                class="w-8 h-8 rounded-full object-cover shrink-0"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                            >
                         @endif
-                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
+                        <div
+                            class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 {{ $photoUrl ? 'hidden' : '' }}"
+                            @if($photoUrl) style="display: none;" @endif
+                        >
+                            {{ mb_strtoupper(mb_substr($user->name, 0, 1)) }}
+                        </div>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 max-w-[8rem] truncate hidden sm:inline">
+                            {{ $user->name }}
+                        </span>
                     </button>
 
                     <div x-show="open" x-transition class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-100 dark:border-gray-700 py-2 z-50">
@@ -117,11 +132,11 @@
 
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="hidden lg:hidden absolute top-20 left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 p-4 flex flex-col gap-4 shadow-xl animate-fade-in-down">
+        <a href="{{ route('about') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">ჩვენს შესახებ</a>
         <a href="{{ route('offers.index') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">შეთავაზებები</a>
         <a href="{{ route('companies') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">კომპანიებისთვის</a>
         <a href="{{ route('partners') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">პარტნიორებისთვის</a>
         <a href="{{ route('blog.index') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">ბლოგი</a>
-        <a href="{{ route('about') }}" class="text-lg font-bold text-gray-800 dark:text-gray-200 py-2 border-b border-gray-50 dark:border-gray-800">ჩვენი ისტორია</a>
 
         <div class="flex items-center justify-between pt-2">
             <button onclick="toggleTheme()" class="p-2 bg-gray-100 dark:bg-gray-800 rounded-full">

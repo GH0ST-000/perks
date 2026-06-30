@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Visit;
 use App\Services\MembershipService;
 use App\Services\SmsService;
+use App\Support\PhoneNumber;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -39,16 +40,48 @@ class PartnerScannerService
 
         $claim = $this->findPendingClaim($partner, $query);
 
-        if (! $claim) {
-            throw new \InvalidArgumentException('შეთავაზება ან საჩუქარი ვერ მოიძებნა ამ კოდით ან ტელეფონზე.');
+        if ($claim) {
+            $offer = $claim->premiumOffer;
+            if (! $offer || $offer->status !== PremiumOffer::STATUS_APPROVED || $offer->day_left <= 0) {
+                throw new \InvalidArgumentException('ეს შეთავაზება ვადაგასულია ან არ არის აქტიური.');
+            }
+
+            return $this->prepareOfferSearchResult($partner, $claim, $offer);
         }
 
-        $offer = $claim->premiumOffer;
-        if (! $offer || $offer->status !== PremiumOffer::STATUS_APPROVED || $offer->day_left <= 0) {
-            throw new \InvalidArgumentException('ეს შეთავაზება ვადაგასულია ან არ არის აქტიური.');
+        $this->failSearchWithMessage($query);
+    }
+
+    private function failSearchWithMessage(string $query): never
+    {
+        $query = trim($query);
+
+        if (preg_match('/^P-(\d+)$/i', $query) || preg_match('/^G-(\d+)$/i', $query)) {
+            throw new \InvalidArgumentException('კოდი ვერ მოიძებნა ან უკვე გამოყენებულია.');
         }
 
-        return $this->prepareOfferSearchResult($partner, $claim, $offer);
+        $user = $this->findUserByQuery($query);
+
+        if (! $user) {
+            throw new \InvalidArgumentException('სამწუხაროდ ნომერი ბაზაში არ არის.');
+        }
+
+        throw new \InvalidArgumentException(
+            'მომხმარებელს არ აქვს გააქტიურებული შეთავაზება. გთხოვთ, მომხმარებელმა გააქტიუროს შეთავაზება.'
+        );
+    }
+
+    private function findUserByQuery(string $query): ?User
+    {
+        $digits = preg_replace('/\D/', '', trim($query)) ?? '';
+
+        if (strlen($digits) < 9) {
+            return null;
+        }
+
+        $phone = PhoneNumber::normalize($digits);
+
+        return User::query()->where('phone', $phone)->first();
     }
 
     /**

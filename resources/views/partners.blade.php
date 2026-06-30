@@ -1,6 +1,6 @@
 @extends('layouts.landing')
 
-@section('title', 'პარტნიორებისთვის - Perks')
+@section('title', 'პარტნიორობა perks-თან')
 
 @section('content')
 @include('components.landing.header')

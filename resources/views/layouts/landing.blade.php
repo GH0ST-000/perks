@@ -3,8 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Perks აქციეთ ზრუნვა მოტივაციად')</title>
+    <title>@yield('title', 'Perks - ბენეფიტები თანამშრომლებისთვის')</title>
     <meta name="description" content="@yield('meta_description', 'აღმოაჩინეთ პლატფორმა, რომელიც ქმნის დაზოგვის შესაძლებლობას თანამშრომლებისთვის და უნიკალურ ბენეფიტს კომპანიისთვის')">
+
+    @include('partials.favicon')
 
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />

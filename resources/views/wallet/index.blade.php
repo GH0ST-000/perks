@@ -1,4 +1,4 @@
-<x-dashboard-layout>
+<x-dashboard-layout title="ჩემი საფულე">
     <div style="max-width: 1400px; margin: 0 auto; padding: 0;">
         <!-- Success Message -->
         @if(session('success'))
@@ -20,31 +20,6 @@
         <div style="border-radius: 12px; padding: 16px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet text-blue-500" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg>
             <span style="font-size: 18px; font-weight: 600; color: var(--text-primary);">ჩემი საფულე</span>
-        </div>
-
-        <!-- Quick Actions -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
-            <a href="{{ route('payments.index') }}" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 16px; padding: 24px; text-decoration: none; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(59, 130, 246, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.3)';">
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="20" height="14" x="2" y="5" rx="2"/>
-                        <line x1="2" x2="22" y1="10" y2="10"/>
-                    </svg>
-                    <span style="color: #ffffff; font-size: 18px; font-weight: 600;">P-Coin-ების შეძენა</span>
-                </div>
-                <p style="color: rgba(255, 255, 255, 0.9); margin: 0; font-size: 14px;">ერთჯერადი გადახდა</p>
-            </a>
-            
-            <a href="{{ route('subscriptions.index') }}" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 16px; padding: 24px; text-decoration: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(16, 185, 129, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.3)';">
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-                        <path d="M21 3v5h-5"/>
-                    </svg>
-                    <span style="color: #ffffff; font-size: 18px; font-weight: 600;">გამოწერა</span>
-                </div>
-                <p style="color: rgba(255, 255, 255, 0.9); margin: 0; font-size: 14px;">რეგულარული P-Coin-ები</p>
-            </a>
         </div>
 
         <!-- P-Coin Packages Section -->
@@ -139,8 +114,8 @@
                     @foreach($paymentMethods as $method)
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; background-color: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color);">
                             <div style="display: flex; align-items: center; gap: 16px;">
-                                <div style="width: 48px; height: 32px; background-color: var(--bg-hover); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                                    <span style="font-size: 12px; font-weight: 600; color: var(--text-primary); text-transform: uppercase;">{{ $method->brand ?? 'VISA' }}</span>
+                                <div style="width: 48px; height: 32px; background-color: #ffffff; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 11px; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.02em;">{{ $method->brand ?? 'CARD' }}</span>
                                 </div>
                                 <div>
                                     <p style="font-size: 16px; font-weight: 500; color: var(--text-primary); margin: 0 0 4px 0;">
@@ -183,8 +158,8 @@
                 <!-- Default card if none exists -->
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; background-color: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color);">
                     <div style="display: flex; align-items: center; gap: 16px;">
-                        <div style="width: 48px; height: 32px; background-color: var(--bg-hover); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                            <span style="font-size: 12px; font-weight: 600; color: var(--text-primary); text-transform: uppercase;">VISA</span>
+                        <div style="width: 48px; height: 32px; background-color: #ffffff; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 11px; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.02em;">VISA</span>
                         </div>
                         <div>
                             <p style="font-size: 16px; font-weight: 500; color: var(--text-primary); margin: 0 0 4px 0;">
@@ -195,9 +170,9 @@
                             </p>
                         </div>
                     </div>
-                    <button style="padding: 6px 12px; background-color: #ffffff; color: #000000; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
-                        Default
-                    </button>
+                    <span style="padding: 6px 12px; background-color: #3b82f6; color: #ffffff; border-radius: 6px; font-size: 12px; font-weight: 600;">
+                        ძირითადი
+                    </span>
                 </div>
             @endif
         </div>

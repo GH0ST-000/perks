@@ -1,4 +1,4 @@
-<x-partner-layout :partner="$partner">
+<x-partner-layout :partner="$partner" title="სკანერი" headerTitle="სკანერი">
     <div class="flex justify-center items-start md:pt-8 px-2">
         <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl md:rounded-[32px] overflow-hidden shadow-sm border border-slate-50 dark:border-slate-800"
              x-data="partnerScanner()" x-cloak>

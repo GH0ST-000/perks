@@ -75,6 +75,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->role === 'partner';
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
     public static function genderOptions(): array
     {
         return [

@@ -2,13 +2,12 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use App\Filament\Support\CategorySelect;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class VisitsRelationManager extends RelationManager
 {
@@ -24,9 +23,11 @@ class VisitsRelationManager extends RelationManager
                     ->searchable()
                     ->preload()
                     ->columnSpan(1),
-                Forms\Components\Select::make('category_id')
-                    ->label('Category')
-                    ->relationship('category', 'name')
+                CategorySelect::configure(
+                    Forms\Components\Select::make('category_id')
+                        ->label('კატეგორია')
+                        ->relationship('category', 'name')
+                )
                     ->searchable()
                     ->preload()
                     ->columnSpan(1),
@@ -51,8 +52,13 @@ class VisitsRelationManager extends RelationManager
                     ->label('Partner')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\ImageColumn::make('category.image')
+                    ->label('აიკონი')
+                    ->disk('public')
+                    ->square()
+                    ->size(32),
                 Tables\Columns\TextColumn::make('category.name')
-                    ->label('Category')
+                    ->label('კატეგორია')
                     ->searchable()
                     ->sortable()
                     ->badge()
@@ -72,8 +78,11 @@ class VisitsRelationManager extends RelationManager
                     ->searchable()
                     ->preload(),
                 Tables\Filters\SelectFilter::make('category_id')
-                    ->label('Category')
+                    ->label('კატეგორია')
                     ->relationship('category', 'name')
+                    ->modifyFormFieldUsing(
+                        fn (Forms\Components\Select $select) => CategorySelect::configure($select)
+                    )
                     ->searchable()
                     ->preload(),
                 Tables\Filters\Filter::make('visited_at')
